@@ -275,14 +275,14 @@ export function Office() {
           <StatusFilters selected={statuses} onChange={setStatuses} />
           <div className="stats">
             {[
-              ["safe", "Tronsoane sigure", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "sigur").length : scores.filter((s) => s.scor >= 0.7).length],
+              ["safe", "Sigur", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "sigur").length : scores.filter((s) => s.scor >= 0.7).length],
               [
                 "warning",
-                "Tronsoane Partial Sigur",
+                "Partial Sigur",
                 osmMeta ? osmApproved.filter(r => r?.osm_verdict === "de_verificat").length : scores.filter((s) => s.scor >= 0.4 && s.scor < 0.7).length,
               ],
-              ["danger", "Tronsoane nesigure", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "nesigur").length : scores.filter((s) => s.scor < 0.4).length],
-              ["primary", "Tronsoane nevalidate", osmMeta ? osmApproved.filter(r => !r).length : pending],
+              ["danger", "Nesigur", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "nesigur").length : scores.filter((s) => s.scor < 0.4).length],
+              ["primary", "Nevalidat", osmMeta ? osmApproved.filter(r => !r).length : pending],
             ].map(([color, label, value]) => (
               <div className="stat" key={label}>
                 <div className={`stat-number ${color}`}>{value}</div>

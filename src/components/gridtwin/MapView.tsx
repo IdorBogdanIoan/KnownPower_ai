@@ -369,22 +369,13 @@ export default function MapView({
           />
         )}
         {enabled["streets"] &&
-          data.layers["streets"]?.features.map((f, i) => {
-            const name = String(f.properties?.["name"] ?? f.properties?.["nume"] ?? "").trim();
-            return (
+          data.layers["streets"]?.features.map((f, i) => (
             <GeoJSON
               key={`street-${i}`}
               data={f}
               style={{ color: palette["road"], weight: 8, opacity: 0.8 }}
-            >
-              {name && name.toLocaleLowerCase("ro") !== "drum fără nume" && (
-                <Tooltip permanent direction="center" className="street-label">
-                  {name}
-                </Tooltip>
-              )}
-            </GeoJSON>
-            );
-          })}
+            />
+          ))}
         {enabled["unknown"] &&
           data.layers["unknown"]?.features.map((f, i) => (
             <GeoJSON

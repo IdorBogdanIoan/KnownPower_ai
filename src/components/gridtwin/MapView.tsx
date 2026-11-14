@@ -16,6 +16,7 @@ import { Layers, LocateFixed, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OpenFreeMapLayer } from "./OpenFreeMapLayer";
 import { osmCoverage, osmMetadata } from "@/lib/gridtwin/osm";
+import { approvedOsmInspection, osmTones, osmVerdicts } from "@/lib/gridtwin/osm-inspections";
 import {
   confidenceCells,
   conductor,
@@ -112,6 +113,14 @@ function Frame({
   useMapEvents({ zoomend: () => onZoom(map.getZoom()) });
   return null;
 }
+function MiniFocus({ focus }: { focus: Geometry }) {
+  const map = useMap();
+  useEffect(() => {
+    const b = turf.bbox(turf.feature(focus));
+    map.fitBounds([[b[1], b[0]], [b[3], b[2]]], { padding: [30, 30], maxZoom: 18 });
+  }, [map, focus]);
+  return null;
+}
 function Pick({
   position,
   onPosition,
@@ -148,6 +157,7 @@ export default function MapView({
   filter,
   onSelect,
   onInspect,
+  onOsmSelect,
   focus,
   position,
   onPosition,
@@ -158,6 +168,7 @@ export default function MapView({
   filter?: string | undefined;
   onSelect?: (id: string) => void;
   onInspect?: (i: Inspection) => void;
+  onOsmSelect?: (id: string) => void;
   focus?: Geometry | undefined;
   position?: Position;
   onPosition?: ((p: Position) => void) | undefined;
@@ -279,6 +290,7 @@ export default function MapView({
           />
         )}
         {!mini && <Frame data={data} focus={focus} onZoom={setZoom} />}
+        {mini && focus && <MiniFocus focus={focus} />}
         {enabled["osmCoverage"] &&
           enabled["osm"] &&
           coverage?.features.map((f) => (
@@ -299,18 +311,22 @@ export default function MapView({
           ))}
         {enabled["osm"] && osm && (
           <GeoJSON
-            key={`osm-${meta?.importedAt}`}
+            key={`osm-${meta?.importedAt}-${data.reports.filter(r => r.osm_id).map(r => `${r.id}-${r.status}`).join(",")}`}
             data={osm}
-            style={{ color: palette["primary"], weight: 3, fillOpacity: 0.12 }}
-            pointToLayer={(_f, p) =>
-              L.circleMarker(p, { radius: 4, color: palette["primary"], fillOpacity: 0.8 })
+            style={f => { const r = f && approvedOsmInspection(f, data.reports); return { color: palette[r?.osm_verdict ? osmTones[r.osm_verdict] : "primary"], weight: 3, fillOpacity: 0.12 }; }}
+            pointToLayer={(f, p) => {
+              const r = approvedOsmInspection(f, data.reports);
+              return L.circleMarker(p, { radius: 5, color: palette[r?.osm_verdict ? osmTones[r.osm_verdict] : "primary"], fillOpacity: 0, weight: 3 });
+            }
             }
             onEachFeature={(f, layer) => {
               const p = f.properties || {};
+              const report = approvedOsmInspection(f, data.reports);
               const label = document.createElement("span");
-              label.textContent = `${p["osm_id"]} · ${p["power"]} · ${p["voltage"] ? `${p["voltage"]} V` : "tensiune necunoscută"}`;
+              label.textContent = `${p["osm_id"]} · ${p["power"]} · ${report?.osm_verdict ? osmVerdicts[report.osm_verdict] : "Nevalidat"}${report ? ` · ${report.actor} · ${new Date(report.inspected_at || report.created_at).toLocaleString("ro-RO")}` : ""}`;
               layer.bindTooltip(label);
               layer.on("click", () => {
+                onOsmSelect?.(String(p["osm_id"]));
                 const el = document.createElement("div");
                 const a = document.createElement("a");
                 a.href = String(p["source_url"]);
@@ -459,7 +475,7 @@ export default function MapView({
             )}
         {enabled["reports"] &&
           data.reports
-            .filter((r) => r.status !== "respins")
+            .filter((r) => !r.osm_id && r.status !== "respins")
             .map((r) => (
               <CircleMarker
                 key={`${r.id}-${r.status}`}
@@ -581,7 +597,7 @@ export default function MapView({
             </div>
           )}
           <div className="map-legend">
-            <h3>Încredere în rețea</h3>
+            <h3>{meta ? "Evaluare OSM aprobată" : "Încredere în rețea"}</h3>
             {meta && (
               <div className="legend-row">
                 <span className="primary">━━</span> Rețea OSM nevalidată
@@ -589,15 +605,15 @@ export default function MapView({
             )}
             <div className="legend-row">
               <i className="legend-line" />
-              Sigur <span className="ml-auto text-muted-foreground">≥ 70%</span>
+              Sigur <span className="ml-auto text-muted-foreground">{meta ? "teren" : "≥ 70%"}</span>
             </div>
             <div className="legend-row">
               <i className="legend-line warning" />
-              De verificat <span className="ml-auto text-muted-foreground">40–69%</span>
+              De verificat <span className="ml-auto text-muted-foreground">{meta ? "teren" : "40–69%"}</span>
             </div>
             <div className="legend-row">
               <i className="legend-line danger" />
-              Nesigur <span className="ml-auto text-muted-foreground">&lt; 40%</span>
+              Nesigur <span className="ml-auto text-muted-foreground">{meta ? "teren" : "< 40%"}</span>
             </div>
             <div className="legend-row">
               <i className="legend-line proposal" />

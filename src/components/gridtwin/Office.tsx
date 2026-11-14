@@ -40,6 +40,8 @@ import {
 } from "@/lib/gridtwin/model";
 import { useOperator } from "./Shell";
 import { osmMetadata } from "@/lib/gridtwin/osm";
+import { approvedOsmInspection, osmVerdicts, osmTones } from "@/lib/gridtwin/osm-inspections";
+import { OsmOfficeList } from "./OsmOfficeList";
 const MapView = lazy(() => import("./MapView"));
 const tipIcons: Record<string, typeof Activity> = {
   gol_retea: Link2,
@@ -95,7 +97,8 @@ export function Office() {
   const osmMeta = osmMetadata(data.layers["osm_constanta"]);
   const actor = useOperator();
   const client = useQueryClient();
-  const [tab, setTab] = useState("proposals");
+  const [tab, setTab] = useState(data.layers["osm_constanta"] ? "osm" : "proposals");
+  const [osmSelected, setOsmSelected] = useState<string>();
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<string>();
@@ -115,6 +118,8 @@ export function Office() {
     reportIds.current = data.reports.map((r) => r.id);
   }, [data.reports]);
   const scores = effectiveScores(data);
+  const osmFeatures = data.layers["osm_constanta"]?.features || [];
+  const osmApproved = osmFeatures.map(f => approvedOsmInspection(f, data.reports));
   const pending = data.proposals.filter((p) => p["status"] === "in_asteptare").length;
   const proposals = useMemo(
     () =>
@@ -200,7 +205,7 @@ export function Office() {
           </div>
           <div className="workspace-subtitle">
             {data.layers["osm_constanta"]
-              ? "OSM nevalidat · scorurile și propunerile simulate rămân separate"
+              ? "OSM · evaluări din teren aprobate · simulările rămân separate"
               : "GIS companie / verificare agent / confirmare din teren"}
           </div>
           {osmMeta && (
@@ -249,32 +254,34 @@ export function Office() {
                 setSelected(undefined);
               }}
               focus={focus}
+              onOsmSelect={id => { setOsmSelected(id); setTab("osm"); setInspection(undefined); setSelected(undefined); }}
             />
           </Suspense>
         </ClientOnly>
         <aside className="operator-panel">
           <div className="stats">
             {[
-              ["safe", "Sigur", scores.filter((s) => s.scor >= 0.7).length],
+              ["safe", "Sigur", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "sigur").length : scores.filter((s) => s.scor >= 0.7).length],
               [
                 "warning",
                 "De verificat",
-                scores.filter((s) => s.scor >= 0.4 && s.scor < 0.7).length,
+                osmMeta ? osmApproved.filter(r => r?.osm_verdict === "de_verificat").length : scores.filter((s) => s.scor >= 0.4 && s.scor < 0.7).length,
               ],
-              ["danger", "Nesigur", scores.filter((s) => s.scor < 0.4).length],
-              ["primary", "În așteptare", pending],
+              ["danger", "Nesigur", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "nesigur").length : scores.filter((s) => s.scor < 0.4).length],
+              ["primary", osmMeta ? "Nevalidat" : "În așteptare", osmMeta ? osmApproved.filter(r => !r).length : pending],
             ].map(([color, label, value]) => (
               <div className="stat" key={label}>
                 <div className={`stat-number ${color}`}>{value}</div>
                 <div className="stat-label">
                   {label}
                   <br />
-                  {label === "În așteptare" ? "decizii" : "tronsoane"}
+                  {osmMeta ? "obiecte OSM" : label === "În așteptare" ? "decizii" : "tronsoane"}
                 </div>
               </div>
             ))}
           </div>
           <div className="panel-tabs">
+            {osmMeta && <Button variant="ghost" className={tab === "osm" ? "active" : ""} onClick={() => { setTab("osm"); setOsmSelected(undefined); }}><ShieldCheck />OSM <span className="tab-count">{osmFeatures.length}</span></Button>}
             <Button
               variant="ghost"
               className={tab === "proposals" ? "active" : ""}
@@ -354,6 +361,7 @@ export function Office() {
             </div>
           )}
           <div className="panel-scroll">
+            {tab === "osm" && <><div className="p-3 text-xs text-muted-foreground">Etichete din teren · nu certificare electrică. Acces DEMO fără identitate verificată.</div>{osmSelected && <Button variant="ghost" size="sm" onClick={() => setOsmSelected(undefined)}>Toate elementele OSM</Button>}<OsmOfficeList data={data} selected={osmSelected} onFocus={setFocus} onReports={() => setTab("field")} /></>}
             {currentInspection && (
               <section className="inspection">
                 <div className="inspection-head">
@@ -616,11 +624,12 @@ export function Office() {
                       <div className="object-id">
                         {r.actor} · {new Date(r.created_at).toLocaleString("ro-RO")}
                       </div>
+                      {r.osm_id && <><div className="object-id">OSM · {r.osm_id}</div><h3 className={r.osm_verdict ? osmTones[r.osm_verdict] : "primary"}>{r.osm_verdict && osmVerdicts[r.osm_verdict]} · {r.status === "aprobat" ? "aprobat" : "propus"}</h3><p className="text-xs">{r.evidence_notes}</p><p className="text-xs text-muted-foreground">Verificat: {new Date(r.inspected_at || r.created_at).toLocaleString("ro-RO")}</p></>}
                       <div className="report-photos">
                         <Photo path={r.photo_pole_url} />
                         <Photo path={r.photo_sheet_url} />
                       </div>
-                      <p className="text-xs">
+                      {!r.osm_id && <p className="text-xs">
                         Stâlp în poză:{" "}
                         {r.pole_check?.valoare === true
                           ? "da"
@@ -629,7 +638,7 @@ export function Office() {
                             : "neconfirmat"}{" "}
                         · {Math.round((r.pole_check?.incredere || 0) * 100)}%{" "}
                         {r.pole_check?.tip_vizibil}
-                      </p>
+                      </p>}
                       <dl className="proposal-details">
                         {Object.entries(r.fields).map(([k, v]) => (
                           <div key={k} className="detail-line">
@@ -649,7 +658,7 @@ export function Office() {
                       <p className="position-note">
                         {r.pos_source} · {r.lat.toFixed(6)}, {r.lon.toFixed(6)}
                       </p>
-                      {data.proposals
+                      {!r.osm_id && data.proposals
                         .filter((p) => nearby(p["geometrie"], [r.lon, r.lat], 20))
                         .map((p) => (
                           <Button
@@ -669,7 +678,7 @@ export function Office() {
                             onClick={() => void decide(r.id, "field", "aprobat")}
                           >
                             <Check />
-                            Aprobă și pune în model
+                            {r.osm_id ? "Aprobă eticheta OSM" : "Aprobă și pune în model"}
                           </Button>
                           <Button
                             variant="reject"

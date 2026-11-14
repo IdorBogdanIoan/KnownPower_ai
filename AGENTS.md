@@ -30,6 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## GridTwin architecture
+- OSM inspections use explicit OSM IDs, immutable geometry snapshots and evidence in field reports; only the newest approved matching-geometry inspection colors an object, and OSM reports never affect simulated scores.
 - Keep OSM imports in the existing layers store under a distinct key with provenance metadata; fetch only a fixed Constanța study area, reject partial exports, require operator confirmation and never merge OSM into company GIS or simulated scores. Coverage cells express cartographic uncertainty, not verified network absence or completeness.
 - Public routes load one paginated workspace through a publishable-key server function and TanStack Query; Realtime invalidates it to keep the office and field views consistent.
 - Normalize workspace payloads at both fetch and cache-read boundaries so older hydrated strings or missing collections cannot blank public pages.

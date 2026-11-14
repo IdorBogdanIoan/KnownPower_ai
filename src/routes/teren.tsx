@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { workspaceQuery } from "@/lib/gridtwin/query";
 import { FieldPage } from "@/components/gridtwin/FieldPage";
 export const Route = createFileRoute("/teren")({
+  validateSearch: (search: Record<string, unknown>): { osm?: string } => typeof search["osm"] === "string" ? { osm: search["osm"] } : {},
   head: () => ({
     meta: [
       { title: "Raport din teren · GridTwin" },

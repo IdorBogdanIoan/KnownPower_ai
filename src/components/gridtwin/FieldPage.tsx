@@ -29,6 +29,8 @@ import {
   type Position,
 } from "@/lib/gridtwin/model";
 import { useOperator } from "./Shell";
+import { Route } from "@/routes/teren";
+import { OsmInspectionForm } from "./OsmInspectionForm";
 const MapView = lazy(() => import("./MapView"));
 async function resize(file: File): Promise<string> {
   const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
@@ -47,6 +49,8 @@ export function FieldPage() {
   const actor = useOperator();
   const read = useServerFn(extractSheet);
   const client = useQueryClient();
+  const search = Route.useSearch();
+  const [mode, setMode] = useState(search.osm ? "osm" : "gis");
   const gap = data.proposals.find((p) => p["tip"] === "gol_retea");
   const initial = gap
     ? midpoint(gap.geometrie)
@@ -202,6 +206,11 @@ export function FieldPage() {
           </div>
           <span className="demo-pill">ÎN AȘTEPTARE</span>
         </div>
+        <div className="flex gap-2 mb-4">
+          <Button variant={mode === "gis" ? "default" : "outline"} onClick={() => setMode("gis")}>Raport GIS</Button>
+          <Button variant={mode === "osm" ? "default" : "outline"} onClick={() => setMode("osm")}>Verificare OSM</Button>
+        </div>
+        {mode === "osm" ? <OsmInspectionForm data={data} initialId={search.osm} /> : <>
         <section className="field-step">
           <h2 className="step-heading">
             <span className={`step-number ${pole ? "done" : ""}`}>
@@ -396,6 +405,7 @@ export function FieldPage() {
           {busy === "send" ? <Loader2 className="animate-spin" /> : <Send />}
           {busy === "send" ? "Se trimite…" : "Trimite în birou"}
         </Button>
+        </>}
       </div>
     </main>
   );

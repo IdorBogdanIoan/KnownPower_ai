@@ -41,10 +41,15 @@ export type Database = {
           created_at: string
           decided_at: string | null
           decided_by: string | null
+          evidence_notes: string | null
           fields: Json
           id: string
+          inspected_at: string | null
           lat: number
           lon: number
+          osm_geometry: Json | null
+          osm_id: string | null
+          osm_verdict: string | null
           photo_pole_url: string | null
           photo_sheet_url: string | null
           pole_check: Json | null
@@ -56,10 +61,15 @@ export type Database = {
           created_at?: string
           decided_at?: string | null
           decided_by?: string | null
+          evidence_notes?: string | null
           fields?: Json
           id?: string
+          inspected_at?: string | null
           lat: number
           lon: number
+          osm_geometry?: Json | null
+          osm_id?: string | null
+          osm_verdict?: string | null
           photo_pole_url?: string | null
           photo_sheet_url?: string | null
           pole_check?: Json | null
@@ -71,10 +81,15 @@ export type Database = {
           created_at?: string
           decided_at?: string | null
           decided_by?: string | null
+          evidence_notes?: string | null
           fields?: Json
           id?: string
+          inspected_at?: string | null
           lat?: number
           lon?: number
+          osm_geometry?: Json | null
+          osm_id?: string | null
+          osm_verdict?: string | null
           photo_pole_url?: string | null
           photo_sheet_url?: string | null
           pole_check?: Json | null
@@ -179,6 +194,7 @@ export type Database = {
         Returns: undefined
       }
       submit_field_report: { Args: { report: Json }; Returns: string }
+      submit_osm_inspection: { Args: { report: Json }; Returns: string }
     }
     Enums: {
       [_ in never]: never

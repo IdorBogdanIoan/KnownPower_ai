@@ -105,6 +105,11 @@ export const extractionSchema = z.object({
 });
 export type Reading = z.infer<typeof valueSchema>;
 export type Report = {
+  osm_id?: string | null;
+  osm_verdict?: "sigur" | "de_verificat" | "nesigur" | null;
+  evidence_notes?: string | null;
+  inspected_at?: string | null;
+  osm_geometry?: Geometry | null;
   id: string;
   created_at: string;
   actor: string;
@@ -158,6 +163,7 @@ export function endpointVerified(geometry: Geometry, reports: Report[]) {
   return reports.find(
     (r) =>
       r.status === "aprobat" &&
+      !r.osm_id &&
       [geometry.coordinates[0], geometry.coordinates.at(-1)].some(
         (p) => p && distanceM(p, [r.lon, r.lat]) < 25,
       ),
@@ -209,7 +215,7 @@ export function confidenceCells(data: Workspace): Inspection[] {
         turf.booleanPointInPolygon(turf.point(midpoint(p["geometrie"])), cell),
     );
     const approved = data.reports.some(
-      (r) => r.status === "aprobat" && turf.booleanPointInPolygon([r.lon, r.lat], cell),
+       (r) => !r.osm_id && r.status === "aprobat" && turf.booleanPointInPolygon([r.lon, r.lat], cell),
     );
     const unknown = data.layers["unknown"]?.features.some((f) => turf.booleanIntersects(f, cell));
     return [

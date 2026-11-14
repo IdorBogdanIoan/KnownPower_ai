@@ -15,6 +15,7 @@ import * as turf from "@turf/turf";
 import { Layers, LocateFixed, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { OpenFreeMapLayer } from "./OpenFreeMapLayer";
+import { osmCoverage, osmMetadata } from "@/lib/gridtwin/osm";
 import {
   confidenceCells,
   conductor,
@@ -27,6 +28,8 @@ import {
   type Position,
 } from "@/lib/gridtwin/model";
 const switches = [
+  ["osm", "Rețea OSM Constanța"],
+  ["osmCoverage", "Acoperire OSM de verificat"],
   ["streets", "Străzi"],
   ["buildings", "Clădiri"],
   ["unknown", "Zone necunoscute"],
@@ -77,9 +80,11 @@ function Frame({
     svg.prepend(defs);
   }, [map]);
   useEffect(() => {
-    const basis = data.layers["streets"]?.features.length
-      ? data.layers["streets"]
-      : turf.featureCollection(data.scores.map((s) => turf.feature(s.geometry)));
+    const basis = data.layers["osm_constanta"]?.features.length
+      ? data.layers["osm_constanta"]
+      : data.layers["streets"]?.features.length
+        ? data.layers["streets"]
+        : turf.featureCollection(data.scores.map((s) => turf.feature(s.geometry)));
     if (!basis.features.length) return;
     const b = turf.bbox(basis);
     map.fitBounds(
@@ -89,7 +94,7 @@ function Frame({
       ],
       { padding: [40, 40], maxZoom: 18 },
     );
-  }, [map, data.layers["streets"], data.scores.length]);
+  }, [map, data.layers["osm_constanta"], data.layers["streets"], data.scores.length]);
   useEffect(() => {
     if (!focus) return;
     const b = turf.bbox(turf.feature(focus));
@@ -173,6 +178,8 @@ export default function MapView({
     reports: true,
     confidence: false,
     conductors: false,
+    osm: true,
+    osmCoverage: true,
   });
   const [zoom, setZoom] = useState(18);
   const [palette, setPalette] = useState<
@@ -207,6 +214,9 @@ export default function MapView({
     return () => observer.disconnect();
   }, []);
   const scores = useMemo(() => effectiveScores(data), [data]);
+  const osm = data.layers["osm_constanta"];
+  const meta = osmMetadata(osm);
+  const coverage = useMemo(() => (osm ? osmCoverage(osm) : undefined), [osm]);
   const cells = useMemo(
     () => (enabled["confidence"] ? confidenceCells(data) : []),
     [data, enabled["confidence"]],
@@ -269,6 +279,50 @@ export default function MapView({
           />
         )}
         {!mini && <Frame data={data} focus={focus} onZoom={setZoom} />}
+        {enabled["osmCoverage"] &&
+          enabled["osm"] &&
+          coverage?.features.map((f) => (
+            <GeoJSON
+              key={`${meta?.importedAt}-${f.properties?.["id"]}`}
+              data={f}
+              style={{
+                color: palette["unknown"],
+                weight: 1,
+                dashArray: "4 6",
+                fillOpacity: f.properties?.["status"] === "no_lines" ? 0.12 : 0.035,
+              }}
+            >
+              <Tooltip>
+                {f.properties?.["id"]} · {f.properties?.["reason"]}
+              </Tooltip>
+            </GeoJSON>
+          ))}
+        {enabled["osm"] && osm && (
+          <GeoJSON
+            key={`osm-${meta?.importedAt}`}
+            data={osm}
+            style={{ color: palette["primary"], weight: 3, fillOpacity: 0.12 }}
+            pointToLayer={(_f, p) =>
+              L.circleMarker(p, { radius: 4, color: palette["primary"], fillOpacity: 0.8 })
+            }
+            onEachFeature={(f, layer) => {
+              const p = f.properties || {};
+              const label = document.createElement("span");
+              label.textContent = `${p["osm_id"]} · ${p["power"]} · ${p["voltage"] ? `${p["voltage"]} V` : "tensiune necunoscută"}`;
+              layer.bindTooltip(label);
+              layer.on("click", () => {
+                const el = document.createElement("div");
+                const a = document.createElement("a");
+                a.href = String(p["source_url"]);
+                a.target = "_blank";
+                a.rel = "noreferrer";
+                a.textContent = `OpenStreetMap · ${p["osm_id"]}`;
+                el.append(a);
+                layer.bindPopup(el).openPopup();
+              });
+            }}
+          />
+        )}
         {enabled["confidence"] &&
           cells.map((c) =>
             line(
@@ -528,6 +582,11 @@ export default function MapView({
           )}
           <div className="map-legend">
             <h3>Încredere în rețea</h3>
+            {meta && (
+              <div className="legend-row">
+                <span className="primary">━━</span> Rețea OSM nevalidată
+              </div>
+            )}
             <div className="legend-row">
               <i className="legend-line" />
               Sigur <span className="ml-auto text-muted-foreground">≥ 70%</span>
@@ -563,10 +622,21 @@ export default function MapView({
               )}
             </div>
           </div>
-          {!data.layers["gis"] && (
+          {meta ? (
             <div className="map-note">
-              GIS original neîncărcat · afișare după scorurile agentului
+              OpenStreetMap · {osm?.features.length} obiecte
+              <br />
+              Import:{" "}
+              {meta.importedAt ? new Date(meta.importedAt).toLocaleString("ro-RO") : "neconfirmat"}
+              <br />
+              Zone punctate: acoperire de verificat, nu absența rețelei
             </div>
+          ) : (
+            !data.layers["gis"] && (
+              <div className="map-note">
+                GIS original neîncărcat · afișare după scorurile agentului
+              </div>
+            )
           )}
         </>
       )}

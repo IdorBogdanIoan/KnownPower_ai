@@ -20,6 +20,11 @@ export const Route = createFileRoute("/")({
   }),
   loader: async ({ context }) => {
     const data = await context.queryClient.ensureQueryData(workspaceQuery);
-    throw redirect({ to: data.proposals.length || data.scores.length ? "/birou" : "/import" });
+    throw redirect({
+      to:
+        data.proposals.length || data.scores.length || data.layers["osm_constanta"]?.features.length
+          ? "/birou"
+          : "/import",
+    });
   },
 });

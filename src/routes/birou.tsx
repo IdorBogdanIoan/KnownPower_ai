@@ -20,7 +20,12 @@ export const Route = createFileRoute("/birou")({
   }),
   loader: async ({ context }) => {
     const data = await context.queryClient.ensureQueryData(workspaceQuery);
-    if (!data.proposals.length && !data.scores.length) throw redirect({ to: "/import" });
+    if (
+      !data.proposals.length &&
+      !data.scores.length &&
+      !data.layers["osm_constanta"]?.features.length
+    )
+      throw redirect({ to: "/import" });
   },
   component: Office,
 });

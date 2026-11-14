@@ -39,6 +39,7 @@ import {
   type Report,
 } from "@/lib/gridtwin/model";
 import { useOperator } from "./Shell";
+import { osmMetadata } from "@/lib/gridtwin/osm";
 const MapView = lazy(() => import("./MapView"));
 const tipIcons: Record<string, typeof Activity> = {
   gol_retea: Link2,
@@ -91,6 +92,7 @@ function Photo({ path }: { path: string | null }) {
 }
 export function Office() {
   const data = useWorkspace();
+  const osmMeta = osmMetadata(data.layers["osm_constanta"]);
   const actor = useOperator();
   const client = useQueryClient();
   const [tab, setTab] = useState("proposals");
@@ -191,11 +193,33 @@ export function Office() {
       <div className="workspace-bar">
         <div>
           <div className="workspace-title">
-            Rețea de joasă tensiune <span className="demo-pill">JT</span>
+            {data.layers["osm_constanta"]
+              ? "Rețea cartografiată · Constanța"
+              : "Rețea de joasă tensiune"}{" "}
+            <span className="demo-pill">{data.layers["osm_constanta"] ? "OSM" : "JT"}</span>
           </div>
           <div className="workspace-subtitle">
-            GIS companie / verificare agent / confirmare din teren
+            {data.layers["osm_constanta"]
+              ? "OSM nevalidat · scorurile și propunerile simulate rămân separate"
+              : "GIS companie / verificare agent / confirmare din teren"}
           </div>
+          {osmMeta && (
+            <div className="workspace-subtitle">
+              <a
+                className="text-primary underline"
+                href={osmMeta.sourceUrl}
+                target="_blank"
+                rel="noreferrer"
+              >
+                OpenStreetMap
+              </a>{" "}
+              · Import:{" "}
+              {osmMeta.importedAt
+                ? new Date(osmMeta.importedAt).toLocaleString("ro-RO")
+                : "neconfirmat"}{" "}
+              · Acoperire incompletă
+            </div>
+          )}
         </div>
         <div className="workspace-actions">
           <Button variant="outline" size="sm" asChild>

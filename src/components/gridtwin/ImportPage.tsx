@@ -20,6 +20,7 @@ import uploadedProposals from "@/data/proposals.json";
 import uploadedScores from "@/data/scores.json";
 import { z } from "zod";
 import type { Json } from "@/integrations/supabase/types";
+import { OsmImport } from "./OsmImport";
 const layerNames: Record<string, string> = {
   streets: "Străzi",
   buildings: "Clădiri",
@@ -147,6 +148,7 @@ export function ImportPage() {
         </div>
         <div className="import-grid">
           <div>
+            <OsmImport collection={data.layers["osm_constanta"]} />
             <label
               className="dropzone"
               onDragOver={(e) => e.preventDefault()}

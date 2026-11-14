@@ -1,6 +1,7 @@
 # GridTwin
+- [x] Add Constanța OSM fetch and manual-export fallback, preview/confirmed import, source and dates, separate map layer and indicative coverage zones; tested with 39 real objects, reload persistence and live fetch failure preserving saved data
 - [x] Replace key-required CARTO background with keyless OpenFreeMap; verify no watermark, desktop/mobile rendering and satellite switching
-- [ ] Obtain real network data for Constanța municipality — public sources identified, but Overpass exports rejected or timed out; no verified GeoJSON downloaded and official detailed GIS is unavailable
+- [ ] Complete real network coverage for Constanța — 39 real OSM objects imported from a central-sector OSM API export; full-area Overpass endpoints return errors/timeouts, official detailed GIS still unavailable
 - [ ] Show confirmed connected consumers as green points — awaiting anonymized connection records
 - [x] Cloud tables, private storage and transactional audited decisions
 - [x] Import supplied agent outputs and support GIS layer uploads

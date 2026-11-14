@@ -611,7 +611,7 @@ export default function MapView({
           )}
           <div className="map-legend">
             <div className="legend-row"><i className="client-underground-line" />Branșament subteran confirmat</div>
-            <div className="legend-row"><i className="client-flag-dot" />Client trimis la echipă</div>
+            <div className="legend-row"><i className="client-flag-dot" />Echipă trimisă la client</div>
             <h3>{meta ? "Evaluare OSM aprobată" : "Încredere în rețea"}</h3>
             {meta && (
               <div className="legend-row">
@@ -634,15 +634,7 @@ export default function MapView({
               <i className="legend-line proposal" />
               Propunere agent
             </div>
-            <div className="legend-row">
-              <i className="legend-dot" />
-              Raport din teren
-            </div>
             <div className="extended-legend">
-              <div className="legend-row">
-                <i className="legend-unknown" />
-                Nu se poate verifica din imagine
-              </div>
               {enabled["confidence"] && (
                 <div className="legend-row">Zone: verde / galben / roșu</div>
               )}

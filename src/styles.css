@@ -546,17 +546,17 @@ input[type="checkbox"] {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   border-bottom: 1px solid var(--border);
-  padding: 21px 12px 18px;
+  padding: 10px 12px 8px;
 }
 .status-filters {
-  padding: 8px 14px;
+  padding: 5px 12px;
   border-bottom: 1px solid var(--border);
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2px 8px;
 }
-.status-filters legend { float: left; width: 100%; grid-column: 1 / -1; font-size: 12px; font-weight: 600; }
-.status-filter { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.status-filters legend { float: left; width: 100%; grid-column: 1 / -1; font-size: 11px; font-weight: 600; }
+.status-filter { display: flex; align-items: center; gap: 6px; font-size: 12px; cursor: pointer; }
 .mini-legend { position: absolute; right: 10px; bottom: 24px; z-index: 500; background: var(--card); color: var(--foreground); border: 1px solid var(--border); border-radius: 6px; box-shadow: var(--shadow-panel); max-width: calc(100% - 20px); padding: 10px; font-size: 11px; }
 .mini-legend .status-filters { padding: 0 0 10px; gap: 8px 14px; }
 .mini-legend .status-filter { font-size: 12px; }
@@ -621,24 +621,24 @@ input[type="checkbox"] {
   font: 10px var(--font-mono);
 }
 .panel-filters {
-  padding: 10px 12px;
+  padding: 6px 10px;
   border-bottom: 1px solid var(--border);
 }
 .search-box {
   position: relative;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 .search-box svg {
   position: absolute;
-  left: 10px;
-  top: 8px;
+  left: 8px;
+  top: 6px;
   width: 14px;
   height: 14px;
   color: var(--muted-foreground);
 }
 .search-box input {
   width: 100%;
-  padding-left: 32px;
+  padding-left: 26px;
 }
 .filter-wrap {
   display: flex;
@@ -646,9 +646,9 @@ input[type="checkbox"] {
   gap: 5px;
 }
 .filter-wrap button {
-  height: 25px;
+  height: 21px;
   font-size: 10px;
-  padding: 0 8px;
+  padding: 0 6px;
   font-weight: 400;
 }
 .filter-wrap .active {

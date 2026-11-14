@@ -14,6 +14,7 @@ import "leaflet/dist/leaflet.css";
 import * as turf from "@turf/turf";
 import { Layers, LocateFixed, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { OpenFreeMapLayer } from "./OpenFreeMapLayer";
 import {
   confidenceCells,
   conductor,
@@ -258,14 +259,7 @@ export default function MapView({
         className="map-canvas"
         zoomControl={!mini}
       >
-        {base === "map" && (
-          <TileLayer
-            attribution="© OpenStreetMap © CARTO"
-            url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png"
-            maxZoom={22}
-            maxNativeZoom={20}
-          />
-        )}
+        {base === "map" && <OpenFreeMapLayer />}
         {base === "satellite" && (
           <TileLayer
             attribution="Esri"

@@ -33,6 +33,7 @@ use the editor.
 - Public routes load one paginated workspace through a publishable-key server function and TanStack Query; Realtime invalidates it to keep the office and field views consistent.
 - Normalize workspace payloads at both fetch and cache-read boundaries so older hydrated strings or missing collections cannot blank public pages.
 - Leaflet is dynamically imported behind ClientOnly, with browser-safe geometry logic in a separate module, to preserve SSR compatibility.
+- Use a browser-only OpenFreeMap MapLibre layer for the keyless street background, explicitly configuring the Vite worker URL so published maps do not fail to load workers; retain Leaflet overlays and the satellite background.
 - Demo decisions and field submission use transactional database functions so audit rows and status changes are saved together; permissive policies are demo-only.
 - Compute effective scores and inferred attributes from original imports plus approved reports/proposals, preserving original GIS and supporting undo without destructive edits.
 - Store photo object paths, not expiring URLs; request signed URLs for display because workspace policy requires private storage.

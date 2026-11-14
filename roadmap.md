@@ -1,4 +1,7 @@
 # GridTwin
+- [x] Replace key-required CARTO background with keyless OpenFreeMap; verify no watermark, desktop/mobile rendering and satellite switching
+- [ ] Obtain real network data — awaiting target locality and county
+- [ ] Show confirmed connected consumers as green points — awaiting anonymized connection records
 - [x] Cloud tables, private storage and transactional audited decisions
 - [x] Import supplied agent outputs and support GIS layer uploads
 - [x] Office map, proposals, scores, zone confidence and conductor labels

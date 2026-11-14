@@ -1,0 +1,17 @@
+{
+ "rulari": [
+  {
+   "rulare": "pilot-bragadiru-chiajna",
+   "data": "2026-11-14 23:13 UTC",
+   "total": {
+    "stalpi": 0,
+    "km_retea_propusa": 0,
+    "case": 0,
+    "patrate": 0
+   },
+   "model": "grid_best_ro_B.pt",
+   "model_case": "OSM + Microsoft"
+  }
+ ],
+ "ultima": "pilot-bragadiru-chiajna"
+}

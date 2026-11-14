@@ -14,40 +14,24 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useWorkspace, audit } from "@/lib/gridtwin/query";
-import { proposalSchema, geometrySchema, type FeatureCollection } from "@/lib/gridtwin/model";
+import { importTarget, parseImport, importError, layerNames } from "@/lib/gridtwin/import";
 import { useOperator } from "./Shell";
 import uploadedProposals from "@/data/proposals.json";
 import uploadedScores from "@/data/scores.json";
-import { z } from "zod";
 import type { Json } from "@/integrations/supabase/types";
 import { OsmImport } from "./OsmImport";
-const layerNames: Record<string, string> = {
-  streets: "Străzi",
-  buildings: "Clădiri",
-  unknown: "Zone necunoscute",
-  detections: "Detecții YOLO",
-  gis: "GIS companie",
-};
-const fileSchema = z.object({
-  type: z.literal("FeatureCollection"),
-  features: z.array(
-    z.object({
-      type: z.literal("Feature"),
-      geometry: geometrySchema,
-      properties: z.record(z.unknown()).nullable(),
-    }),
-  ),
-});
 export function ImportPage() {
   const data = useWorkspace();
   const actor = useOperator();
   const client = useQueryClient();
   const [busy, setBusy] = useState(false);
+  const [destination, setDestination] = useState("");
   const [results, setResults] = useState<{ name: string; ok: boolean; text: string }[]>([]);
   async function importData(name: string, value: unknown) {
-    if (name === "proposals.json") {
-      const parsed = z.array(proposalSchema).parse(value);
-      const rows = parsed.map((p) => ({
+    const key = importTarget(name, destination);
+    const parsed = parseImport(key, value);
+    if (parsed.kind === "proposals") {
+      const rows = parsed.rows.map((p) => ({
         ...p,
         decided_at: p.decided_at ?? null,
         decided_by: p.decided_by ?? null,
@@ -60,29 +44,13 @@ export function ImportPage() {
       if (error) throw error;
       return `${rows.length} propuneri`;
     }
-    if (name === "scores.geojson") {
-      const fc = fileSchema.parse(value);
-      const rows = fc.features.map((f) => {
-        const p = z
-          .object({
-            id: z.string(),
-            scor: z.number().min(0).max(1),
-            culoare: z.enum(["verde", "galben", "rosu"]),
-            motive: z.array(z.string()),
-          })
-          .parse(f.properties);
-        if (f.geometry.type !== "LineString")
-          throw new Error("Scorurile trebuie să fie LineString");
-        return { ...p, geometry: f.geometry as unknown as Json };
-      });
+    if (parsed.kind === "scores") {
+      const rows = parsed.rows.map((row) => ({ ...row, geometry: row.geometry as unknown as Json }));
       const { error } = await supabase.from("line_scores").upsert(rows);
       if (error) throw error;
       return `${rows.length} tronsoane`;
     }
-    let key = name.replace(".geojson", "");
-    if (key === "gis_company") key = "gis";
-    if (!(key in layerNames)) throw new Error("Fișier nerecunoscut");
-    const geojson = fileSchema.parse(value);
+    const geojson = parsed.collection;
     const { error } = await supabase
       .from("layers")
       .upsert({ name: key, geojson: geojson as unknown as Json });
@@ -90,19 +58,24 @@ export function ImportPage() {
     return `${geojson.features.length} obiecte`;
   }
   async function run(items: { name: string; value: () => Promise<unknown> }[]) {
-    if (!actor) return;
+    if (busy || !items.length) return;
+    if (!actor) { toast.error("Completează numele operatorului înainte de import."); return; }
     setBusy(true);
     const out = [];
     for (const item of items) {
       try {
         const text = await importData(item.name, await item.value());
-        await audit(actor, `Import ${item.name} · ${text}`);
-        out.push({ name: item.name, ok: true, text });
+        try {
+          await audit(actor, `Import ${item.name} · ${text}`);
+          out.push({ name: item.name, ok: true, text });
+        } catch {
+          out.push({ name: item.name, ok: true, text: `${text} · Salvate, dar înregistrarea în jurnal a eșuat.` });
+        }
       } catch (error) {
         out.push({
           name: item.name,
           ok: false,
-          text: error instanceof Error ? error.message : "Import nereușit",
+          text: importError(error),
         });
       }
     }
@@ -149,6 +122,15 @@ export function ImportPage() {
         <div className="import-grid">
           <div>
             <OsmImport collection={data.layers["osm_constanta"]} />
+            <label className="form-label mb-3">
+              Importă în
+              <select aria-label="Importă în" className="form-control mt-2" value={destination} disabled={busy} onChange={(e) => setDestination(e.target.value)}>
+                <option value="">Recunoaștere după numele fișierului</option>
+                {Object.entries(layerNames).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
+                <option value="proposals">Propuneri de corecție</option>
+                <option value="scores">Încredere pe tronson</option>
+              </select>
+            </label>
             <label
               className="dropzone"
               onDragOver={(e) => e.preventDefault()}
@@ -157,17 +139,18 @@ export function ImportPage() {
                 void run(
                   Array.from(e.dataTransfer.files).map((file) => ({
                     name: file.name,
-                    value: async () => JSON.parse(await file.text()),
+                    value: async () => JSON.parse((await file.text()).replace(/^\uFEFF/, "")),
                   })),
                 );
               }}
             >
               <UploadCloud />
-              <strong>Încarcă fișierele rețelei</strong>
+              <strong>{busy ? "Se importă…" : "Încarcă fișierele rețelei"}</strong>
               <span>Alege fișiere sau trage-le aici</span>
               <span className="font-mono text-[10px]">.geojson · .json</span>
               <input
                 type="file"
+                aria-label="Încarcă fișierele rețelei"
                 multiple
                 accept=".json,.geojson"
                 className="sr-only"
@@ -177,7 +160,7 @@ export function ImportPage() {
                   void run(
                     files.map((file) => ({
                       name: file.name,
-                      value: async () => JSON.parse(await file.text()),
+                      value: async () => JSON.parse((await file.text()).replace(/^\uFEFF/, "")),
                     })),
                   );
                   e.target.value = "";
@@ -218,14 +201,13 @@ export function ImportPage() {
               <div className="notice">
                 <AlertTriangle />
                 <div>
-                  Straturile streets, buildings, unknown, detections și gis_company nu sunt în
-                  fișierele primite. Încarcă-le pentru rețeaua GIS completă. Datele agentului provin
+                  Datele agentului provin
                   dintr-un scenariu simulat, conform documentației sale.
                 </div>
               </div>
             </section>
             {results.length > 0 && (
-              <section className="import-section">
+              <section className="import-section" aria-live="polite">
                 <h2 className="section-title">Rezultatul importului</h2>
                 {results.map((r) => (
                   <div className="file-row" key={r.name}>

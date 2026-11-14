@@ -1,4 +1,5 @@
 # GridTwin
+- [x] Repair file imports: renamed JSON/GeoJSON destinations, proposals GeoJSON support and readable errors; 14 tests passed, existing streets reimported unchanged and persistence verified on desktop/mobile
 - [x] OSM field inspections with required photo/notes/position, operator-reviewed labels, matching-geometry map display and reversible audit history; 11 rule tests and desktop/mobile form checks passed
 - [ ] Verify OSM submission, photo read-back and approval end-to-end — awaiting a real inspection photograph and observations; no invented evidence or real-network approvals used in testing
 - [x] Add Constanța OSM fetch and manual-export fallback, preview/confirmed import, source and dates, separate map layer and indicative coverage zones; tested with 39 real objects, reload persistence and live fetch failure preserving saved data

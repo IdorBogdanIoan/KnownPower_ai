@@ -80,7 +80,7 @@ export function OsmImport({ collection }: { collection?: FeatureCollection | und
       {meta && (
         <p className="text-sm my-3">
           {collection?.features.length} obiecte · Import:{" "}
-          {meta.importedAt ? new Date(meta.importedAt).toLocaleString("ro-RO") : "neconfirmat"}
+          {meta.importedAt ? new Date(meta.importedAt).toLocaleString("ro-RO", { timeZone: "Europe/Bucharest" }) : "neconfirmat"}
           <br />
           Data sursei: {meta.snapshotAt || "neprecizată în export"}
         </p>
@@ -108,7 +108,8 @@ export function OsmImport({ collection }: { collection?: FeatureCollection | und
           accept=".json"
           disabled={busy}
           onChange={async (e) => {
-            const file = e.target.files?.[0];
+            const input = e.currentTarget;
+            const file = input.files?.[0];
             if (!file) return;
             setPreview(undefined);
             setError("");
@@ -124,7 +125,7 @@ export function OsmImport({ collection }: { collection?: FeatureCollection | und
             } catch (failure) {
               setError(failure instanceof Error ? failure.message : "Export invalid.");
             }
-            e.target.value = "";
+            input.value = "";
           }}
         />
       </label>

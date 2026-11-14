@@ -19,6 +19,7 @@ import { initialStatuses, visibleOsm, visibleScore, type StatusSelection } from 
 import { OpenFreeMapLayer } from "./OpenFreeMapLayer";
 import { osmCoverage, osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmTones, osmVerdicts } from "@/lib/gridtwin/osm-inspections";
+import { clientVerification } from "@/lib/gridtwin/client-documents";
 import {
   confidenceCells,
   conductor,
@@ -46,11 +47,11 @@ const switches = [
 function colors() {
   const css = getComputedStyle(document.documentElement);
   return Object.fromEntries(
-    ["safe", "warning", "danger", "primary", "field", "road", "building", "unknown", "pole"].map(
+    ["safe", "warning", "danger", "primary", "field", "road", "building", "unknown", "pole", "underground", "clientFlag"].map(
       (k) => [k, css.getPropertyValue(`--${k}`).trim()],
     ),
   ) as Record<
-    "safe" | "warning" | "danger" | "primary" | "field" | "road" | "building" | "unknown" | "pole",
+    "safe" | "warning" | "danger" | "primary" | "field" | "road" | "building" | "unknown" | "pole" | "underground" | "clientFlag",
     string
   >;
 }
@@ -209,7 +210,8 @@ export default function MapView({
       | "road"
       | "building"
       | "unknown"
-      | "pole",
+      | "pole"
+      | "underground" | "clientFlag",
       string
     >
   >({
@@ -222,6 +224,7 @@ export default function MapView({
     building: "",
     unknown: "",
     pole: "",
+    underground: "", clientFlag: "",
   });
   const [reset, setReset] = useState(0);
   useEffect(() => {
@@ -469,13 +472,15 @@ export default function MapView({
                   p["id"] === selected ||
                   filter === "atribute_lipsa"),
             )
-            .map((p) =>
+            .map((p) => p.propus["flag"] === "echipa_teren" && p.status === "in_asteptare" ? (
+              <CircleMarker key={`client-flag-${p.id}`} center={[midpoint(p.geometrie)[1] ?? 0,midpoint(p.geometrie)[0] ?? 0]} radius={7} pathOptions={{color:palette.clientFlag,fillColor:palette.clientFlag,fillOpacity:0.7,weight:2}} eventHandlers={{click:()=>onSelect?.(p.id)}}><Tooltip>{String(p.propus["adresa"] || p.obiect)} · Trimis la echipă</Tooltip></CircleMarker>
+            ) :
               line(
                 p["geometrie"],
                 `proposal-${p["id"]}-${p["status"]}-${selected === p["id"]}`,
-                p["status"] === "aprobat" ? palette["safe"] : palette["primary"],
+                p.status === "aprobat" && clientVerification(p)["rezultat"] === "subteran" ? palette.underground : p["status"] === "aprobat" ? palette["safe"] : palette["primary"],
                 selected === p["id"] ? 6 : 3,
-                p["status"] === "aprobat" ? undefined : "5 6",
+                p.status === "aprobat" && clientVerification(p)["rezultat"] === "subteran" ? "2 5" : p["status"] === "aprobat" ? undefined : "5 6",
                 () => onSelect?.(p["id"]),
                 `${p["id"]} · ${p["obiect"]} · ${Math.round(p["incredere"] * 100)}%`,
               ),
@@ -605,6 +610,8 @@ export default function MapView({
             </div>
           )}
           <div className="map-legend">
+            <div className="legend-row"><i className="client-underground-line" />Branșament subteran confirmat</div>
+            <div className="legend-row"><i className="client-flag-dot" />Client trimis la echipă</div>
             <h3>{meta ? "Evaluare OSM aprobată" : "Încredere în rețea"}</h3>
             {meta && (
               <div className="legend-row">

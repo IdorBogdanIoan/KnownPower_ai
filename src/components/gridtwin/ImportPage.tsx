@@ -20,6 +20,7 @@ import uploadedProposals from "@/data/proposals.json";
 import uploadedScores from "@/data/scores.json";
 import type { Json } from "@/integrations/supabase/types";
 import { OsmImport } from "./OsmImport";
+import { ClientDocumentImport } from "./ClientDocumentImport";
 import { readTestSession, testWriteNotice } from "@/lib/gridtwin/test-session";
 export function ImportPage() {
   const data = useWorkspace();
@@ -123,6 +124,7 @@ export function ImportPage() {
         </div>
         <div className="import-grid">
           <div>
+            <ClientDocumentImport />
             <OsmImport collection={data.layers["osm_constanta"]} />
             <label className="form-label mb-3">
               Importă în

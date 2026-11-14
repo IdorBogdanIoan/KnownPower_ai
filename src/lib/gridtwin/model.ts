@@ -18,6 +18,7 @@ export const labels: Record<string, string> = {
   posibil_demontat: "Posibil demontat",
   pozitie_suspecta: "Poziție suspectă",
   bransament_lipsa: "Branșament lipsă",
+  verificare_teren: "Client de verificat",
   prosumator_neinregistrat: "Prosumator nou",
   atribute_lipsa: "Atribute lipsă",
 };
@@ -48,6 +49,7 @@ export const proposalSchema = z.object({
     "posibil_demontat",
     "pozitie_suspecta",
     "bransament_lipsa",
+    "verificare_teren",
     "prosumator_neinregistrat",
     "atribute_lipsa",
   ]),

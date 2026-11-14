@@ -1,4 +1,6 @@
 # GridTwin
+- [x] Client document import, exact address matching, AI/rules verification, transactional automatic underground approval, compact cards, batch progress and map legend; 59 tests and local browser checks, zero test documents saved
+- [ ] Verify authenticated client document import, AI result and automatic connection end-to-end — awaiting a verified admin/validator session and real client documents/GIS poles; test login cannot access or change these
 - [x] Replace social login buttons with name/role test entry, exact role menus and isolated no-write preview; 45 tests and all four browser flows, reload/logout and mobile login verified
 - [x] Add Google/Lovable login, name/team profiles, four roles, protected workspace, server/database permission checks, admin role/configuration screen; 40 tests and signed-out desktop/mobile access-denial checks passed
 - [ ] Assign the first real admin and verify all four signed-in roles — no accounts exist yet; temporary-account creation is unavailable, awaiting the user's login and explicit first-admin account

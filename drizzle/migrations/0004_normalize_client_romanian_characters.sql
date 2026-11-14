@@ -1,0 +1,1 @@
+CREATE OR REPLACE FUNCTION public.normalize_client_text(value text) RETURNS text LANGUAGE sql IMMUTABLE SET search_path=public AS $$ SELECT trim(regexp_replace(regexp_replace(regexp_replace(lower(translate(value,'ăâîșşțţĂÂÎȘŞȚŢ','aaissttAAISSTT')), '\m(str|strada|nr|numar|numarul)\M',' ','g'),'[^a-z0-9]',' ','g'),'\s+',' ','g')); $$;

@@ -50,6 +50,36 @@ export type Database = {
         }
         Relationships: []
       }
+      client_documents: {
+        Row: {
+          data: string | null
+          id: string
+          imported_at: string
+          kind: string
+          pod: string | null
+          text: string
+          text_norm: string
+        }
+        Insert: {
+          data?: string | null
+          id: string
+          imported_at?: string
+          kind: string
+          pod?: string | null
+          text: string
+          text_norm: string
+        }
+        Update: {
+          data?: string | null
+          id?: string
+          imported_at?: string
+          kind?: string
+          pod?: string | null
+          text?: string
+          text_norm?: string
+        }
+        Relationships: []
+      }
       field_reports: {
         Row: {
           actor: string
@@ -263,6 +293,35 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      match_client_documents: {
+        Args: { address: string }
+        Returns: {
+          data: string | null
+          id: string
+          imported_at: string
+          kind: string
+          pod: string | null
+          text: string
+          text_norm: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "client_documents"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      normalize_client_text: { Args: { value: string }; Returns: string }
+      save_client_verification: {
+        Args: {
+          documents_snapshot: Json
+          expected: Json
+          line_geometry: Json
+          proposal_id: string
+          verification: Json
+        }
+        Returns: undefined
       }
       set_gridtwin_role: {
         Args: {

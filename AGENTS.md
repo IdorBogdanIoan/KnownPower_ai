@@ -44,3 +44,4 @@ use the editor.
 - Compute effective scores and inferred attributes from original imports plus approved reports/proposals, preserving original GIS and supporting undo without destructive edits.
 - Store photo object paths, not expiring URLs; request signed URLs for display because workspace policy requires private storage.
 - Run vision extraction in a TanStack server function through the AI Gateway SDK, validating model output and retaining manual edits on failure.
+- Client document verification is authenticated, address-bound and conservative; a transactional compare-and-save operation records evidence and approvals, while missing GIS geometry never creates a connection.

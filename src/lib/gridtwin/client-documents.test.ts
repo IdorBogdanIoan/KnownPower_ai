@@ -1,0 +1,20 @@
+import { describe,it,expect } from "vitest";
+import { addressMatches,classifyDocuments,clientLine,documentDate,normalizeClientText,parseClientDocuments } from "./client-documents";
+import { proposalSchema, type Proposal } from "./model";
+const proposal:Proposal={id:"local",tip:"verificare_teren",obiect:"B1",geometrie:{type:"Point",coordinates:[28.6,44.2]},propus:{adresa:"Str. Fagului nr 4",building:"B1",stalp_probabil:"S1"},incredere:0.5,status:"in_asteptare"};
+describe("client contract rules",()=>{
+ it("accepts verificare_teren and retains agent fields",()=>{expect(proposalSchema.parse(proposal).propus).toEqual(proposal.propus);});
+ it("normalizes Romanian addresses",()=>{expect(normalizeClientText("Str. Făgului, numărul 4")).toBe("fagului 4");});
+ it("does not match house 41 for house 4",()=>{expect(addressMatches("str Fagului nr 4","strada Fagului 41")).toBe(false);expect(addressMatches("str Fagului nr 4","PV Fagului 4 racord")).toBe(true);});
+ it("extracts first date",()=>{expect(documentDate("PV 12.03.2017 apoi 2020-01-01")).toBe("2017-03-12");});
+ it("rejects impossible dates",()=>{expect(documentDate("31.02.2017")).toBeNull();});
+ it("imports TXT id without extension",()=>{expect(parseClientDocuments("ATR-0012.txt","Fagului 4. 2017-01-01 LES executat")[0]?.id).toBe("ATR-0012");});
+ it("imports contract POD as document id",()=>{expect(parseClientDocuments("contracts.json",JSON.stringify([{pod:"P1",adresa:"Fagului 4",data_racordare:"2017-01-01",putere_aprobata_kw:5}]))[0]?.id).toBe("P1");});
+ it("newest clear document wins",()=>{const docs=[...parseClientDocuments("ATR.txt","Fagului 4\nBranșament aerian TYIR"),...parseClientDocuments("PV.txt","Fagului 4\nS-a înlocuit branșamentul aerian cu unul subteran")];expect(classifyDocuments(docs).tip_racord).toBe("subteran");expect(classifyDocuments(docs).document).toBe("PV");});
+ it("rejects refused underground variant",()=>{expect(classifyDocuments(parseClientDocuments("PV.txt","Varianta subterană respinsă. Branșament aerian TYIR.")).tip_racord).toBe("aerian");});
+ it("underground absence does not connect",()=>{expect(classifyDocuments(parseClientDocuments("PV.txt","Nu există rețea subterană")).tip_racord).toBe("necunoscut");});
+ it("proposed underground is not realized",()=>{expect(classifyDocuments(parseClientDocuments("PV.txt","Se propune varianta subterană LES")).tip_racord).toBe("necunoscut");});
+ it("empty documents do not connect",()=>{expect(classifyDocuments([]).tip_racord).toBe("necunoscut");});
+ it("missing GIS poles cannot invent connection",()=>{expect(clientLine(proposal)).toBeNull();});
+ it("uses preferred real GIS pole",()=>{expect(clientLine(proposal,{type:"FeatureCollection",features:[{type:"Feature",properties:{kind:"stalp",id:"S1"},geometry:{type:"Point",coordinates:[28.61,44.21]}}]})).toEqual({type:"LineString",coordinates:[[28.6,44.2],[28.61,44.21]]});});
+});

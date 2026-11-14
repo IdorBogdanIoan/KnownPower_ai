@@ -9,6 +9,12 @@
 @source "../src";
 @import "tw-animate-css";
 
+:root { --underground: oklch(0.49 0.08 58); --clientFlag: oklch(0.68 0.17 48); }
+.dark { --underground: oklch(0.72 0.08 58); --clientFlag: oklch(0.76 0.16 48); }
+.client-underground-line { width: 22px; border-top: 3px dotted var(--underground); }
+.client-flag-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--clientFlag); }
+@media (max-width: 640px) { .app-header { flex-wrap: wrap; height: auto; min-height: 58px; gap: 6px; } .header-nav { order: 3; width: 100%; overflow-x: auto; } .header-right { margin-left: auto; } }
+
 @custom-variant dark (&:is(.dark *));
 
 /*

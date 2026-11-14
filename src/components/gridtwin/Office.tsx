@@ -41,6 +41,9 @@ import {
 import { useOperator } from "./Shell";
 import { useAccount } from "./Account";
 import { testWriteNotice } from "@/lib/gridtwin/test-session";
+import { ClientCard } from "./ClientCard";
+import { ClientBatch, useClientVerification } from "./ClientVerification";
+import { isClient } from "@/lib/gridtwin/client-documents";
 import { osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmVerdicts, osmTones } from "@/lib/gridtwin/osm-inspections";
 import { OsmOfficeList } from "./OsmOfficeList";
@@ -97,6 +100,7 @@ function Photo({ path }: { path: string | null }) {
   );
 }
 export function Office() {
+  const clientVerification = useClientVerification();
   const data = useWorkspace();
   const osmMeta = osmMetadata(data.layers["osm_constanta"]);
   const [statuses, setStatuses] = useState<StatusSelection>(data.layers["osm_constanta"] ? initialStatuses : { ...initialStatuses, primary: false, safe: true });
@@ -371,6 +375,7 @@ export function Office() {
             </div>
           )}
           <div className="panel-scroll">
+            {tab === "proposals" && <ClientBatch proposals={data.proposals} verification={clientVerification} />}
             {tab === "osm" && <><div className="p-3 text-xs text-muted-foreground">Etichete din teren · nu certificare electrică.</div>{osmSelected && <Button variant="ghost" size="sm" onClick={() => setOsmSelected(undefined)}>Toate elementele OSM</Button>}<OsmOfficeList data={data} selected={osmSelected} onFocus={setFocus} onReports={() => setTab("field")} /></>}
             {currentInspection && (
               <section className="inspection">
@@ -464,6 +469,7 @@ export function Office() {
             )}
             {tab === "proposals" &&
               proposals.map((p) => {
+                if (isClient(p)) return <ClientCard key={p.id} proposal={p} busy={clientVerification.busy === p.id} canVerify={access.validate && !!clientVerification.count.data} canUndo={access.validate} onVerify={() => { void clientVerification.verify(p).catch(e => toast.error(e instanceof Error ? e.message : "Verificarea nu a reușit.")); }} onFocus={() => setFocus(p.geometrie)} onUndo={() => void decide(p.id,"proposal","in_asteptare")} />;
                 const Icon = tipIcons[p["tip"]] || Activity;
                 const reports = data.reports.filter(
                   (r) => r.status !== "respins" && nearby(p["geometrie"], [r.lon, r.lat], 20),

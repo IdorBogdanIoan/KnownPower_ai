@@ -1413,6 +1413,11 @@ meter::-webkit-meter-optimum-value {
   .map-legend .legend-row { gap: 6px; margin-top: 2px; line-height: 1.35; }
   .map-legend .legend-line, .map-legend .client-underground-line { width: 17px; flex-shrink: 0; }
   .map-legend .client-flag-dot { width: 7px; height: 7px; flex-shrink: 0; }
+  .mini-legend { padding: 5px 7px; font-size: 9px; max-width: calc(100% - 20px); }
+  .mini-legend .status-filters { padding: 0 0 4px; gap: 2px 6px; }
+  .mini-legend .status-filters legend { font-size: 9px; }
+  .mini-legend .status-filter { min-height: 24px; font-size: 10px; gap: 3px; }
+  .mini-legend .legend-row { margin-top: 3px; gap: 5px; }
 }
 @media (max-height: 600px) and (min-width: 761px) {
   .app-header .brand { min-height: 40px; }

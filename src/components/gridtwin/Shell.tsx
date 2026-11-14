@@ -50,7 +50,6 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>
           <div className="header-right">
             <span className="live">Sincronizat</span>
-            <span className="demo-pill">DEMO</span>
             <Button
               variant="ghost"
               size="icon"

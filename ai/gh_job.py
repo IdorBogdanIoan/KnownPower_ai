@@ -4,7 +4,7 @@
 
 Fără --callback afișează doar rezultatul (pentru test).
 """
-import argparse, json, os, sys, traceback, urllib.request
+import argparse, json, os, sys, traceback, urllib.error, urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -18,12 +18,17 @@ def post(url, body, token, apikey):
     payload = {"p_id": body["job_id"], "p_token": token, "p_status": body["status"],
                "p_rezultat": body.get("rezultat"), "p_eroare": body.get("eroare")}
     data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    headers = {"Content-Type": "application/json", "apikey": apikey}
+    headers = {"Content-Type": "application/json", "apikey": apikey,
+               "User-Agent": "Mozilla/5.0 (compatible; KnownPower-AI/1.0)", "Accept": "application/json"}
     if apikey and not apikey.startswith("sb_"):
         headers["Authorization"] = f"Bearer {apikey}"
     req = urllib.request.Request(url, data=data, method="POST", headers=headers)
-    with urllib.request.urlopen(req, timeout=120) as r:
-        print("callback:", r.status, r.read()[:300].decode("utf-8", "replace"))
+    try:
+        with urllib.request.urlopen(req, timeout=120) as r:
+            print("callback:", r.status, r.read()[:300].decode("utf-8", "replace"))
+    except urllib.error.HTTPError as e:
+        print("callback refuzat:", e.code, e.read()[:500].decode("utf-8", "replace"))
+        raise
 
 
 def main():

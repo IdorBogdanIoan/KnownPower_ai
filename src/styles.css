@@ -504,11 +504,6 @@ input[type="checkbox"] {
 .legend-line.danger {
   background: var(--danger);
 }
-.legend-line.proposal {
-  background: none;
-  border-top: 2px dashed var(--primary);
-  height: 0;
-}
 .legend-dot {
   width: 9px;
   height: 9px;
@@ -549,7 +544,7 @@ input[type="checkbox"] {
 }
 .stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   border-bottom: 1px solid var(--border);
   padding: 21px 12px 18px;
 }

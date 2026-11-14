@@ -15,7 +15,7 @@ import * as turf from "@turf/turf";
 import { Layers, LocateFixed, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusFilters } from "./StatusFilters";
-import { initialStatuses, unsafeProposals, unvalidatedGisLines, unvalidatedNetworkCount, visibleOsm, visibleScore, visibleProposal, type StatusSelection } from "@/lib/gridtwin/map-status";
+import { initialStatuses, unsafeProposals, evaluatedGisLines, visibleOsm, visibleScore, visibleProposal, type StatusSelection } from "@/lib/gridtwin/map-status";
 import { OpenFreeMapLayer } from "./OpenFreeMapLayer";
 import { osmCoverage, osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmTones, osmVerdicts } from "@/lib/gridtwin/osm-inspections";
@@ -179,7 +179,7 @@ export default function MapView({
   mini?: boolean;
   statuses?: StatusSelection;
 }) {
-  const [localStatuses, setLocalStatuses] = useState<StatusSelection>(data.layers["osm_constanta"] ? initialStatuses : { ...initialStatuses, primary: false, safe: true });
+  const [localStatuses, setLocalStatuses] = useState<StatusSelection>(initialStatuses);
   const activeStatuses = statuses ?? localStatuses;
   const [base, setBase] = useState("satellite");
   useEffect(() => {
@@ -323,17 +323,17 @@ export default function MapView({
           <GeoJSON
             key={`osm-${meta?.importedAt}-${JSON.stringify(activeStatuses)}-${data.reports.filter(r => r.osm_id).map(r => `${r.id}-${r.status}`).join(",")}`}
             data={filteredOsm}
-            style={f => { const r = f && approvedOsmInspection(f, data.reports); return { color: palette[r?.osm_verdict ? osmTones[r.osm_verdict] : "primary"], weight: 3, dashArray: r?.osm_verdict ? undefined : "5 6", fillOpacity: 0.12 }; }}
+            style={f => { const r = f && approvedOsmInspection(f, data.reports); return { color: palette[r?.osm_verdict ? osmTones[r.osm_verdict] : "pole"], weight: 3, fillOpacity: 0.12 }; }}
             pointToLayer={(f, p) => {
               const r = approvedOsmInspection(f, data.reports);
-              return L.circleMarker(p, { radius: 5, color: palette[r?.osm_verdict ? osmTones[r.osm_verdict] : "primary"], fillOpacity: 0, weight: 3 });
+              return L.circleMarker(p, { radius: 5, color: palette[r?.osm_verdict ? osmTones[r.osm_verdict] : "pole"], fillOpacity: 0, weight: 3 });
             }
             }
             onEachFeature={(f, layer) => {
               const p = f.properties || {};
               const report = approvedOsmInspection(f, data.reports);
               const label = document.createElement("span");
-              label.textContent = `${p["osm_id"]} · ${p["power"]} · ${report?.osm_verdict ? osmVerdicts[report.osm_verdict] : "Nevalidat"}${report ? ` · ${report.actor} · ${new Date(report.inspected_at || report.created_at).toLocaleString("ro-RO")}` : ""}`;
+              label.textContent = `${p["osm_id"]} · ${p["power"]}${report?.osm_verdict ? ` · ${osmVerdicts[report.osm_verdict]}` : ""}${report ? ` · ${report.actor} · ${new Date(report.inspected_at || report.created_at).toLocaleString("ro-RO")}` : ""}`;
               layer.bindTooltip(label);
               layer.on("click", () => {
                 onOsmSelect?.(String(p["osm_id"]));
@@ -350,7 +350,7 @@ export default function MapView({
           />
         )}
         {enabled["confidence"] &&
-          cells.filter(c => activeStatuses[c.unknown ? "primary" : tone(c.scor)]).map((c) =>
+          cells.filter(c => !c.unknown && activeStatuses[tone(c.scor)]).map((c) =>
             line(
               c.geometry,
               `${c.id}-${c.scor}-${c.unknown}`,
@@ -393,12 +393,9 @@ export default function MapView({
               </Tooltip>
             </GeoJSON>
           ))}
-        {enabled["gis"] && activeStatuses.primary && unvalidatedGisLines(data).map((f, i) =>
-          line(f.geometry, `unvalidated-gis-${i}`, palette.primary, 3, "5 6", undefined, `${String(f.properties?.["id"] || "Element GIS")} · Nevalidat`)
-        )}
         {enabled["gis"] &&
           data.layers["gis"]?.features
-            .filter((f) => f.properties?.["kind"] === "bransament" && !unvalidatedGisLines(data).includes(f))
+            .filter((f) => f.properties?.["kind"] === "bransament" && evaluatedGisLines(data).includes(f))
             .map((f, i) =>
               line(
                 f.geometry,
@@ -616,11 +613,6 @@ export default function MapView({
             <div className="legend-row"><i className="client-underground-line" />Branșament subteran confirmat</div>
             <div className="legend-row"><i className="client-flag-dot" />Echipă trimisă la client</div>
             {meta && <h3>Evaluare OSM aprobată</h3>}
-            {meta && (
-              <div className="legend-row">
-                <i className="legend-line proposal" /> Rețea OSM nevalidată
-              </div>
-            )}
             <div className="legend-row">
               <i className="legend-line" />
               Sigur <span className="ml-auto text-muted-foreground">{meta ? "teren" : "≥ 70%"}</span>
@@ -633,10 +625,6 @@ export default function MapView({
               <i className="legend-line danger" />
               Nesigur <span className="ml-auto text-muted-foreground">{meta ? "teren" : "< 40%"}</span>
             </div>
-            <div className="legend-row">
-              <i className="legend-line proposal" />
-              Nevalidat
-            </div>
             <div className="extended-legend">
               {enabled["confidence"] && (
                 <div className="legend-row">Zone: verde / galben / roșu</div>
@@ -648,9 +636,7 @@ export default function MapView({
               )}
             </div>
           </div>
-          {activeStatuses.primary && unvalidatedNetworkCount(data) === 0 ? (
-            <div className="map-note" role="status">Nu există elemente nevalidate în datele încărcate.</div>
-          ) : meta ? (
+          {meta ? (
             <div className="map-note">
               OpenStreetMap · {osm?.features.length} obiecte
               <br />

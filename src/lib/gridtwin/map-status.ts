@@ -1,29 +1,25 @@
 import { approvedOsmInspection, osmTones } from "./osm-inspections";
 import { effectiveScores, tone, type Feature, type Report, type Proposal, type Workspace } from "./model";
 
-export const statusLabels = { safe: "Sigur", warning: "Partial Sigur", danger: "Nesigur", primary: "Nevalidat" } as const;
+export const statusLabels = { safe: "Sigur", warning: "Partial Sigur", danger: "Nesigur" } as const;
 export type MapStatus = keyof typeof statusLabels;
 export type StatusSelection = Record<MapStatus, boolean>;
-export const initialStatuses: StatusSelection = { safe: false, warning: false, danger: false, primary: true };
-export function osmStatus(feature: Feature, reports: Report[]): MapStatus {
+export const initialStatuses: StatusSelection = { safe: true, warning: false, danger: false };
+export function osmStatus(feature: Feature, reports: Report[]): MapStatus | undefined {
   const report = approvedOsmInspection(feature, reports);
-  return report?.osm_verdict ? osmTones[report.osm_verdict] : "primary";
+  return report?.osm_verdict ? osmTones[report.osm_verdict] : undefined;
 }
 export function visibleOsm(features: Feature[], reports: Report[], selected: StatusSelection) {
-  return features.filter(f => selected[osmStatus(f, reports)]);
+  return features.filter(f => { const status = osmStatus(f, reports); return status ? selected[status] : false; });
 }
 export function visibleScore(score: number, selected: StatusSelection) {
   return selected[tone(score)];
 }
-export function unvalidatedGisLines(data: Workspace) {
+export function evaluatedGisLines(data: Workspace) {
   return (data.layers["gis"]?.features ?? []).filter(f =>
     ["LineString", "MultiLineString"].includes(f.geometry.type) &&
-    !data.scores.some(s => s.id === f.properties?.["id"] || JSON.stringify(s.geometry) === JSON.stringify(f.geometry))
+    data.scores.some(s => s.id === f.properties?.["id"] || JSON.stringify(s.geometry) === JSON.stringify(f.geometry))
   );
-}
-export function unvalidatedNetworkCount(data: Workspace) {
-  return unvalidatedGisLines(data).length +
-    (data.layers["osm_constanta"]?.features.filter(f => osmStatus(f, data.reports) === "primary").length ?? 0);
 }
 export function unsafeProposals(data: Workspace) {
   const scores = effectiveScores(data);

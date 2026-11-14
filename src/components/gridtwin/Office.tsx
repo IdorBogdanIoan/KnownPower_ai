@@ -48,7 +48,7 @@ import { osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmVerdicts, osmTones } from "@/lib/gridtwin/osm-inspections";
 import { OsmOfficeList } from "./OsmOfficeList";
 import { StatusFilters } from "./StatusFilters";
-import { initialStatuses, unsafeProposals, unvalidatedNetworkCount, type StatusSelection } from "@/lib/gridtwin/map-status";
+import { initialStatuses, unsafeProposals, type StatusSelection } from "@/lib/gridtwin/map-status";
 const MapView = lazy(() => import("./MapView"));
 const tipIcons: Record<string, typeof Activity> = {
   gol_retea: Link2,
@@ -103,7 +103,7 @@ export function Office() {
   const clientVerification = useClientVerification();
   const data = useWorkspace();
   const osmMeta = osmMetadata(data.layers["osm_constanta"]);
-  const [statuses, setStatuses] = useState<StatusSelection>(data.layers["osm_constanta"] ? initialStatuses : { ...initialStatuses, primary: false, safe: true });
+  const [statuses, setStatuses] = useState<StatusSelection>(initialStatuses);
   const actor = useOperator();
   const access = useAccount();
   const settings = useQuery({ queryKey: ["app-settings"], enabled: !access.test, queryFn: async () => { const r = await supabase.from("app_settings").select("*"); if (r.error) throw r.error; return Object.fromEntries(r.data.map(x => [x.key,x.value])); } });
@@ -283,7 +283,6 @@ export function Office() {
                 osmMeta ? osmApproved.filter(r => r?.osm_verdict === "de_verificat").length : scores.filter((s) => s.scor >= 0.4 && s.scor < 0.7).length,
               ],
               ["danger", "Nesigur", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "nesigur").length : scores.filter((s) => s.scor < 0.4).length],
-              ["primary", "Nevalidat", unvalidatedNetworkCount(data)],
             ].map(([color, label, value]) => (
               <div className="stat" key={label}>
                 <div className={`stat-number ${color}`}>{value}</div>

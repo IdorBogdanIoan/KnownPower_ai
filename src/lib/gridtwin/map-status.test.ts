@@ -1,18 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { visibleOsm, visibleScore, visibleProposal, unsafeProposals, unvalidatedGisLines, unvalidatedNetworkCount, initialStatuses } from "./map-status";
+import { visibleOsm, visibleScore, visibleProposal, unsafeProposals, evaluatedGisLines, initialStatuses } from "./map-status";
 import type { Feature, Report, Proposal, Workspace } from "./model";
 const feature: Feature = { type: "Feature", geometry: { type: "Point", coordinates: [28.64,44.18] }, properties: { osm_id: "node/1" } };
 const report: Report = { id: "r1", osm_id: "node/1", osm_verdict: "sigur", osm_geometry: feature.geometry, status: "aprobat", actor: "Test", created_at: "2026-11-14", lat: 44.18, lon: 28.64, fields: {}, pole_check: null, photo_pole_url: null, photo_sheet_url: null, pos_source: null, decided_at: null, decided_by: null };
 describe("map status checkboxes", () => {
   const proposal: Proposal = { id: "p1", tip: "tronson_lipsa", obiect: "T1", geometrie: { type: "LineString", coordinates: [[28.64,44.18],[28.65,44.18]] }, propus: {}, status: "in_asteptare", incredere: 0.8, motiv: "", sursa: "agent", decided_at: null, decided_by: null };
-  it("shows eligible proposals only with Nesigur, never Nevalidat", () => {
+  it("shows eligible proposals only with Nesigur", () => {
     expect(visibleProposal(proposal, initialStatuses)).toBe(false);
     expect(visibleProposal(proposal, { ...initialStatuses, danger: true })).toBe(true);
-    expect(visibleProposal(proposal, { ...initialStatuses, primary: false, safe: true })).toBe(false);
-    expect(visibleOsm([{ ...feature, geometry: proposal.geometrie }], [], { ...initialStatuses, primary: false })).toEqual([]);
+    expect(visibleProposal(proposal, initialStatuses)).toBe(false);
+    expect(visibleOsm([{ ...feature, geometry: proposal.geometrie }], [], initialStatuses)).toEqual([]);
   });
   it("does not confuse proposal approval with the network classification", () => {
-    expect(visibleProposal({ ...proposal, status: "aprobat" }, { ...initialStatuses, primary: false, safe: true })).toBe(false);
+    expect(visibleProposal({ ...proposal, status: "aprobat" }, { ...initialStatuses, safe: true })).toBe(false);
     expect(visibleProposal({ ...proposal, status: "aprobat" }, initialStatuses)).toBe(false);
   });
   it("does not display field-flagged proposals under Partial Sigur", () => {
@@ -20,23 +20,16 @@ describe("map status checkboxes", () => {
     expect(visibleProposal({ ...proposal, propus: { flag: "echipa_teren" } }, { ...initialStatuses, warning: true })).toBe(false);
   });
   const workspace: Workspace = { layers: {}, proposals: [proposal], scores: [], reports: [], audit: [] };
-  it("keeps unscored imported GIS lines unvalidated without counting pending proposals", () => {
+  it("excludes imported GIS lines without scores from status overlays while preserving them", () => {
     const line: Feature = { type: "Feature", geometry: proposal.geometrie, properties: { id: "T1" } };
     const data = { ...workspace, layers: { gis: { type: "FeatureCollection" as const, features: [line] } } };
-    expect(unvalidatedGisLines(data)).toEqual([line]);
-    expect(unvalidatedGisLines(workspace)).toEqual([]);
-    expect(unvalidatedGisLines({ ...data, scores: [{ id: "T1", geometry: line.geometry, scor: 0.2, culoare: "", motive: [] }] })).toEqual([]);
+    expect(evaluatedGisLines(data)).toEqual([]);
+    expect(data.layers.gis.features).toEqual([line]);
+    expect(evaluatedGisLines(workspace)).toEqual([]);
+    expect(evaluatedGisLines({ ...data, scores: [{ id: "T1", geometry: line.geometry, scor: 0.2, culoare: "", motive: [] }] })).toEqual([line]);
   });
   it("excludes proposals with no evaluated evidence even at high proposal confidence", () => {
     expect(unsafeProposals(workspace)).toEqual([]);
-  });
-  it("counts unvalidated GIS and OSM together, never proposal geometry or evaluated lines", () => {
-    const line: Feature = { type: "Feature", geometry: proposal.geometrie, properties: { id: "T1" } };
-    const data = { ...workspace, layers: { gis: { type: "FeatureCollection" as const, features: [line] }, osm_constanta: { type: "FeatureCollection" as const, features: [feature] } } };
-    expect(unvalidatedNetworkCount(workspace)).toBe(0);
-    expect(unvalidatedNetworkCount(data)).toBe(2);
-    expect(unvalidatedNetworkCount({ ...data, reports: [report] })).toBe(1);
-    expect(unvalidatedNetworkCount({ ...data, reports: [report], scores: [{ id: "T1", geometry: line.geometry, scor: 0.2, culoare: "", motive: [] }] })).toBe(0);
   });
   it("includes only explicitly linked Nesigur scores, excluding safe and partial scores", () => {
     for (const [scor, expected] of [[0.3, 1], [0.4, 0], [0.8, 0]] as const) {
@@ -56,17 +49,19 @@ describe("map status checkboxes", () => {
     expect(unsafeProposals({ ...osmWorkspace, reports: [report] })).toEqual([]);
   });
   it("shows only checked categories and permits Sigur plus Nesigur", () => {
-    const selected = { safe: true, danger: true, warning: false, primary: false };
+    const selected = { safe: true, danger: true, warning: false };
     expect(visibleScore(0.8, selected)).toBe(true);
     expect(visibleScore(0.2, selected)).toBe(true);
     expect(visibleScore(0.5, selected)).toBe(false);
   });
   it("hides every evaluated object when every checkbox is cleared", () => {
-    expect(visibleOsm([feature], [report], { safe: false, danger: false, warning: false, primary: false })).toEqual([]);
+    expect(visibleOsm([feature], [report], { safe: false, danger: false, warning: false })).toEqual([]);
   });
-  it("keeps unapproved objects Nevalidat and never enables all categories initially", () => {
-    expect(visibleOsm([feature], [{ ...report, status: "in_asteptare" }], initialStatuses)).toEqual([feature]);
-    expect(visibleOsm([feature], [report], initialStatuses)).toEqual([]);
+  it("hides OSM without approved evidence even with every remaining category selected", () => {
+    const all = { safe: true, warning: true, danger: true };
+    expect(visibleOsm([feature], [], all)).toEqual([]);
+    expect(visibleOsm([feature], [{ ...report, status: "in_asteptare" }], all)).toEqual([]);
+    expect(visibleOsm([feature], [report], initialStatuses)).toEqual([feature]);
     expect(Object.values(initialStatuses).filter(Boolean)).toHaveLength(1);
   });
 });

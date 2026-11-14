@@ -48,7 +48,7 @@ import { osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmVerdicts, osmTones } from "@/lib/gridtwin/osm-inspections";
 import { OsmOfficeList } from "./OsmOfficeList";
 import { StatusFilters } from "./StatusFilters";
-import { initialStatuses, type StatusSelection } from "@/lib/gridtwin/map-status";
+import { initialStatuses, unsafeProposals, type StatusSelection } from "@/lib/gridtwin/map-status";
 const MapView = lazy(() => import("./MapView"));
 const tipIcons: Record<string, typeof Activity> = {
   gol_retea: Link2,
@@ -116,7 +116,7 @@ export function Office() {
   const [focus, setFocus] = useState<Geometry>();
   const [inspection, setInspection] = useState<Inspection>();
   const [busy, setBusy] = useState<string>();
-  const [statusFilter, setStatusFilter] = useState("all");
+  const [statusFilter, setStatusFilter] = useState("in_asteptare");
   const reportIds = useRef<string[] | null>(null);
   useEffect(() => {
     if (reportIds.current) {
@@ -132,23 +132,25 @@ export function Office() {
   const osmFeatures = data.layers["osm_constanta"]?.features || [];
   const osmApproved = osmFeatures.map(f => approvedOsmInspection(f, data.reports));
   const pending = data.proposals.filter((p) => p["status"] === "in_asteptare").length;
+  const eligibleProposals = useMemo(() => unsafeProposals(data), [data]);
   const proposals = useMemo(
     () =>
-      sortedProposals(data.proposals).filter(
+      sortedProposals(eligibleProposals).filter(
         (p) =>
           (filter === "all" || p["tip"] === filter) &&
-          (statusFilter === "all" || p["status"] === statusFilter) &&
+          p["status"] === statusFilter &&
           `${p["id"]} ${p["obiect"]} ${p["motiv"]}`.toLowerCase().includes(search.toLowerCase()),
       ),
-    [data.proposals, filter, search, statusFilter],
+    [eligibleProposals, filter, search, statusFilter],
   );
   function select(id: string) {
-    const p = data.proposals.find((p) => p["id"] === id);
+    const p = eligibleProposals.find((p) => p["id"] === id);
     if (!p) return;
     setSelected(id);
     setFocus(p["geometrie"]);
     setTab("proposals");
     setFilter("all");
+    setStatusFilter(p.status);
     setInspection(undefined);
     setTimeout(
       () =>
@@ -192,7 +194,7 @@ export function Office() {
     }
   }
   const nearbyP = inspection
-    ? data.proposals.filter(
+    ? eligibleProposals.filter(
         (p) =>
           p["status"] === "in_asteptare" &&
           nearby(p["geometrie"], midpoint(inspection.geometry), 50),
@@ -300,7 +302,7 @@ export function Office() {
               onClick={() => setTab("proposals")}
             >
               <ListFilter />
-              Propuneri <span className="tab-count">{data.proposals.length}</span>
+              Propuneri <span className="tab-count">{eligibleProposals.length}</span>
             </Button>
             <Button
               variant="ghost"
@@ -338,10 +340,10 @@ export function Office() {
                   className={filter === "all" ? "active" : ""}
                   onClick={() => setFilter("all")}
                 >
-                  Toate <span className="font-mono">{data.proposals.length}</span>
+                  Toate <span className="font-mono">{eligibleProposals.length}</span>
                 </Button>
                 {types.map((t) => {
-                  const count = data.proposals.filter((p) => p["tip"] === t).length;
+                  const count = eligibleProposals.filter((p) => p["tip"] === t).length;
                   return (
                     count > 0 && (
                       <Button
@@ -364,8 +366,7 @@ export function Office() {
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                 >
-                  <option value="all">În așteptare întâi</option>
-                  <option value="in_asteptare">Doar în așteptare</option>
+                  <option value="in_asteptare">În așteptare</option>
                   <option value="aprobat">Aprobate</option>
                   <option value="respins">Respinse</option>
                 </select>
@@ -373,7 +374,7 @@ export function Office() {
             </div>
           )}
           <div className="panel-scroll">
-            {tab === "proposals" && <ClientBatch proposals={data.proposals} verification={clientVerification} />}
+            {tab === "proposals" && <ClientBatch proposals={eligibleProposals} verification={clientVerification} />}
             {tab === "osm" && <><div className="p-3 text-xs text-muted-foreground">Etichete din teren · nu certificare electrică.</div>{osmSelected && <Button variant="ghost" size="sm" onClick={() => setOsmSelected(undefined)}>Toate elementele OSM</Button>}<OsmOfficeList data={data} selected={osmSelected} onFocus={setFocus} onReports={() => setTab("field")} /></>}
             {currentInspection && (
               <section className="inspection">
@@ -673,7 +674,7 @@ export function Office() {
                       <p className="position-note">
                         {r.pos_source} · {r.lat.toFixed(6)}, {r.lon.toFixed(6)}
                       </p>
-                      {!r.osm_id && data.proposals
+                      {!r.osm_id && eligibleProposals
                         .filter((p) => nearby(p["geometrie"], [r.lon, r.lat], 20))
                         .map((p) => (
                           <Button

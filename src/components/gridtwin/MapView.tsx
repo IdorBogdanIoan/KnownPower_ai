@@ -15,7 +15,7 @@ import * as turf from "@turf/turf";
 import { Layers, LocateFixed, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusFilters } from "./StatusFilters";
-import { initialStatuses, visibleOsm, visibleScore, visibleProposal, type StatusSelection } from "@/lib/gridtwin/map-status";
+import { initialStatuses, unsafeProposals, visibleOsm, visibleScore, visibleProposal, type StatusSelection } from "@/lib/gridtwin/map-status";
 import { OpenFreeMapLayer } from "./OpenFreeMapLayer";
 import { osmCoverage, osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmTones, osmVerdicts } from "@/lib/gridtwin/osm-inspections";
@@ -464,7 +464,7 @@ export default function MapView({
             ),
           )}
         {enabled["proposals"] &&
-          data.proposals
+          unsafeProposals(data)
             .filter(
               (p) =>
                 visibleProposal(p, activeStatuses) &&
@@ -478,7 +478,7 @@ export default function MapView({
               line(
                 p["geometrie"],
                 `proposal-${p["id"]}-${p["status"]}-${selected === p["id"]}`,
-                p.status === "aprobat" && clientVerification(p)["rezultat"] === "subteran" ? palette.underground : p["status"] === "aprobat" ? palette["safe"] : palette["primary"],
+                p.status === "aprobat" && clientVerification(p)["rezultat"] === "subteran" ? palette.underground : palette["danger"],
                 selected === p["id"] ? 6 : 3,
                 p.status === "aprobat" && clientVerification(p)["rezultat"] === "subteran" ? "2 5" : p["status"] === "aprobat" ? undefined : "5 6",
                 () => onSelect?.(p["id"]),

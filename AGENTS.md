@@ -30,7 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## GridTwin architecture
-- Share browser-safe map status selection across the office filters and field legends; filter approved OSM classifications and proposal overlays (pending: unvalidated, approved: safe, field-flagged: to check) without modifying stored evidence or scores, so unchecked categories leave no proposal lines behind.
+- Share browser-safe map status selection and unsafe proposal eligibility across map, review lists and batches; match proposals by explicit object/affected IDs or identical geometry to effective danger scores or approved matching OSM inspections, never by proximity or approval status, so missing validation cannot create eligibility. Preserve stored proposals and evidence.
 - Validate file imports in a browser-safe shared parser; use known filename aliases or an explicit destination for renamed files so data never silently enters the wrong layer.
 - OSM inspections use explicit OSM IDs, immutable geometry snapshots and evidence in field reports; only the newest approved matching-geometry inspection colors an object, and OSM reports never affect simulated scores.
 - Keep OSM imports in the existing layers store under a distinct key with provenance metadata; fetch only a fixed Constanța study area, reject partial exports, require operator confirmation and never merge OSM into company GIS or simulated scores. Coverage cells express cartographic uncertainty, not verified network absence or completeness.

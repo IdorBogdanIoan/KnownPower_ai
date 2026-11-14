@@ -1,0 +1,115 @@
+name: Analiza periferie (loturi)
+run-name: lot ${{ inputs.rulare }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      rulare:     { description: "nume rulare (ex. pilot-bragadiru-chiajna)", required: true }
+      localitati: { description: "localitati separate prin ;", required: true, default: "Bragadiru, Ilfov;Chiajna, Ilfov" }
+      loturi:     { description: "cate joburi in paralel (max 20)", required: false, default: "6" }
+
+permissions:
+  contents: write
+
+env:
+  YOLO_CONFIG_DIR: /tmp/ultra
+  GRIDTWIN_MS_LIVE: "1"
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    outputs:
+      chunks: ${{ steps.p.outputs.chunks }}
+    defaults: { run: { working-directory: ai } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/cache@v4
+        with: { path: ai/cache_ms, key: cache-ms-v1 }
+      - id: p
+        env:
+          LOCALITATI: ${{ inputs.localitati }}
+          LOTURI: ${{ inputs.loturi }}
+        run: python lot.py plan --localitati "$LOCALITATI" --chunks "$LOTURI" --out plan.json
+      - uses: actions/upload-artifact@v4
+        with: { name: plan, path: ai/plan.json }
+
+  analiza:
+    needs: plan
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    strategy:
+      fail-fast: false
+      max-parallel: 20
+      matrix:
+        chunk: ${{ fromJSON(needs.plan.outputs.chunks) }}
+    defaults: { run: { working-directory: ai } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: ai/requirements.txt
+      - uses: actions/cache@v4
+        with: { path: ai/cache_ms, key: cache-ms-v1 }
+      - run: pip install -r requirements.txt
+      - uses: actions/download-artifact@v4
+        with: { name: plan, path: ai }
+      - env:
+          CHUNK: ${{ matrix.chunk }}
+        run: python lot.py run --plan plan.json --chunk "$CHUNK" --out "part_$CHUNK.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: "part-${{ matrix.chunk }}", path: "ai/part_*.json", if-no-files-found: ignore }
+
+  merge:
+    needs: analiza
+    if: always() && needs.analiza.result != 'skipped'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults: { run: { working-directory: ai } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/download-artifact@v4
+        with: { pattern: "part-*", path: ai/parts }
+      - name: Uneste si verifica
+        env:
+          RULARE: ${{ inputs.rulare }}
+        run: |
+          case "$RULARE" in *[!a-z0-9-]*|"") echo "nume de rulare invalid (doar a-z, 0-9, -)"; exit 1;; esac
+          python lot.py merge --parts parts --rulare "$RULARE" --out "out/$RULARE"
+      - name: Salveaza pe ramura rezultate
+        env:
+          RULARE: ${{ inputs.rulare }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          URL="https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          if git clone --depth 1 --branch rezultate "$URL" "$RUNNER_TEMP/rez"; then :; else
+            mkdir -p "$RUNNER_TEMP/rez" && cd "$RUNNER_TEMP/rez" && git init -q -b rezultate && git remote add origin "$URL" && cd -
+          fi
+          mkdir -p "$RUNNER_TEMP/rez/rulari"
+          rm -rf "$RUNNER_TEMP/rez/rulari/$RULARE"
+          cp -r "out/$RULARE" "$RUNNER_TEMP/rez/rulari/$RULARE"
+          cd "$RUNNER_TEMP/rez"
+          python3 - "$RULARE" <<'PY'
+          import json, os, sys
+          r = sys.argv[1]
+          p = "latest.json"
+          lst = json.load(open(p)) if os.path.exists(p) else {"rulari": []}
+          idx = json.load(open(f"rulari/{r}/index.json"))
+          lst["rulari"] = [x for x in lst["rulari"] if x["rulare"] != r] + [{"rulare": r, "data": idx["data"], "total": idx["total"], "model": idx["model"], "model_case": idx["model_case"]}]
+          lst["ultima"] = r
+          json.dump(lst, open(p, "w"), ensure_ascii=False, indent=1)
+          PY
+          git add -A
+          git commit -q -m "Rulare $RULARE"
+          git push origin rezultate
+      - uses: actions/upload-artifact@v4
+        with: { name: rezultat, path: ai/out }

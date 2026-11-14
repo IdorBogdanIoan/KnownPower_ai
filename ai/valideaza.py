@@ -20,10 +20,10 @@ import api_local, run_zone  # noqa: E402
 
 MATCH_M = 10.0
 NEAR_LINE_M = 15.0
-ILFOV = (25.90, 44.30, 26.35, 44.60)       # lon0, lat0, lon1, lat1
-CELL_M = 500
+ILFOV = (25.70, 44.20, 26.50, 44.75)       # lon0, lat0, lon1, lat1
+CELL_M = 1000
 MAX_CELLS = 6
-MIN_POLES = 15
+MIN_POLES = 8
 
 
 # ----------------------------------------------------------------------------- geometrie

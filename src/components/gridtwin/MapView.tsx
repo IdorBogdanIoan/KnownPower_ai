@@ -5,6 +5,7 @@ import {
   GeoJSON,
   CircleMarker,
   Tooltip,
+  Popup,
   Marker,
   useMap,
   useMapEvents,
@@ -150,7 +151,7 @@ function Pick({
         },
       }}
     >
-      <Tooltip>Stâlp marcat în teren</Tooltip>
+      <Popup>Stâlp marcat în teren</Popup>
     </Marker>
   );
 }
@@ -276,7 +277,7 @@ export default function MapView({
           L.circleMarker(p, { radius: 6, color, weight: 2, fillOpacity: 0.15 })
         }
       >
-        {tip && <Tooltip>{tip}</Tooltip>}
+        {tip && (geometry.type === "Point" || geometry.type === "MultiPoint" ? <Popup>{tip}</Popup> : <Tooltip>{tip}</Tooltip>)}
       </GeoJSON>
     );
   }
@@ -334,10 +335,10 @@ export default function MapView({
               const report = approvedOsmInspection(f, data.reports);
               const label = document.createElement("span");
               label.textContent = `${p["osm_id"]} · ${p["power"]}${report?.osm_verdict ? ` · ${osmVerdicts[report.osm_verdict]}` : ""}${report ? ` · ${report.actor} · ${new Date(report.inspected_at || report.created_at).toLocaleString("ro-RO")}` : ""}`;
-              layer.bindTooltip(label);
               layer.on("click", () => {
                 onOsmSelect?.(String(p["osm_id"]));
                 const el = document.createElement("div");
+                el.append(label, document.createElement("br"));
                 const a = document.createElement("a");
                 a.href = String(p["source_url"]);
                 a.target = "_blank";
@@ -446,8 +447,11 @@ export default function MapView({
                     weight: 1.8,
                   }}
                 >
-                  <Tooltip>
+                  <Popup>
+                    <strong>{p["kind"] === "post_transformare" ? "Post de transformare" : "Stâlp"}</strong>
+                    <br />
                     {[
+                      p["name"] || p["nume"],
                       p["id"],
                       p["material"],
                       p["type"] || p["tip"],
@@ -455,7 +459,7 @@ export default function MapView({
                     ]
                       .filter(Boolean)
                       .join(" · ")}
-                  </Tooltip>
+                  </Popup>
                 </CircleMarker>
               );
             })}
@@ -481,7 +485,7 @@ export default function MapView({
                   filter === "atribute_lipsa"),
             )
             .map((p) => p.propus["flag"] === "echipa_teren" && p.status === "in_asteptare" ? (
-              <CircleMarker key={`client-flag-${p.id}`} center={[midpoint(p.geometrie)[1] ?? 0,midpoint(p.geometrie)[0] ?? 0]} radius={7} pathOptions={{color:palette.clientFlag,fillColor:palette.clientFlag,fillOpacity:0.7,weight:2}} eventHandlers={{click:()=>onSelect?.(p.id)}}><Tooltip>{String(p.propus["adresa"] || p.obiect)} · Trimis la echipă</Tooltip></CircleMarker>
+              <CircleMarker key={`client-flag-${p.id}`} center={[midpoint(p.geometrie)[1] ?? 0,midpoint(p.geometrie)[0] ?? 0]} radius={7} pathOptions={{color:palette.clientFlag,fillColor:palette.clientFlag,fillOpacity:0.7,weight:2}} eventHandlers={{click:()=>onSelect?.(p.id)}}><Popup>{String(p.propus["adresa"] || p.obiect)} · Echipă trimisă la client</Popup></CircleMarker>
             ) :
               line(
                 p["geometrie"],
@@ -509,9 +513,9 @@ export default function MapView({
                   className: r.status === "in_asteptare" ? "report-pulse" : "",
                 }}
               >
-                <Tooltip>
+                <Popup>
                   {r.actor} · {r.status === "aprobat" ? "Verificat în teren" : "Raport din teren"}
-                </Tooltip>
+                </Popup>
               </CircleMarker>
             ))}
         {enabled["conductors"] &&
@@ -544,7 +548,7 @@ export default function MapView({
           })}
         {position && <Pick position={position} onPosition={onPosition} />}
       </MapContainer>
-      {mini && <div className="mini-legend"><StatusFilters selected={localStatuses} onChange={setLocalStatuses} /><div className="legend-row"><i className="legend-dot" />Stâlp marcat în teren</div></div>}
+      {mini && <div className="mini-legend"><StatusFilters selected={localStatuses} onChange={setLocalStatuses} /><div className="legend-row"><i className="legend-dot" />Stâlp marcat în teren</div><div className="legend-row"><i className="size-2 shrink-0 rounded-full bg-primary" />Post de transformare</div></div>}
       {!mini && (
         <>
           <div className="map-toolbar">
@@ -618,6 +622,7 @@ export default function MapView({
             </div>
           )}
           <div className="map-legend">
+            <div className="legend-row"><i className="size-2 shrink-0 rounded-full bg-primary" />Post de transformare</div>
             <div className="legend-row"><i className="client-underground-line" />Branșament subteran confirmat</div>
             <div className="legend-row"><i className="client-flag-dot" />Echipă trimisă la client</div>
             {meta && <h3>Evaluare OSM aprobată</h3>}

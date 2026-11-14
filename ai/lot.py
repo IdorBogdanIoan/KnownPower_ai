@@ -9,7 +9,7 @@ Pentru fiecare pătrat rulează aceeași analiză ca pe site (api_local.analiza)
 + rețea probabilă. Păstrăm doar ce cade în interiorul pătratului (fără dubluri la margini), apoi la merge:
 dedublare, verificări, rolul stâlpilor și câte un GeoJSON pe localitate.
 """
-import argparse, json, math, os, sys, time, traceback, urllib.parse
+import argparse, json, math, os, sys, time, traceback, urllib.parse, urllib.request
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -42,6 +42,26 @@ def bbox_localitate(nume):
     return (w, s, e, n)
 
 
+def osm_localitate(box, out):
+    """străzile + clădirile OSM pentru toată localitatea, o singură cerere (nu una pe pătrat)"""
+    import run_zone
+    os.makedirs(os.path.dirname(out), exist_ok=True)
+    w, s_, e, n = box[0] - 0.002, box[1] - 0.002, box[2] + 0.002, box[3] + 0.002
+    bb = f"{s_:.6f},{w:.6f},{n:.6f},{e:.6f}"
+    q = (f'[out:json][timeout:240][maxsize:536870912];(way["highway"~"residential|living_street|unclassified|tertiary|secondary|primary|service"]({bb});'
+         f'way["building"]({bb}););out tags geom;')
+    for ep in run_zone.OVERPASS * 2:
+        try:
+            raw = run_zone.http(ep, data=urllib.parse.urlencode({"data": q}).encode(), timeout=300)
+            fc = run_zone.overpass_to_geojson(json.loads(raw))
+            json.dump(fc, open(out, "w"), separators=(",", ":"))
+            print(f"  OSM: {len(fc['features'])} obiecte -> {out}")
+            return
+        except Exception as ex:
+            print("  Overpass:", ep, ex); time.sleep(10)
+    print("  OSM nu a răspuns; pătratele vor încerca live")
+
+
 def plan(a):
     import cladiri_ms
     cells = []
@@ -59,6 +79,8 @@ def plan(a):
             k = (int((cx - box[0]) / dlon), int((cy - box[1]) / dlat))
             cnt[k] = cnt.get(k, 0) + 1
         loc = nume.split(",")[0].strip()
+        if a.osm_dir:
+            osm_localitate(box, os.path.join(a.osm_dir, slug(loc) + ".json"))
         keep = 0
         for (i, j), n in sorted(cnt.items()):
             if n < MIN_CASE:
@@ -126,12 +148,16 @@ def run(a):
             return out
         api_local.ms_buildings = ms_box
 
+    acceleratii(api_local, a.osm_dir)
     out = {"cells": [], "stalpi": [], "linii": [], "erori": []}
     for n, c in enumerate(cells, 1):
         t0 = time.time()
         box = c["box"]
         lon, lat = (box[0] + box[2]) / 2, (box[1] + box[3]) / 2
         try:
+            TIMP.clear()
+            prefetch_dale(lon, lat, RAZA + 60)
+            TIMP["dale"] = round(time.time() - t0, 1)
             rez = api_local.analiza(lon, lat, RAZA)
         except Exception as e:
             traceback.print_exc()
@@ -177,11 +203,111 @@ def run(a):
                                       "localitate": c["localitate"], "celula": c["id"], "ext_id": None})
         nr = rez["numere"]
         out["cells"].append({**c, "case": nr["case"], "strazi": nr["strazi"], "stalpi_imagine": nr["stalpi_imagine"],
-                             "verificari": verif, "durata_s": round(time.time() - t0, 1)})
+                             "verificari": verif, "durata_s": round(time.time() - t0, 1), "timp": dict(TIMP)})
         print(f"[{n}/{len(cells)}] {c['id']}: {nr['case']} case, {nr['stalpi_imagine']} stâlpi în imagine, "
-              f"{nr['stalpi_propusi']} prezisi, scoși: {verif} ({time.time() - t0:.0f} s)", flush=True)
+              f"{nr['stalpi_propusi']} prezisi, scoși: {verif} ({time.time() - t0:.0f} s; {dict(TIMP)})", flush=True)
     json.dump(out, open(a.out, "w"), ensure_ascii=False)
 
+
+
+# ----------------------------------------------------------------------------- accelerări pentru loturi
+TIMP = {}
+_DALE = {}
+
+
+def prefetch_dale(lon, lat, raza_m, zooms=(18, 17)):
+    """descarcă în paralel dalele Esri ale pătratului; modelele le iau apoi din memorie"""
+    import run_zone
+    from concurrent.futures import ThreadPoolExecutor
+    _DALE.clear()
+    dlat = raza_m / KY; dlon = raza_m / kx(lat)
+    urls = []
+    for z in zooms[:1]:
+        tx0, ty0 = (int(v) for v in run_zone.tile_xy(lon - dlon, lat + dlat, z))
+        tx1, ty1 = (int(v) for v in run_zone.tile_xy(lon + dlon, lat - dlat, z))
+        urls += [run_zone.ESRI.format(z=z, x=x, y=y) for x in range(tx0 - 1, tx1 + 2) for y in range(ty0 - 1, ty1 + 2)]
+
+    def one(u):
+        for i in range(3):
+            try:
+                req = urllib.request.Request(u, headers={"User-Agent": run_zone.UA})
+                with urllib.request.urlopen(req, timeout=30) as r:
+                    return u, r.read()
+            except Exception:
+                time.sleep(1 + i)
+        return u, None
+    with ThreadPoolExecutor(16) as ex:
+        for u, b in ex.map(one, urls):
+            if b:
+                _DALE[u] = b
+
+
+def acceleratii(api_local, osm_dir):
+    import run_zone, imagini
+    import urllib.request as _ur
+    # 1. dalele din memorie (ambele modele le cer, fiecare cu propriul downloader)
+    orig_http, orig_get = run_zone.http, imagini.get
+
+    def http(url, data=None, timeout=120, tries=3):
+        if data is None and url in _DALE:
+            return _DALE[url]
+        return orig_http(url, data=data, timeout=timeout, tries=tries)
+
+    def get(url, timeout=30, tries=3):
+        return _DALE[url] if url in _DALE else orig_get(url, timeout=timeout, tries=tries)
+    run_zone.http, imagini.get = http, get
+    imagini.mozaic.__defaults__ = tuple(0 if isinstance(d, float) and d < 1 else d for d in imagini.mozaic.__defaults__)  # fără pauză între dale
+    # 2. OSM din fișierul localității, cu index pe grilă
+    idx = {}
+    if osm_dir and os.path.isdir(osm_dir):
+        for fn in os.listdir(osm_dir):
+            for f in json.load(open(os.path.join(osm_dir, fn)))["features"]:
+                g = f["geometry"]
+                cs = g["coordinates"][0] if g["type"] == "Polygon" else g["coordinates"]
+                for k in {(int(x / 0.005), int(y / 0.005)) for x, y in cs}:
+                    idx.setdefault(k, []).append(f)
+        print(f"OSM local: {sum(len(v) for v in idx.values())} intrări în index")
+    orig_osm = api_local.osm_for
+
+    def osm_for(lat, lon, raza, box):
+        if not idx:
+            return orig_osm(lat, lon, raza, box)
+        m = (raza + 60) / KY
+        bb = (lon - m * KY / kx(lat), lat - m, lon + m * KY / kx(lat), lat + m)
+        seen, out = set(), []
+        for gx in range(int(bb[0] / 0.005) - 1, int(bb[2] / 0.005) + 2):
+            for gy in range(int(bb[1] / 0.005) - 1, int(bb[3] / 0.005) + 2):
+                for f in idx.get((gx, gy), []):
+                    if id(f) in seen:
+                        continue
+                    g = f["geometry"]
+                    cs = g["coordinates"][0] if g["type"] == "Polygon" else g["coordinates"]
+                    if any(bb[0] <= x <= bb[2] and bb[1] <= y <= bb[3] for x, y in cs):
+                        seen.add(id(f)); out.append(f)
+        return out, "OpenStreetMap (descărcat pe localitate)"
+    api_local.osm_for = osm_for
+    # 3. cronometru pe pași
+    for name in ("osm_for", "ms_buildings", "satellite_poles"):
+        fn = getattr(api_local, name)
+
+        def wrap(*args, _fn=fn, _n=name, **kw):
+            t = time.time()
+            try:
+                return _fn(*args, **kw)
+            finally:
+                TIMP[_n] = round(TIMP.get(_n, 0) + time.time() - t, 1)
+        setattr(api_local, name, wrap)
+    import retea_prezisa, cladiri_ai
+    for mod, name in ((retea_prezisa, "prezice"), (cladiri_ai, "cladiri")):
+        fn = getattr(mod, name)
+
+        def wrap(*args, _fn=fn, _n=name, **kw):
+            t = time.time()
+            try:
+                return _fn(*args, **kw)
+            finally:
+                TIMP[_n] = round(TIMP.get(_n, 0) + time.time() - t, 1)
+        setattr(mod, name, wrap)
 
 # ----------------------------------------------------------------------------- merge
 def merge(a):
@@ -320,8 +446,8 @@ def merge(a):
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
-    p = sub.add_parser("plan"); p.add_argument("--localitati", required=True); p.add_argument("--chunks", type=int, default=10); p.add_argument("--out", default="plan.json")
-    r = sub.add_parser("run"); r.add_argument("--plan", required=True); r.add_argument("--chunk", type=int, required=True); r.add_argument("--out", required=True)
+    p = sub.add_parser("plan"); p.add_argument("--localitati", required=True); p.add_argument("--chunks", type=int, default=10); p.add_argument("--out", default="plan.json"); p.add_argument("--osm-dir", default="osm")
+    r = sub.add_parser("run"); r.add_argument("--plan", required=True); r.add_argument("--chunk", type=int, required=True); r.add_argument("--out", required=True); r.add_argument("--osm-dir", default="osm")
     m = sub.add_parser("merge"); m.add_argument("--parts", required=True); m.add_argument("--rulare", required=True); m.add_argument("--out", required=True)
     a = ap.parse_args()
     {"plan": plan, "run": run, "merge": merge}[a.cmd](a)

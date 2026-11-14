@@ -1,0 +1,64 @@
+name: Materiale stalpi (poze de strada)
+run-name: materiale ${{ inputs.rulare }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      rulare: { description: "rularea (din ramura rezultate)", required: true }
+      max:    { description: "cati stalpi maxim pe localitate", required: false, default: "200" }
+
+permissions:
+  contents: write
+
+jobs:
+  materiale:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    defaults: { run: { working-directory: ai } }
+    env:
+      MAPILLARY_TOKEN: ${{ secrets.MAPILLARY_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: ai/requirements.txt
+      - uses: actions/cache@v4
+        with: { path: ~/.cache/huggingface, key: clip-vitb32-v1 }
+      - run: pip install -r requirements.txt open_clip_torch
+      - name: Ia rezultatele rularii
+        env: { RULARE: "${{ inputs.rulare }}", GH_TOKEN: "${{ github.token }}" }
+        run: |
+          case "$RULARE" in *[!a-z0-9-]*|"") echo "nume invalid"; exit 1;; esac
+          git clone -q --depth 1 --branch rezultate "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" "$RUNNER_TEMP/rez"
+          test -d "$RUNNER_TEMP/rez/rulari/$RULARE" || { echo "nu exista rularea $RULARE"; exit 1; }
+      - name: Analizeaza pozele
+        env: { RULARE: "${{ inputs.rulare }}", MAX: "${{ inputs.max }}" }
+        run: |
+          D="$RUNNER_TEMP/rez/rulari/$RULARE"
+          for g in "$D"/*.geojson; do
+            s=$(basename "$g" .geojson)
+            echo "== $s"
+            python materiale.py --geojson "$g" --out "$D/materiale_$s.json" --max "$MAX" || echo "eroare la $s"
+          done
+          python3 - "$D" <<'PY'
+          import glob, json, os, sys
+          d = sys.argv[1]; p = os.path.join(d, "index.json")
+          idx = json.load(open(p))
+          for loc in idx["localitati"]:
+              m = os.path.join(d, "materiale_" + loc["fisier"].replace(".geojson", ".json"))
+              if os.path.exists(m):
+                  loc["materiale"] = json.load(open(m))["stats"]
+                  loc["fisier_materiale"] = os.path.basename(m)
+          json.dump(idx, open(p, "w"), ensure_ascii=False, indent=1)
+          PY
+      - name: Salveaza
+        env: { RULARE: "${{ inputs.rulare }}" }
+        run: |
+          cd "$RUNNER_TEMP/rez"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Materiale $RULARE" || echo "nimic nou"
+          git push -q origin rezultate

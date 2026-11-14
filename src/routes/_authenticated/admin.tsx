@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { roleLabels, type AppRole } from "@/lib/gridtwin/access";
 import { toast } from "sonner";
 export const Route = createFileRoute("/_authenticated/admin")({
-  head: () => ({ meta: [{ title: "Administrare · GridTwin" }, { name: "description", content: "Administrarea rolurilor și configurărilor aplicației GridTwin." }, { property: "og:title", content: "Administrare · GridTwin" }, { property: "og:description", content: "Conturi, echipe și configurări GridTwin." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  head: () => ({ meta: [{ title: "Administrare · KnownPower" }, { name: "description", content: "Administrarea rolurilor și configurărilor aplicației KnownPower." }, { property: "og:title", content: "Administrare · KnownPower" }, { property: "og:description", content: "Conturi, echipe și configurări KnownPower." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: () => <AccessRequired kind="admin"><Admin /></AccessRequired>,
 });
 function Admin() {
@@ -22,7 +22,7 @@ function Admin() {
   } });
   return <main className="page-body"><div className="content-width space-y-8"><h1 className="text-2xl font-semibold">Administrare</h1>
     <section><h2 className="section-title flex items-center gap-2"><Users className="size-4" />Conturi și roluri</h2>
-    {account.test ? <p>Conturile reale nu sunt afișate în modul de test.</p> : query.isPending && <p>Se încarcă…</p>}{query.error && <p role="alert">Conturile nu au putut fi încărcate.</p>}
+    {account.test ? <p>Accesul la conturi necesită un cont verificat.</p> : query.isPending && <p>Se încarcă…</p>}{query.error && <p role="alert">Conturile nu au putut fi încărcate.</p>}
     <div className="divide-y divide-border">{query.data?.map(p => <div key={p.id} className="flex flex-wrap gap-4 items-center py-4"><div className="flex-1 min-w-40"><strong>{p.display_name || "Profil necompletat"}</strong><p className="text-sm text-muted-foreground">{p.team || "Echipă necompletată"}</p><small className="font-mono break-all">{p.id}</small></div>
     <select className="form-control w-auto" aria-label={`Rol pentru ${p.display_name || p.id}`} value={p.role} disabled={!!busy} onChange={async e => { setBusy(p.id); const result = await supabase.rpc("set_gridtwin_role", { target_user: p.id, new_role: e.target.value as AppRole }); if (result.error) toast.error(result.error.message); else { toast.success("Rol actualizat"); await client.invalidateQueries({ queryKey: ["admin-accounts"] }); await client.invalidateQueries({ queryKey: ["account"] }); } setBusy(""); }}>
     {Object.entries(roleLabels).map(([key,label]) => <option key={key} value={key}>{label}</option>)}</select></div>)}</div></section>

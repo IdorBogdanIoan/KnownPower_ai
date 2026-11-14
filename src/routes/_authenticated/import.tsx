@@ -5,12 +5,12 @@ import { AccessRequired } from "@/components/gridtwin/Account";
 export const Route = createFileRoute("/_authenticated/import")({
   head: () => ({
     meta: [
-      { title: "Import de date · GridTwin" },
+      { title: "Import de date · KnownPower" },
       {
         name: "description",
-        content: "Importă straturi GeoJSON, propuneri și scorurile agentului GridTwin.",
+        content: "Importă straturi GeoJSON, propuneri și scorurile agentului KnownPower.",
       },
-      { property: "og:title", content: "Import de date · GridTwin" },
+      { property: "og:title", content: "Import de date · KnownPower" },
       {
         property: "og:description",
         content: "Încarcă datele GIS și rezultatele agentului de verificare.",

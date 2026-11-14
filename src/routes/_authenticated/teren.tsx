@@ -6,12 +6,12 @@ export const Route = createFileRoute("/_authenticated/teren")({
   validateSearch: (search: Record<string, unknown>): { osm?: string } => typeof search["osm"] === "string" ? { osm: search["osm"] } : {},
   head: () => ({
     meta: [
-      { title: "Raport din teren · GridTwin" },
+      { title: "Raport din teren · KnownPower" },
       {
         name: "description",
-        content: "Trimite fotografii, măsurători și poziția stâlpului către operatorul GridTwin.",
+        content: "Trimite fotografii, măsurători și poziția stâlpului către operatorul KnownPower.",
       },
-      { property: "og:title", content: "Raport din teren · GridTwin" },
+      { property: "og:title", content: "Raport din teren · KnownPower" },
       {
         property: "og:description",
         content: "Confirmă rețeaua de joasă tensiune cu fotografii și măsurători din teren.",

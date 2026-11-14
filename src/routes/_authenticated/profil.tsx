@@ -7,13 +7,13 @@ import { useAccount } from "@/components/gridtwin/Account";
 import { supabase } from "@/integrations/supabase/client";
 import { roleLabels } from "@/lib/gridtwin/access";
 export const Route = createFileRoute("/_authenticated/profil")({
-  head: () => ({ meta: [{ title: "Profilul meu · GridTwin" }, { name: "description", content: "Numele, echipa și rolul contului GridTwin." }, { property: "og:title", content: "Profilul meu · GridTwin" }, { property: "og:description", content: "Datele contului și accesul acordat în GridTwin." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
+  head: () => ({ meta: [{ title: "Profilul meu · KnownPower" }, { name: "description", content: "Numele, echipa și rolul contului KnownPower." }, { property: "og:title", content: "Profilul meu · KnownPower" }, { property: "og:description", content: "Datele contului și accesul acordat în KnownPower." }, { property: "og:type", content: "website" }, { name: "twitter:card", content: "summary" }] }),
   component: Profile,
 });
 function Profile() {
   const account = useAccount();
   if (account.loading) return <main className="page-body">Se încarcă profilul…</main>;
-  if (account.test) return <main className="page-body"><h1>{account.name}</h1><p>Profil de test · {account.roles.map(r => roleLabels[r]).join(", ")}</p></main>;
+  if (account.test) return <main className="page-body"><h1>{account.name}</h1><p>Rol · {account.roles.map(r => roleLabels[r]).join(", ")}</p></main>;
   if (account.error) return <main className="page-body"><p role="alert">{account.error}</p></main>;
   return <ProfileForm key={`${account.userId}:${account.name}:${account.team}`} />;
 }

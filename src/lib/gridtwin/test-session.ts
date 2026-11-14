@@ -16,4 +16,4 @@ export function roleHome(role: AppRole) {
   return role === "field_team" ? "/teren" : role === "validation_team" ? "/validare" : "/birou";
 }
 export function canViewMap(roles: readonly AppRole[]) { return roles.includes("admin") || roles.includes("user"); }
-export const testWriteNotice = "Mod de test: datele reale nu sunt modificate. Salvarea necesită autentificare.";
+export const testWriteNotice = "Salvarea datelor reale necesită un cont verificat.";

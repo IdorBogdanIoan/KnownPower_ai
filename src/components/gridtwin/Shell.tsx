@@ -34,7 +34,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="brand-mark">
               <Activity />
             </span>
-            GridTwin
+            KnownPower
           </Link>
           <nav className="header-nav">
             {account.map && <Link to="/birou" activeProps={{ className: "active" }}>
@@ -76,7 +76,6 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link></Button><Button variant="ghost" size="icon" aria-label="Deconectare" title="Deconectare" onClick={async () => { await client.cancelQueries(); client.clear(); await supabase.auth.signOut(); await navigate({ to: "/auth", replace: true }); }}><LogOut /></Button></> : <Button variant="outline" asChild><Link to="/auth"><UserRound />Login</Link></Button>}
           </div>
         </header>
-        {account.test && <div className="border-b border-border bg-muted px-4 py-2 text-xs text-muted-foreground" role="status">Mod de test · rezultate simulate furnizate inițial · datele reale nu sunt modificate</div>}
         {children}
       </div>
       <Toaster position="top-center" richColors />

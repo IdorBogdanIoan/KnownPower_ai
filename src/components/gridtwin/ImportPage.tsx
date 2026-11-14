@@ -114,7 +114,7 @@ export function ImportPage() {
         <div className="page-heading">
           <div>
             <h1>Import de date</h1>
-            <p>Straturi GIS și rezultatele agentului GridTwin</p>
+            <p>Straturi GIS și rezultatele agentului KnownPower</p>
           </div>
           <Button variant="outline" asChild>
             <Link to="/birou">

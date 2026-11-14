@@ -5,12 +5,12 @@ import { AccessRequired } from "@/components/gridtwin/Account";
 export const Route = createFileRoute("/_authenticated/birou")({
   head: () => ({
     meta: [
-      { title: "Hartă · GridTwin" },
+      { title: "Hartă · KnownPower" },
       {
         name: "description",
         content: "Harta rețelei JT, propuneri de corecție și aprobări auditate de operator.",
       },
-      { property: "og:title", content: "Hartă · GridTwin" },
+      { property: "og:title", content: "Hartă · KnownPower" },
       {
         property: "og:description",
         content: "Verifică rețeaua și aprobă corecțiile din GIS și din teren.",

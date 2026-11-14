@@ -15,6 +15,12 @@ export function visibleOsm(features: Feature[], reports: Report[], selected: Sta
 export function visibleScore(score: number, selected: StatusSelection) {
   return selected[tone(score)];
 }
+export function unvalidatedGisLines(data: Workspace) {
+  return (data.layers["gis"]?.features ?? []).filter(f =>
+    ["LineString", "MultiLineString"].includes(f.geometry.type) &&
+    !data.scores.some(s => s.id === f.properties?.["id"] || JSON.stringify(s.geometry) === JSON.stringify(f.geometry))
+  );
+}
 export function unsafeProposals(data: Workspace) {
   const scores = effectiveScores(data);
   return data.proposals.filter(p => {

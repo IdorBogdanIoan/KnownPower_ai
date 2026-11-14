@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { visibleOsm, visibleScore, visibleProposal, unsafeProposals, initialStatuses } from "./map-status";
+import { visibleOsm, visibleScore, visibleProposal, unsafeProposals, unvalidatedGisLines, initialStatuses } from "./map-status";
 import type { Feature, Report, Proposal, Workspace } from "./model";
 const feature: Feature = { type: "Feature", geometry: { type: "Point", coordinates: [28.64,44.18] }, properties: { osm_id: "node/1" } };
 const report: Report = { id: "r1", osm_id: "node/1", osm_verdict: "sigur", osm_geometry: feature.geometry, status: "aprobat", actor: "Test", created_at: "2026-11-14", lat: 44.18, lon: 28.64, fields: {}, pole_check: null, photo_pole_url: null, photo_sheet_url: null, pos_source: null, decided_at: null, decided_by: null };
@@ -20,6 +20,13 @@ describe("map status checkboxes", () => {
     expect(visibleProposal({ ...proposal, propus: { flag: "echipa_teren" } }, { ...initialStatuses, warning: true })).toBe(false);
   });
   const workspace: Workspace = { layers: {}, proposals: [proposal], scores: [], reports: [], audit: [] };
+  it("keeps unscored imported GIS lines unvalidated without counting pending proposals", () => {
+    const line: Feature = { type: "Feature", geometry: proposal.geometrie, properties: { id: "T1" } };
+    const data = { ...workspace, layers: { gis: { type: "FeatureCollection" as const, features: [line] } } };
+    expect(unvalidatedGisLines(data)).toEqual([line]);
+    expect(unvalidatedGisLines(workspace)).toEqual([]);
+    expect(unvalidatedGisLines({ ...data, scores: [{ id: "T1", geometry: line.geometry, scor: 0.2, culoare: "", motive: [] }] })).toEqual([]);
+  });
   it("excludes proposals with no evaluated evidence even at high proposal confidence", () => {
     expect(unsafeProposals(workspace)).toEqual([]);
   });

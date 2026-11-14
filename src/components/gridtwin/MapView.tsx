@@ -15,7 +15,7 @@ import * as turf from "@turf/turf";
 import { Layers, LocateFixed, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusFilters } from "./StatusFilters";
-import { initialStatuses, unsafeProposals, visibleOsm, visibleScore, visibleProposal, type StatusSelection } from "@/lib/gridtwin/map-status";
+import { initialStatuses, unsafeProposals, unvalidatedGisLines, visibleOsm, visibleScore, visibleProposal, type StatusSelection } from "@/lib/gridtwin/map-status";
 import { OpenFreeMapLayer } from "./OpenFreeMapLayer";
 import { osmCoverage, osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmTones, osmVerdicts } from "@/lib/gridtwin/osm-inspections";
@@ -393,9 +393,12 @@ export default function MapView({
               </Tooltip>
             </GeoJSON>
           ))}
+        {enabled["gis"] && activeStatuses.primary && unvalidatedGisLines(data).map((f, i) =>
+          line(f.geometry, `unvalidated-gis-${i}`, palette.primary, 3, "5 6", undefined, `${String(f.properties?.["id"] || "Element GIS")} · Nevalidat`)
+        )}
         {enabled["gis"] &&
           data.layers["gis"]?.features
-            .filter((f) => f.properties?.["kind"] === "bransament")
+            .filter((f) => f.properties?.["kind"] === "bransament" && !unvalidatedGisLines(data).includes(f))
             .map((f, i) =>
               line(
                 f.geometry,

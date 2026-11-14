@@ -14,6 +14,8 @@ import "leaflet/dist/leaflet.css";
 import * as turf from "@turf/turf";
 import { Layers, LocateFixed, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { StatusFilters } from "./StatusFilters";
+import { initialStatuses, visibleOsm, visibleScore, type StatusSelection } from "@/lib/gridtwin/map-status";
 import { OpenFreeMapLayer } from "./OpenFreeMapLayer";
 import { osmCoverage, osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmTones, osmVerdicts } from "@/lib/gridtwin/osm-inspections";
@@ -162,6 +164,7 @@ export default function MapView({
   position,
   onPosition,
   mini = false,
+  statuses,
 }: {
   data: Workspace;
   selected?: string | undefined;
@@ -173,7 +176,10 @@ export default function MapView({
   position?: Position;
   onPosition?: ((p: Position) => void) | undefined;
   mini?: boolean;
+  statuses?: StatusSelection;
 }) {
+  const [localStatuses, setLocalStatuses] = useState<StatusSelection>(data.layers["osm_constanta"] ? initialStatuses : { ...initialStatuses, primary: false, safe: true });
+  const activeStatuses = statuses ?? localStatuses;
   const [base, setBase] = useState("satellite");
   useEffect(() => {
     setBase(localStorage.getItem("gridtwin-basemap") || "satellite");
@@ -227,6 +233,7 @@ export default function MapView({
   const scores = useMemo(() => effectiveScores(data), [data]);
   const osm = data.layers["osm_constanta"];
   const meta = osmMetadata(osm);
+  const filteredOsm = useMemo(() => osm ? { ...osm, features: visibleOsm(osm.features, data.reports, activeStatuses) } : undefined, [osm, data.reports, activeStatuses]);
   const coverage = useMemo(() => (osm ? osmCoverage(osm) : undefined), [osm]);
   const cells = useMemo(
     () => (enabled["confidence"] ? confidenceCells(data) : []),
@@ -309,10 +316,10 @@ export default function MapView({
               </Tooltip>
             </GeoJSON>
           ))}
-        {enabled["osm"] && osm && (
+        {enabled["osm"] && filteredOsm && (
           <GeoJSON
-            key={`osm-${meta?.importedAt}-${data.reports.filter(r => r.osm_id).map(r => `${r.id}-${r.status}`).join(",")}`}
-            data={osm}
+            key={`osm-${meta?.importedAt}-${JSON.stringify(activeStatuses)}-${data.reports.filter(r => r.osm_id).map(r => `${r.id}-${r.status}`).join(",")}`}
+            data={filteredOsm}
             style={f => { const r = f && approvedOsmInspection(f, data.reports); return { color: palette[r?.osm_verdict ? osmTones[r.osm_verdict] : "primary"], weight: 3, fillOpacity: 0.12 }; }}
             pointToLayer={(f, p) => {
               const r = approvedOsmInspection(f, data.reports);
@@ -340,7 +347,7 @@ export default function MapView({
           />
         )}
         {enabled["confidence"] &&
-          cells.map((c) =>
+          cells.filter(c => activeStatuses[c.unknown ? "primary" : tone(c.scor)]).map((c) =>
             line(
               c.geometry,
               `${c.id}-${c.scor}-${c.unknown}`,
@@ -398,7 +405,7 @@ export default function MapView({
               ),
             )}
         {enabled["gis"] &&
-          scores.map((s) =>
+          scores.filter(s => visibleScore(s.scor, activeStatuses)).map((s) =>
             line(
               s.geometry,
               `score-${s.id}-${s.scor}`,
@@ -496,7 +503,7 @@ export default function MapView({
             ))}
         {enabled["conductors"] &&
           zoom >= 18 &&
-          scores.map((s) => {
+          scores.filter(s => visibleScore(s.scor, activeStatuses)).map((s) => {
             const attrs = conductor(data, s.id);
             const section = attrs[1],
               material = attrs[2];
@@ -524,6 +531,7 @@ export default function MapView({
           })}
         {position && <Pick position={position} onPosition={onPosition} />}
       </MapContainer>
+      {mini && <div className="mini-legend"><StatusFilters selected={localStatuses} onChange={setLocalStatuses} /><div className="legend-row"><i className="legend-dot" />Stâlp marcat în teren</div></div>}
       {!mini && (
         <>
           <div className="map-toolbar">
@@ -643,7 +651,7 @@ export default function MapView({
               OpenStreetMap · {osm?.features.length} obiecte
               <br />
               Import:{" "}
-              {meta.importedAt ? new Date(meta.importedAt).toLocaleString("ro-RO") : "neconfirmat"}
+              {meta.importedAt ? new Date(meta.importedAt).toLocaleString("ro-RO", { timeZone: "Europe/Bucharest" }) : "neconfirmat"}
               <br />
               Zone punctate: acoperire de verificat, nu absența rețelei
             </div>

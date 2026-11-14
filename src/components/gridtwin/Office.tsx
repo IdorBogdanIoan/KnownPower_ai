@@ -42,6 +42,8 @@ import { useOperator } from "./Shell";
 import { osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmVerdicts, osmTones } from "@/lib/gridtwin/osm-inspections";
 import { OsmOfficeList } from "./OsmOfficeList";
+import { StatusFilters } from "./StatusFilters";
+import { initialStatuses, type StatusSelection } from "@/lib/gridtwin/map-status";
 const MapView = lazy(() => import("./MapView"));
 const tipIcons: Record<string, typeof Activity> = {
   gol_retea: Link2,
@@ -95,6 +97,7 @@ function Photo({ path }: { path: string | null }) {
 export function Office() {
   const data = useWorkspace();
   const osmMeta = osmMetadata(data.layers["osm_constanta"]);
+  const [statuses, setStatuses] = useState<StatusSelection>(data.layers["osm_constanta"] ? initialStatuses : { ...initialStatuses, primary: false, safe: true });
   const actor = useOperator();
   const client = useQueryClient();
   const [tab, setTab] = useState(data.layers["osm_constanta"] ? "osm" : "proposals");
@@ -201,7 +204,6 @@ export function Office() {
             {data.layers["osm_constanta"]
               ? "Rețea cartografiată · Constanța"
               : "Rețea de joasă tensiune"}{" "}
-            <span className="demo-pill">{data.layers["osm_constanta"] ? "OSM" : "JT"}</span>
           </div>
           <div className="workspace-subtitle">
             {data.layers["osm_constanta"]
@@ -220,7 +222,7 @@ export function Office() {
               </a>{" "}
               · Import:{" "}
               {osmMeta.importedAt
-                ? new Date(osmMeta.importedAt).toLocaleString("ro-RO")
+                ? new Date(osmMeta.importedAt).toLocaleString("ro-RO", { timeZone: "Europe/Bucharest" })
                 : "neconfirmat"}{" "}
               · Acoperire incompletă
             </div>
@@ -246,6 +248,7 @@ export function Office() {
           <Suspense fallback={<div className="map-loading">Se încarcă harta…</div>}>
             <MapView
               data={data}
+              statuses={statuses}
               selected={selected}
               filter={filter}
               onSelect={select}
@@ -259,6 +262,7 @@ export function Office() {
           </Suspense>
         </ClientOnly>
         <aside className="operator-panel">
+          <StatusFilters selected={statuses} onChange={setStatuses} />
           <div className="stats">
             {[
               ["safe", "Sigur", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "sigur").length : scores.filter((s) => s.scor >= 0.7).length],

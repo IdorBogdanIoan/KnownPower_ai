@@ -175,7 +175,7 @@ export function FieldPage() {
           <p>Raportul tău așteaptă aprobarea operatorului.</p>
           <p className="font-mono text-xs">{sent}</p>
           <Button asChild>
-            <Link to="/birou">Deschide biroul</Link>
+            <Link to="/birou">Deschide harta</Link>
           </Button>
           <Button
             variant="outline"

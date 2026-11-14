@@ -349,26 +349,29 @@ input {
   font-weight: 600;
 }
 .workspace-bar {
-  height: 62px;
+  min-height: 108px;
+  height: auto;
   background: var(--card);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 24px;
+  padding: 14px 24px;
+  gap: 20px;
   flex-shrink: 0;
 }
 .workspace-title {
-  font-size: 17px;
+  font-size: 20px;
   font-weight: 600;
   display: flex;
   gap: 12px;
   align-items: center;
 }
 .workspace-subtitle {
-  color: var(--muted-foreground);
-  font-size: 12px;
-  margin-top: 3px;
+  color: var(--foreground);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-top: 5px;
 }
 .workspace-actions {
   display: flex;
@@ -544,6 +547,18 @@ input[type="checkbox"] {
   border-bottom: 1px solid var(--border);
   padding: 21px 12px 18px;
 }
+.status-filters {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.status-filters legend { float: left; width: 100%; grid-column: 1 / -1; font-size: 13px; font-weight: 600; }
+.status-filter { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
+.mini-legend { position: absolute; right: 10px; bottom: 24px; z-index: 500; background: var(--card); color: var(--foreground); border: 1px solid var(--border); border-radius: 6px; box-shadow: var(--shadow-panel); max-width: calc(100% - 20px); padding: 10px; font-size: 11px; }
+.mini-legend .status-filters { padding: 0 0 10px; gap: 8px 14px; }
+.mini-legend .status-filter { font-size: 12px; }
 .stat {
   padding: 0 9px;
   border-right: 1px solid var(--border);
@@ -1293,10 +1308,10 @@ meter::-webkit-meter-optimum-value {
     grid-template-columns: minmax(0, 1fr) 360px;
   }
   .workspace-bar {
-    padding: 0 16px;
+    padding: 14px 16px;
   }
   .workspace-subtitle {
-    font-size: 11px;
+    font-size: 13px;
   }
   .import-grid {
     grid-template-columns: 1fr;
@@ -1342,16 +1357,16 @@ meter::-webkit-meter-optimum-value {
     width: 28px;
   }
   .workspace-bar {
-    height: 68px;
+    height: auto;
     gap: 8px;
-    padding: 0 12px;
+    padding: 12px;
   }
   .workspace-title {
-    font-size: 14px;
+    font-size: 18px;
   }
   .workspace-subtitle {
-    font-size: 10px;
-    max-width: 200px;
+    font-size: 12px;
+    max-width: none;
   }
   .workspace-actions button {
     padding: 0 8px;
@@ -1450,13 +1465,12 @@ meter::-webkit-meter-optimum-value {
     gap: 8px;
   }
   .workspace-title {
-    white-space: nowrap;
+    white-space: normal;
   }
   .workspace-subtitle {
     max-width: none;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow-wrap: anywhere;
   }
   .workspace-actions {
     justify-content: flex-start;

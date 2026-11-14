@@ -41,7 +41,7 @@ export function OsmInspectionForm({ data, initialId }: { data: Workspace; initia
     } catch { setError("Verificarea nu a fost salvată. Dovezile sunt păstrate; reîncearcă."); }
     finally { setBusy(false); }
   }
-  if (sent) return <section className="field-step"><CheckCircle2 className="safe" /><h2>Verificare OSM trimisă</h2><p>Eticheta așteaptă aprobarea operatorului.</p><Button asChild><Link to="/birou">Deschide biroul</Link></Button><Button variant="outline" className="ml-2" onClick={() => { setSent(false); setPhoto(undefined); setPreview(""); setNotes(""); setVerdict(""); }}>Verificare nouă</Button></section>;
+  if (sent) return <section className="field-step"><CheckCircle2 className="safe" /><h2>Verificare OSM trimisă</h2><p>Eticheta așteaptă aprobarea operatorului.</p><Button asChild><Link to="/birou">Deschide harta</Link></Button><Button variant="outline" className="ml-2" onClick={() => { setSent(false); setPhoto(undefined); setPreview(""); setNotes(""); setVerdict(""); }}>Verificare nouă</Button></section>;
   return <section className="field-step space-y-4">
     <h2>Verificare rețea OSM · Constanța</h2>
     <p className="text-xs text-muted-foreground">Evaluare vizuală documentată, nu certificare de siguranță electrică. Acces DEMO fără identitate verificată.</p>

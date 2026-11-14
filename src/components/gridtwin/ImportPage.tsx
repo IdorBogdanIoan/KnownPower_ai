@@ -115,7 +115,7 @@ export function ImportPage() {
           </div>
           <Button variant="outline" asChild>
             <Link to="/birou">
-              Deschide biroul <ArrowRight />
+              Deschide harta <ArrowRight />
             </Link>
           </Button>
         </div>

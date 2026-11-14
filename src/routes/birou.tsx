@@ -4,12 +4,12 @@ import { Office } from "@/components/gridtwin/Office";
 export const Route = createFileRoute("/birou")({
   head: () => ({
     meta: [
-      { title: "Birou · GridTwin" },
+      { title: "Hartă · GridTwin" },
       {
         name: "description",
         content: "Harta rețelei JT, propuneri de corecție și aprobări auditate de operator.",
       },
-      { property: "og:title", content: "Birou · GridTwin" },
+      { property: "og:title", content: "Hartă · GridTwin" },
       {
         property: "og:description",
         content: "Verifică rețeaua și aprobă corecțiile din GIS și din teren.",

@@ -37,7 +37,7 @@ export function AppShell({ children }: { children: ReactNode }) {
           <nav className="header-nav">
             <Link to="/birou" activeProps={{ className: "active" }}>
               <Map />
-              Birou
+              Hartă
             </Link>
             <Link to="/teren" activeProps={{ className: "active" }}>
               <Camera />

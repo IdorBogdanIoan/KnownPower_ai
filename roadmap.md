@@ -1,4 +1,5 @@
 # GridTwin
+- [x] Improve map heading readability, remove OSM title badge, rename navigation to Hartă, add legends to both field maps and multi-select status filters; 14 tests and desktop/mobile browser checks passed
 - [x] Repair file imports: renamed JSON/GeoJSON destinations, proposals GeoJSON support and readable errors; 14 tests passed, existing streets reimported unchanged and persistence verified on desktop/mobile
 - [x] OSM field inspections with required photo/notes/position, operator-reviewed labels, matching-geometry map display and reversible audit history; 11 rule tests and desktop/mobile form checks passed
 - [ ] Verify OSM submission, photo read-back and approval end-to-end — awaiting a real inspection photograph and observations; no invented evidence or real-network approvals used in testing

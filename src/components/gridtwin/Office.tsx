@@ -275,21 +275,19 @@ export function Office() {
           <StatusFilters selected={statuses} onChange={setStatuses} />
           <div className="stats">
             {[
-              ["safe", "Sigur", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "sigur").length : scores.filter((s) => s.scor >= 0.7).length],
+              ["safe", "Tronsoane sigure", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "sigur").length : scores.filter((s) => s.scor >= 0.7).length],
               [
                 "warning",
-                "De verificat",
+                "Tronsoane de verificat",
                 osmMeta ? osmApproved.filter(r => r?.osm_verdict === "de_verificat").length : scores.filter((s) => s.scor >= 0.4 && s.scor < 0.7).length,
               ],
-              ["danger", "Nesigur", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "nesigur").length : scores.filter((s) => s.scor < 0.4).length],
-              ["primary", osmMeta ? "Nevalidat" : "În așteptare", osmMeta ? osmApproved.filter(r => !r).length : pending],
+              ["danger", "Tronsoane nesigure", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "nesigur").length : scores.filter((s) => s.scor < 0.4).length],
+              ["primary", "Tronsoane nevalidate", osmMeta ? osmApproved.filter(r => !r).length : pending],
             ].map(([color, label, value]) => (
               <div className="stat" key={label}>
                 <div className={`stat-number ${color}`}>{value}</div>
                 <div className="stat-label">
                   {label}
-                  <br />
-                  {osmMeta ? "obiecte OSM" : label === "În așteptare" ? "decizii" : "tronsoane"}
                 </div>
               </div>
             ))}

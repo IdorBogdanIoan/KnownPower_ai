@@ -1,5 +1,5 @@
 import { approvedOsmInspection, osmTones } from "./osm-inspections";
-import { tone, type Feature, type Report } from "./model";
+import { tone, type Feature, type Report, type Proposal } from "./model";
 
 export const statusLabels = { safe: "Sigur", warning: "De verificat", danger: "Nesigur", primary: "Nevalidat" } as const;
 export type MapStatus = keyof typeof statusLabels;
@@ -14,4 +14,9 @@ export function visibleOsm(features: Feature[], reports: Report[], selected: Sta
 }
 export function visibleScore(score: number, selected: StatusSelection) {
   return selected[tone(score)];
+}
+export function visibleProposal(proposal: Proposal, selected: StatusSelection) {
+  if (proposal.status === "respins") return false;
+  const status = proposal.status === "aprobat" ? "safe" : proposal.propus["flag"] === "echipa_teren" ? "warning" : "primary";
+  return selected[status];
 }

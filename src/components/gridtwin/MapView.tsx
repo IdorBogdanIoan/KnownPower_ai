@@ -15,7 +15,7 @@ import * as turf from "@turf/turf";
 import { Layers, LocateFixed, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusFilters } from "./StatusFilters";
-import { initialStatuses, visibleOsm, visibleScore, type StatusSelection } from "@/lib/gridtwin/map-status";
+import { initialStatuses, visibleOsm, visibleScore, visibleProposal, type StatusSelection } from "@/lib/gridtwin/map-status";
 import { OpenFreeMapLayer } from "./OpenFreeMapLayer";
 import { osmCoverage, osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmTones, osmVerdicts } from "@/lib/gridtwin/osm-inspections";
@@ -467,7 +467,7 @@ export default function MapView({
           data.proposals
             .filter(
               (p) =>
-                p["status"] !== "respins" &&
+                visibleProposal(p, activeStatuses) &&
                 (p["tip"] !== "atribute_lipsa" ||
                   p["id"] === selected ||
                   filter === "atribute_lipsa"),

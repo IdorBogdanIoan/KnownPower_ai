@@ -235,6 +235,23 @@ export default function MapView({
     return () => observer.disconnect();
   }, []);
   const scores = useMemo(() => effectiveScores(data), [data]);
+  const visibleBranches = useMemo(() => {
+    const evaluated = new Set(evaluatedGisLines(data));
+    return (data.layers["gis"]?.features || []).filter(f => f.properties?.["kind"] === "bransament" && evaluated.has(f));
+  }, [data]);
+  const undergroundKeys = useMemo(() => {
+    const keys = new Set<string>();
+    for (const f of data.layers["gis"]?.features || [])
+      if (f.properties?.["kind"] === "tronson" && f.properties?.["tip_retea"] === "subteran") {
+        if (f.properties?.["id"] != null) keys.add(`id:${f.properties["id"]}`);
+        keys.add(`g:${JSON.stringify(f.geometry)}`);
+      }
+    return keys;
+  }, [data]);
+  const poleFeatures = useMemo(() => (data.layers["gis"]?.features || []).filter(f => ["stalp", "post_transformare"].includes(f.properties?.["kind"])), [data]);
+  const streetsLayer = data.layers["streets"];
+  const unknownLayer = data.layers["unknown"];
+  const detail = mini || zoom >= 16;
   const osm = data.layers["osm_constanta"];
   const meta = osmMetadata(osm);
   const filteredOsm = useMemo(() => osm ? { ...osm, features: visibleOsm(osm.features, data.reports, activeStatuses) } : undefined, [osm, data.reports, activeStatuses]);
@@ -290,6 +307,7 @@ export default function MapView({
         maxZoom={22}
         className="map-canvas"
         zoomControl={!mini}
+        preferCanvas
       >
         {base === "map" && <OpenFreeMapLayer />}
         {base === "satellite" && (
@@ -362,38 +380,29 @@ export default function MapView({
               `${c.id} · ${Math.round(c.scor * 100)}%${c.unknown ? " · nu se poate verifica din imagine" : ""}`,
             ),
           )}
-        {enabled["buildings"] && data.layers["buildings"] && (
+        {enabled["buildings"] && detail && data.layers["buildings"] && (
           <GeoJSON
             data={data.layers["buildings"]}
             style={{ color: palette["building"], weight: 1, fillOpacity: 0.3 }}
           />
         )}
         {enabled["streets"] &&
-          data.layers["streets"]?.features.map((f, i) => (
+          streetsLayer && (
             <GeoJSON
-              key={`street-${i}`}
-              data={f}
+              data={streetsLayer}
               style={{ color: palette["road"], weight: 8, opacity: 0.8 }}
             />
-          ))}
+          )}
         {enabled["unknown"] &&
-          data.layers["unknown"]?.features.map((f, i) => (
+          unknownLayer && (
             <GeoJSON
-              key={`unknown-${i}`}
-              data={f}
+              data={unknownLayer}
               style={{ color: palette["unknown"], fillOpacity: 0.18, weight: 1, dashArray: "3 5" }}
-            >
-              <Tooltip>
-                {f.properties?.["motiv"] ||
-                  f.properties?.["reason"] ||
-                  "Nu se poate verifica din imagine"}
-              </Tooltip>
-            </GeoJSON>
-          ))}
+              onEachFeature={(f, layer) => layer.bindTooltip(String(f.properties?.["motiv"] || f.properties?.["reason"] || "Nu se poate verifica din imagine"))}
+            />
+          )}
         {enabled["gis"] &&
-          data.layers["gis"]?.features
-            .filter((f) => f.properties?.["kind"] === "bransament" && evaluatedGisLines(data).includes(f))
-            .map((f, i) =>
+          visibleBranches.map((f, i) =>
               line(
                 f.geometry,
                 `branch-${i}`,
@@ -411,20 +420,17 @@ export default function MapView({
               `score-${s.id}-${s.scor}`,
               palette[tone(s.scor)],
               3.5,
-              data.layers["gis"]?.features.some(f =>
-                f.properties?.["kind"] === "tronson" && f.properties?.["tip_retea"] === "subteran" &&
-                (f.properties?.["id"] === s.id || JSON.stringify(f.geometry) === JSON.stringify(s.geometry))
-              ) ? "4 6" : undefined,
+              undergroundKeys.has(`id:${s.id}`) || undergroundKeys.has(`g:${JSON.stringify(s.geometry)}`) ? "4 6" : undefined,
               () => onInspect?.({ ...s, kind: "line" }),
               `${s.id} · ${Math.round(s.scor * 100)}% · ${s.motive.join(" · ")}`,
             ),
           )}
         {enabled["gis"] &&
-          data.layers["gis"]?.features
-            .filter((f) => ["stalp", "post_transformare"].includes(f.properties?.["kind"]))
+          poleFeatures
             .map((f, i) => {
               if (f.geometry.type !== "Point") return null;
               const p = f.properties || {};
+              if (!detail && p["kind"] !== "post_transformare") return null;
               return (
                 <CircleMarker
                   key={`pole-${i}`}

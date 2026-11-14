@@ -549,13 +549,13 @@ input[type="checkbox"] {
   padding: 21px 12px 18px;
 }
 .status-filters {
-  padding: 14px 18px;
+  padding: 8px 14px;
   border-bottom: 1px solid var(--border);
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
+  gap: 6px 10px;
 }
-.status-filters legend { float: left; width: 100%; grid-column: 1 / -1; font-size: 13px; font-weight: 600; }
+.status-filters legend { float: left; width: 100%; grid-column: 1 / -1; font-size: 12px; font-weight: 600; }
 .status-filter { display: flex; align-items: center; gap: 8px; font-size: 13px; cursor: pointer; }
 .mini-legend { position: absolute; right: 10px; bottom: 24px; z-index: 500; background: var(--card); color: var(--foreground); border: 1px solid var(--border); border-radius: 6px; box-shadow: var(--shadow-panel); max-width: calc(100% - 20px); padding: 10px; font-size: 11px; }
 .mini-legend .status-filters { padding: 0 0 10px; gap: 8px 14px; }
@@ -621,17 +621,17 @@ input[type="checkbox"] {
   font: 10px var(--font-mono);
 }
 .panel-filters {
-  padding: 16px;
+  padding: 10px 12px;
   border-bottom: 1px solid var(--border);
 }
 .search-box {
   position: relative;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
 }
 .search-box svg {
   position: absolute;
   left: 10px;
-  top: 10px;
+  top: 8px;
   width: 14px;
   height: 14px;
   color: var(--muted-foreground);

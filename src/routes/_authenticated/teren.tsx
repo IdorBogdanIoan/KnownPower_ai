@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { workspaceQuery } from "@/lib/gridtwin/query";
 import { FieldPage } from "@/components/gridtwin/FieldPage";
-export const Route = createFileRoute("/teren")({
+import { AccessRequired } from "@/components/gridtwin/Account";
+export const Route = createFileRoute("/_authenticated/teren")({
   validateSearch: (search: Record<string, unknown>): { osm?: string } => typeof search["osm"] === "string" ? { osm: search["osm"] } : {},
   head: () => ({
     meta: [
@@ -20,5 +21,5 @@ export const Route = createFileRoute("/teren")({
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(workspaceQuery),
-  component: FieldPage,
+  component: () => <AccessRequired kind="submit"><FieldPage /></AccessRequired>,
 });

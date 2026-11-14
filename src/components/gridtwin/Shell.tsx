@@ -1,19 +1,20 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
-import { Activity, Map, Camera, Upload, Moon, Sun, ArrowRight } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { Link, useNavigate } from "@tanstack/react-router";
+import { Activity, Map, Camera, Upload, Moon, Sun, LogOut, Settings, UserRound } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAccount } from "./Account";
+import { roleLabels } from "@/lib/gridtwin/access";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "sonner";
-const OperatorContext = createContext("");
-export const useOperator = () => useContext(OperatorContext);
+export const useOperator = () => useAccount().name;
 export function AppShell({ children }: { children: ReactNode }) {
-  const [actor, setActor] = useState("");
-  const [name, setName] = useState("");
-  const [ask, setAsk] = useState(false);
+  const account = useAccount();
+  const actor = account.name;
+  const navigate = useNavigate();
+  const client = useQueryClient();
   const [dark, setDark] = useState(false);
   useEffect(() => {
-    const saved = localStorage.getItem("gridtwin-operator");
-    if (saved) setActor(saved);
-    else setAsk(true);
     const theme = localStorage.getItem("gridtwin-theme") === "dark";
     setDark(theme);
     document.documentElement.classList.toggle("dark", theme);
@@ -25,7 +26,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     localStorage.setItem("gridtwin-theme", next ? "dark" : "light");
   }
   return (
-    <OperatorContext.Provider value={actor}>
+    <>
       <div className="app-shell">
         <header className="app-header">
           <Link to="/birou" className="brand">
@@ -39,17 +40,18 @@ export function AppShell({ children }: { children: ReactNode }) {
               <Map />
               Hartă
             </Link>
-            <Link to="/teren" activeProps={{ className: "active" }}>
+            {account.submit && <Link to="/teren" activeProps={{ className: "active" }}>
               <Camera />
               Teren
-            </Link>
-            <Link to="/import" activeProps={{ className: "active" }}>
+            </Link>}
+            {account.admin && <Link to="/import" activeProps={{ className: "active" }}>
               <Upload />
               Import
-            </Link>
+            </Link>}
+            {account.admin && <Link to="/admin" activeProps={{ className: "active" }}><Settings />Administrare</Link>}
           </nav>
           <div className="header-right">
-            <span className="live">Sincronizat</span>
+            <span className="live">{account.roles.map(r => roleLabels[r]).join(" · ")}</span>
             <Button
               variant="ghost"
               size="icon"
@@ -59,15 +61,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               {dark ? <Sun /> : <Moon />}
             </Button>
-            <Button
-              variant="ghost"
-              onClick={() => {
-                setName(actor);
-                setAsk(true);
-              }}
-              className="px-1"
-              title="Schimbă operatorul"
-            >
+            {account.userId ? <><Button variant="ghost" asChild className="px-1" title="Profilul meu"><Link to="/profil">
               <span className="avatar">
                 {actor
                   .split(" ")
@@ -77,51 +71,12 @@ export function AppShell({ children }: { children: ReactNode }) {
                   .toUpperCase() || "OP"}
               </span>
               <span className="actor-name text-xs">{actor || "Operator"}</span>
-            </Button>
+            </Link></Button><Button variant="ghost" size="icon" aria-label="Deconectare" title="Deconectare" onClick={async () => { await client.cancelQueries(); client.clear(); await supabase.auth.signOut(); await navigate({ to: "/auth", replace: true }); }}><LogOut /></Button></> : <Button variant="outline" asChild><Link to="/auth"><UserRound />Login</Link></Button>}
           </div>
         </header>
         {children}
       </div>
       <Toaster position="top-center" richColors />
-      {ask && (
-        <div className="modal-shade">
-          <form
-            className="name-modal"
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (name.trim().length < 2) return;
-              localStorage.setItem("gridtwin-operator", name.trim());
-              setActor(name.trim());
-              setAsk(false);
-            }}
-          >
-            <div className="brand">
-              <span className="brand-mark">
-                <Activity />
-              </span>
-              GridTwin
-            </div>
-            <h2>Cum te cheamă?</h2>
-            <p>Numele tău va însoți deciziile și rapoartele din jurnal.</p>
-            <label className="form-label" htmlFor="operator">
-              Nume operator
-            </label>
-            <input
-              autoFocus
-              id="operator"
-              className="form-control"
-              placeholder="Nume și prenume"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              minLength={2}
-            />
-            <Button type="submit" disabled={name.trim().length < 2}>
-              Intră în GridTwin <ArrowRight />
-            </Button>
-          </form>
-        </div>
-      )}
-    </OperatorContext.Provider>
+    </>
   );
 }

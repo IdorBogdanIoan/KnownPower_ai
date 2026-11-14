@@ -10,63 +10,105 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as BirouRouteImport } from './routes/birou'
-import { Route as ImportRouteImport } from './routes/import'
-import { Route as TerenRouteImport } from './routes/teren'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
+import { Route as AuthenticatedBirouRouteImport } from './routes/_authenticated/birou'
+import { Route as AuthenticatedImportRouteImport } from './routes/_authenticated/import'
+import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
+import { Route as AuthenticatedTerenRouteImport } from './routes/_authenticated/teren'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BirouRoute = BirouRouteImport.update({
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedBirouRoute = AuthenticatedBirouRouteImport.update({
   id: '/birou',
   path: '/birou',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const ImportRoute = ImportRouteImport.update({
+const AuthenticatedImportRoute = AuthenticatedImportRouteImport.update({
   id: '/import',
   path: '/import',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
-const TerenRoute = TerenRouteImport.update({
+const AuthenticatedProfilRoute = AuthenticatedProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTerenRoute = AuthenticatedTerenRouteImport.update({
   id: '/teren',
   path: '/teren',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/birou': typeof BirouRoute
-  '/import': typeof ImportRoute
-  '/teren': typeof TerenRoute
+  '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/birou': typeof AuthenticatedBirouRoute
+  '/import': typeof AuthenticatedImportRoute
+  '/profil': typeof AuthenticatedProfilRoute
+  '/teren': typeof AuthenticatedTerenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/birou': typeof BirouRoute
-  '/import': typeof ImportRoute
-  '/teren': typeof TerenRoute
+  '/auth': typeof AuthRoute
+  '/admin': typeof AuthenticatedAdminRoute
+  '/birou': typeof AuthenticatedBirouRoute
+  '/import': typeof AuthenticatedImportRoute
+  '/profil': typeof AuthenticatedProfilRoute
+  '/teren': typeof AuthenticatedTerenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/birou': typeof BirouRoute
-  '/import': typeof ImportRoute
-  '/teren': typeof TerenRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
+  '/_authenticated/birou': typeof AuthenticatedBirouRoute
+  '/_authenticated/import': typeof AuthenticatedImportRoute
+  '/_authenticated/profil': typeof AuthenticatedProfilRoute
+  '/_authenticated/teren': typeof AuthenticatedTerenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/birou' | '/import' | '/teren'
+  fullPaths:
+    '/' | '/auth' | '/admin' | '/birou' | '/import' | '/profil' | '/teren'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/birou' | '/import' | '/teren'
-  id: '__root__' | '/' | '/birou' | '/import' | '/teren'
+  to: '/' | '/auth' | '/admin' | '/birou' | '/import' | '/profil' | '/teren'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/admin'
+    | '/_authenticated/birou'
+    | '/_authenticated/import'
+    | '/_authenticated/profil'
+    | '/_authenticated/teren'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  BirouRoute: typeof BirouRoute
-  ImportRoute: typeof ImportRoute
-  TerenRoute: typeof TerenRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,35 +120,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/birou': {
-      id: '/birou'
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/birou': {
+      id: '/_authenticated/birou'
       path: '/birou'
       fullPath: '/birou'
-      preLoaderRoute: typeof BirouRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedBirouRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/import': {
-      id: '/import'
+    '/_authenticated/import': {
+      id: '/_authenticated/import'
       path: '/import'
       fullPath: '/import'
-      preLoaderRoute: typeof ImportRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedImportRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
-    '/teren': {
-      id: '/teren'
+    '/_authenticated/profil': {
+      id: '/_authenticated/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof AuthenticatedProfilRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/teren': {
+      id: '/_authenticated/teren'
       path: '/teren'
       fullPath: '/teren'
-      preLoaderRoute: typeof TerenRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedTerenRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
+  AuthenticatedBirouRoute: typeof AuthenticatedBirouRoute
+  AuthenticatedImportRoute: typeof AuthenticatedImportRoute
+  AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
+  AuthenticatedTerenRoute: typeof AuthenticatedTerenRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
+  AuthenticatedBirouRoute: AuthenticatedBirouRoute,
+  AuthenticatedImportRoute: AuthenticatedImportRoute,
+  AuthenticatedProfilRoute: AuthenticatedProfilRoute,
+  AuthenticatedTerenRoute: AuthenticatedTerenRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  BirouRoute: BirouRoute,
-  ImportRoute: ImportRoute,
-  TerenRoute: TerenRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

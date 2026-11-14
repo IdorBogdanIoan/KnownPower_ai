@@ -29,7 +29,7 @@ import {
   type Position,
 } from "@/lib/gridtwin/model";
 import { useOperator } from "./Shell";
-import { Route } from "@/routes/teren";
+import { Route } from "@/routes/_authenticated/teren";
 import { OsmInspectionForm } from "./OsmInspectionForm";
 const MapView = lazy(() => import("./MapView"));
 async function resize(file: File): Promise<string> {

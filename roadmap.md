@@ -1,4 +1,6 @@
 # GridTwin
+- [x] Add Google/Lovable login, name/team profiles, four roles, protected workspace, server/database permission checks, admin role/configuration screen; 40 tests and signed-out desktop/mobile access-denial checks passed
+- [ ] Assign the first real admin and verify all four signed-in roles — no accounts exist yet; temporary-account creation is unavailable, awaiting the user's login and explicit first-admin account
 - [x] Improve map heading readability, remove OSM title badge, rename navigation to Hartă, add legends to both field maps and multi-select status filters; 14 tests and desktop/mobile browser checks passed
 - [x] Repair file imports: renamed JSON/GeoJSON destinations, proposals GeoJSON support and readable errors; 14 tests passed, existing streets reimported unchanged and persistence verified on desktop/mobile
 - [x] OSM field inspections with required photo/notes/position, operator-reviewed labels, matching-geometry map display and reversible audit history; 11 rule tests and desktop/mobile form checks passed

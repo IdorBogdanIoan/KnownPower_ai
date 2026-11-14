@@ -2,7 +2,9 @@ import { createServerFn } from "@tanstack/react-start";
 import { generateResponse } from "@lovable.dev/ai-gateway";
 import { z } from "zod";
 import { extractionSchema, fieldKeys } from "./model";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 export const extractSheet = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
   .inputValidator(
     z.object({
       pole: z
@@ -15,7 +17,9 @@ export const extractSheet = createServerFn({ method: "POST" })
         .regex(/^data:image\/(jpeg|png|webp);base64,/),
     }),
   )
-  .handler(async ({ data }) => {
+  .handler(async ({ data, context }) => {
+    const { data: roles, error } = await context.supabase.from("user_roles").select("role").eq("user_id", context.userId);
+    if (error || !roles?.some(r => r.role === "field_team" || r.role === "admin")) throw new Error("Acces interzis");
     try {
       const response = await generateResponse({
         model: "openai/gpt-6-astra",

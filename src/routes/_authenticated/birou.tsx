@@ -1,7 +1,7 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { workspaceQuery } from "@/lib/gridtwin/query";
 import { Office } from "@/components/gridtwin/Office";
-export const Route = createFileRoute("/birou")({
+export const Route = createFileRoute("/_authenticated/birou")({
   head: () => ({
     meta: [
       { title: "Hartă · GridTwin" },
@@ -18,14 +18,6 @@ export const Route = createFileRoute("/birou")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  loader: async ({ context }) => {
-    const data = await context.queryClient.ensureQueryData(workspaceQuery);
-    if (
-      !data.proposals.length &&
-      !data.scores.length &&
-      !data.layers["osm_constanta"]?.features.length
-    )
-      throw redirect({ to: "/import" });
-  },
+  loader: ({ context }) => context.queryClient.ensureQueryData(workspaceQuery),
   component: Office,
 });

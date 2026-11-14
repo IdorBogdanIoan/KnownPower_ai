@@ -1,6 +1,6 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { ClientOnly, Link } from "@tanstack/react-router";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Check,
   X,
@@ -39,6 +39,7 @@ import {
   type Report,
 } from "@/lib/gridtwin/model";
 import { useOperator } from "./Shell";
+import { useAccount } from "./Account";
 import { osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmVerdicts, osmTones } from "@/lib/gridtwin/osm-inspections";
 import { OsmOfficeList } from "./OsmOfficeList";
@@ -99,6 +100,8 @@ export function Office() {
   const osmMeta = osmMetadata(data.layers["osm_constanta"]);
   const [statuses, setStatuses] = useState<StatusSelection>(data.layers["osm_constanta"] ? initialStatuses : { ...initialStatuses, primary: false, safe: true });
   const actor = useOperator();
+  const access = useAccount();
+  const settings = useQuery({ queryKey: ["app-settings"], queryFn: async () => { const r = await supabase.from("app_settings").select("*"); if (r.error) throw r.error; return Object.fromEntries(r.data.map(x => [x.key,x.value])); } });
   const client = useQueryClient();
   const [tab, setTab] = useState(data.layers["osm_constanta"] ? "osm" : "proposals");
   const [osmSelected, setOsmSelected] = useState<string>();
@@ -155,7 +158,7 @@ export function Office() {
     kind: "proposal" | "field",
     decision: "aprobat" | "respins" | "in_asteptare",
   ) {
-    if (!actor) {
+    if (!actor || !access.validate) {
       toast.error("Completează numele operatorului.");
       return;
     }
@@ -201,9 +204,9 @@ export function Office() {
       <div className="workspace-bar">
         <div>
           <div className="workspace-title">
-            {data.layers["osm_constanta"]
+            {settings.data?.["workspace_title"] || (data.layers["osm_constanta"]
               ? "Rețea cartografiată · Constanța"
-              : "Rețea de joasă tensiune"}{" "}
+              : "Rețea de joasă tensiune")}{" "}
           </div>
           <div className="workspace-subtitle">
             {data.layers["osm_constanta"]
@@ -227,20 +230,21 @@ export function Office() {
               · Acoperire incompletă
             </div>
           )}
+          {settings.data?.["workspace_notice"] && <div className="workspace-subtitle">{settings.data["workspace_notice"]}</div>}
         </div>
         <div className="workspace-actions">
-          <Button variant="outline" size="sm" asChild>
+          {access.admin && <Button variant="outline" size="sm" asChild>
             <Link to="/import">
               <Upload />
               Importă date
             </Link>
-          </Button>
-          <Button variant="field" size="sm" asChild>
+          </Button>}
+          {access.submit && <Button variant="field" size="sm" asChild>
             <Link to="/teren">
               <Camera />
               Raport din teren
             </Link>
-          </Button>
+          </Button>}
         </div>
       </div>
       <div className="office-body">
@@ -365,7 +369,7 @@ export function Office() {
             </div>
           )}
           <div className="panel-scroll">
-            {tab === "osm" && <><div className="p-3 text-xs text-muted-foreground">Etichete din teren · nu certificare electrică. Acces DEMO fără identitate verificată.</div>{osmSelected && <Button variant="ghost" size="sm" onClick={() => setOsmSelected(undefined)}>Toate elementele OSM</Button>}<OsmOfficeList data={data} selected={osmSelected} onFocus={setFocus} onReports={() => setTab("field")} /></>}
+            {tab === "osm" && <><div className="p-3 text-xs text-muted-foreground">Etichete din teren · nu certificare electrică.</div>{osmSelected && <Button variant="ghost" size="sm" onClick={() => setOsmSelected(undefined)}>Toate elementele OSM</Button>}<OsmOfficeList data={data} selected={osmSelected} onFocus={setFocus} onReports={() => setTab("field")} /></>}
             {currentInspection && (
               <section className="inspection">
                 <div className="inspection-head">
@@ -439,6 +443,7 @@ export function Office() {
                 )}
                 <Button
                   variant="outline"
+                  disabled={!access.validate}
                   className="w-full mt-4 text-xs"
                   onClick={async () => {
                     try {
@@ -531,7 +536,7 @@ export function Office() {
                       <Link2 />
                       {p["sursa"]}
                     </div>
-                    {p["status"] === "in_asteptare" ? (
+                    {access.validate && (p["status"] === "in_asteptare" ? (
                       <div className="proposal-actions">
                         <Button
                           variant="approve"
@@ -589,7 +594,7 @@ export function Office() {
                           Anulează
                         </Button>
                       </div>
-                    )}
+                    ))}
                   </article>
                 );
               })}
@@ -626,7 +631,7 @@ export function Office() {
                         </span>
                       </div>
                       <div className="object-id">
-                        {r.actor} · {new Date(r.created_at).toLocaleString("ro-RO")}
+                        {r.actor} · {r.submitted_team || ""} · {new Date(r.created_at).toLocaleString("ro-RO")}
                       </div>
                       {r.osm_id && <><div className="object-id">OSM · {r.osm_id}</div><h3 className={r.osm_verdict ? osmTones[r.osm_verdict] : "primary"}>{r.osm_verdict && osmVerdicts[r.osm_verdict]} · {r.status === "aprobat" ? "aprobat" : "propus"}</h3><p className="text-xs">{r.evidence_notes}</p><p className="text-xs text-muted-foreground">Verificat: {new Date(r.inspected_at || r.created_at).toLocaleString("ro-RO")}</p></>}
                       <div className="report-photos">
@@ -674,7 +679,7 @@ export function Office() {
                             {p["id"]} · {labels[p["tip"]]}
                           </Button>
                         ))}
-                      {r.status === "in_asteptare" ? (
+                      {access.validate && (r.status === "in_asteptare" ? (
                         <div className="proposal-actions mt-3">
                           <Button
                             variant="approve"
@@ -706,7 +711,7 @@ export function Office() {
                             Anulează
                           </Button>
                         </div>
-                      )}
+                      ))}
                     </article>
                   ))
               ) : (
@@ -714,11 +719,11 @@ export function Office() {
                   <Camera />
                   <h3>Niciun raport din teren</h3>
                   <p>Rapoartele trimise de echipă vor apărea aici.</p>
-                  <Button variant="outline" asChild>
+                  {access.submit && <Button variant="outline" asChild>
                     <Link to="/teren">
                       Raport nou <ArrowUpRight />
                     </Link>
-                  </Button>
+                  </Button>}
                 </div>
               ))}
             {tab === "audit" &&

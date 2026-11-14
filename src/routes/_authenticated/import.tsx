@@ -1,7 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { workspaceQuery } from "@/lib/gridtwin/query";
 import { ImportPage } from "@/components/gridtwin/ImportPage";
-export const Route = createFileRoute("/import")({
+import { AccessRequired } from "@/components/gridtwin/Account";
+export const Route = createFileRoute("/_authenticated/import")({
   head: () => ({
     meta: [
       { title: "Import de date · GridTwin" },
@@ -19,5 +20,5 @@ export const Route = createFileRoute("/import")({
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(workspaceQuery),
-  component: ImportPage,
+  component: () => <AccessRequired kind="admin"><ImportPage /></AccessRequired>,
 });

@@ -1,5 +1,4 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { workspaceQuery } from "@/lib/gridtwin/query";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -18,13 +17,5 @@ export const Route = createFileRoute("/")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  loader: async ({ context }) => {
-    const data = await context.queryClient.ensureQueryData(workspaceQuery);
-    throw redirect({
-      to:
-        data.proposals.length || data.scores.length || data.layers["osm_constanta"]?.features.length
-          ? "/birou"
-          : "/import",
-    });
-  },
+  loader: () => { throw redirect({ to: "/birou" }); },
 });

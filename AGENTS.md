@@ -34,11 +34,12 @@ use the editor.
 - Validate file imports in a browser-safe shared parser; use known filename aliases or an explicit destination for renamed files so data never silently enters the wrong layer.
 - OSM inspections use explicit OSM IDs, immutable geometry snapshots and evidence in field reports; only the newest approved matching-geometry inspection colors an object, and OSM reports never affect simulated scores.
 - Keep OSM imports in the existing layers store under a distinct key with provenance metadata; fetch only a fixed Constanța study area, reject partial exports, require operator confirmation and never merge OSM into company GIS or simulated scores. Coverage cells express cartographic uncertainty, not verified network absence or completeness.
-- Public routes load one paginated workspace through a publishable-key server function and TanStack Query; Realtime invalidates it to keep the office and field views consistent.
+- Authenticated routes load one paginated workspace through an authenticated server function and TanStack Query; Realtime invalidates it to keep the office and field views consistent.
 - Normalize workspace payloads at both fetch and cache-read boundaries so older hydrated strings or missing collections cannot blank public pages.
 - Leaflet is dynamically imported behind ClientOnly, with browser-safe geometry logic in a separate module, to preserve SSR compatibility.
 - Use a browser-only OpenFreeMap MapLibre layer for the keyless street background, explicitly configuring the Vite worker URL so published maps do not fail to load workers; retain Leaflet overlays and the satellite background.
-- Demo decisions and field submission use transactional database functions so audit rows and status changes are saved together; permissive policies are demo-only.
+- Account roles live in protected user_roles, separate from editable name/team profiles; database policies and transactional RPCs enforce access and derive audit identity from auth.uid() because UI visibility is not authorization.
+- Application settings use an admin-writable store read by the office view; new accounts default to read-only and the initial real administrator must be explicitly identified, never auto-promoted.
 - Compute effective scores and inferred attributes from original imports plus approved reports/proposals, preserving original GIS and supporting undo without destructive edits.
 - Store photo object paths, not expiring URLs; request signed URLs for display because workspace policy requires private storage.
 - Run vision extraction in a TanStack server function through the AI Gateway SDK, validating model output and retaining manual edits on failure.

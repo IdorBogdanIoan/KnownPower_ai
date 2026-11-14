@@ -1,7 +1,10 @@
 import { createServerFn } from "@tanstack/react-start";
 import { convertOsm, osmQuery } from "./osm";
+import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-export const fetchConstantaOsm = createServerFn({ method: "POST" }).handler(async () => {
+export const fetchConstantaOsm = createServerFn({ method: "POST" }).middleware([requireSupabaseAuth]).handler(async ({ context }) => {
+  const { data: allowed } = await context.supabase.rpc("has_role", { _user_id: context.userId, _role: "admin" });
+  if (!allowed) throw new Error("Acces interzis: admin");
   const endpoints = [
     "https://overpass-api.de/api/interpreter",
     "https://overpass.private.coffee/api/interpreter",

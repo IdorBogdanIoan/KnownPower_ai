@@ -14,6 +14,21 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          key: string
+          value: string
+        }
+        Insert: {
+          key: string
+          value?: string
+        }
+        Update: {
+          key?: string
+          value?: string
+        }
+        Relationships: []
+      }
       audit_log: {
         Row: {
           actor: string
@@ -55,6 +70,9 @@ export type Database = {
           pole_check: Json | null
           pos_source: string | null
           status: string
+          submitted_by: string | null
+          submitted_team: string | null
+          validated_by: string | null
         }
         Insert: {
           actor: string
@@ -75,6 +93,9 @@ export type Database = {
           pole_check?: Json | null
           pos_source?: string | null
           status?: string
+          submitted_by?: string | null
+          submitted_team?: string | null
+          validated_by?: string | null
         }
         Update: {
           actor?: string
@@ -95,6 +116,9 @@ export type Database = {
           pole_check?: Json | null
           pos_source?: string | null
           status?: string
+          submitted_by?: string | null
+          submitted_team?: string | null
+          validated_by?: string | null
         }
         Relationships: []
       }
@@ -137,6 +161,24 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          display_name: string
+          id: string
+          team: string
+        }
+        Insert: {
+          display_name?: string
+          id: string
+          team?: string
+        }
+        Update: {
+          display_name?: string
+          id?: string
+          team?: string
+        }
+        Relationships: []
+      }
       proposals: {
         Row: {
           decided_at: string | null
@@ -150,6 +192,7 @@ export type Database = {
           status: string
           sursa: string | null
           tip: string
+          validated_by: string | null
         }
         Insert: {
           decided_at?: string | null
@@ -163,6 +206,7 @@ export type Database = {
           status?: string
           sursa?: string | null
           tip: string
+          validated_by?: string | null
         }
         Update: {
           decided_at?: string | null
@@ -176,6 +220,25 @@ export type Database = {
           status?: string
           sursa?: string | null
           tip?: string
+          validated_by?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
         }
         Relationships: []
       }
@@ -193,11 +256,26 @@ export type Database = {
         }
         Returns: undefined
       }
+      gridtwin_actor: { Args: never; Returns: string }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
+      set_gridtwin_role: {
+        Args: {
+          new_role: Database["public"]["Enums"]["app_role"]
+          target_user: string
+        }
+        Returns: undefined
+      }
       submit_field_report: { Args: { report: Json }; Returns: string }
       submit_osm_inspection: { Args: { report: Json }; Returns: string }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "field_team" | "validation_team" | "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -324,6 +402,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["field_team", "validation_team", "admin", "user"],
+    },
   },
 } as const

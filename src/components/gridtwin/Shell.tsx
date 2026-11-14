@@ -63,7 +63,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               {dark ? <Sun /> : <Moon />}
             </Button>
-            {account.test ? <><span className="actor-name text-xs">{actor}</span><Button variant="ghost" size="icon" aria-label="Deconectare" title="Deconectare" onClick={async () => { await client.cancelQueries(); account.endTest(); await navigate({ to: "/auth", replace: true }); }}><LogOut /></Button></> : account.userId ? <><Button variant="ghost" asChild className="px-1" title="Profilul meu"><Link to="/profil">
+            {account.test ? <><span className="actor-name text-xs flex flex-col items-start leading-tight"><span>{actor}</span><span className="text-muted-foreground">Logged as: {account.roles.map(r => roleLabels[r]).join(" · ")}</span></span><Button variant="ghost" size="icon" aria-label="Deconectare" title="Deconectare" onClick={async () => { await client.cancelQueries(); account.endTest(); await navigate({ to: "/auth", replace: true }); }}><LogOut /></Button></> : account.userId ? <><Button variant="ghost" asChild className="px-1" title="Profilul meu"><Link to="/profil">
               <span className="avatar">
                 {actor
                   .split(" ")
@@ -72,7 +72,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   .slice(0, 2)
                   .toUpperCase() || "OP"}
               </span>
-              <span className="actor-name text-xs">{actor || "Operator"}</span>
+              <span className="actor-name text-xs flex flex-col items-start leading-tight"><span>{actor || "Operator"}</span><span className="text-muted-foreground">Logged as: {account.roles.map(r => roleLabels[r]).join(" · ")}</span></span>
             </Link></Button><Button variant="ghost" size="icon" aria-label="Deconectare" title="Deconectare" onClick={async () => { await client.cancelQueries(); client.clear(); await supabase.auth.signOut(); await navigate({ to: "/auth", replace: true }); }}><LogOut /></Button></> : <Button variant="outline" asChild><Link to="/auth"><UserRound />Login</Link></Button>}
           </div>
         </header>

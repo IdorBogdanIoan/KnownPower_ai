@@ -1,0 +1,54 @@
+name: Analiza zona AI
+run-name: analiza ${{ inputs.job_id }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      job_id:   { description: "id job (din site)", required: true }
+      lon:      { description: "longitudine", required: true }
+      lat:      { description: "latitudine", required: true }
+      raza:     { description: "raza in metri (max 400)", required: false, default: "250" }
+      callback: { description: "adresa unde se trimite rezultatul", required: false, default: "" }
+      token:    { description: "token unic al jobului", required: false, default: "" }
+      apikey:   { description: "cheia publica Supabase", required: false, default: "" }
+
+permissions:
+  contents: read
+
+concurrency:
+  group: analiza-${{ inputs.job_id }}
+
+jobs:
+  analiza:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GRIDTWIN_MS_LIVE: "1"
+      YOLO_CONFIG_DIR: /tmp/ultra
+    steps:
+      - name: Ascunde tokenul din loguri
+        env:
+          JOB_TOKEN: ${{ inputs.token }}
+        run: echo "::add-mask::$JOB_TOKEN"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Cache cladiri Microsoft
+        uses: actions/cache@v4
+        with:
+          path: cache_ms
+          key: cache-ms-v1
+      - name: Instaleaza
+        run: pip install -r requirements.txt
+      - name: Ruleaza analiza
+        env:
+          JOB_ID: ${{ inputs.job_id }}
+          LON: ${{ inputs.lon }}
+          LAT: ${{ inputs.lat }}
+          RAZA: ${{ inputs.raza }}
+          CALLBACK: ${{ inputs.callback }}
+          JOB_TOKEN: ${{ inputs.token }}
+          SUPABASE_KEY: ${{ inputs.apikey }}
+        run: python gh_job.py --job "$JOB_ID" --lon "$LON" --lat "$LAT" --raza "$RAZA" --callback "$CALLBACK" --token "$JOB_TOKEN"

@@ -326,7 +326,7 @@ export function Office() {
                 <Search />
                 <input
                   className="form-control h-6 text-xs"
-                  placeholder="Caută propunere, stâlp, tronson…"
+                  placeholder="Caută propunere, stâlp…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   aria-label="Caută propuneri"

@@ -355,19 +355,19 @@ input {
   font-weight: 600;
 }
 .workspace-bar {
-  min-height: 108px;
+  min-height: 56px;
   height: auto;
   background: var(--card);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 24px;
+  padding: 6px 24px;
   gap: 20px;
   flex-shrink: 0;
 }
 .workspace-title {
-  font-size: 20px;
+  font-size: 15px;
   font-weight: 600;
   display: flex;
   gap: 12px;
@@ -375,9 +375,9 @@ input {
 }
 .workspace-subtitle {
   color: var(--foreground);
-  font-size: 13px;
-  line-height: 1.5;
-  margin-top: 5px;
+  font-size: 11px;
+  line-height: 1.4;
+  margin-top: 2px;
 }
 .workspace-actions {
   display: flex;

@@ -41,6 +41,8 @@ import {
 import { useOperator } from "./Shell";
 import { useAccount } from "./Account";
 import { testWriteNotice } from "@/lib/gridtwin/test-session";
+import { decideDemoReport } from "@/lib/gridtwin/demo-reports";
+import { ReportPhoto as Photo } from "./ReportPhoto";
 import { ClientCard } from "./ClientCard";
 import { ClientBatch, useClientVerification } from "./ClientVerification";
 import { isClient } from "@/lib/gridtwin/client-documents";
@@ -75,29 +77,6 @@ function display(v: unknown): string {
       .map(([k, x]) => `${humanKey[k] || k.replaceAll("_", " ")}: ${display(x)}`)
       .join(" · ");
   return String(v);
-}
-function Photo({ path }: { path: string | null }) {
-  const [url, setUrl] = useState("");
-  useEffect(() => {
-    if (!path) return;
-    let alive = true;
-    supabase.storage
-      .from("field-photos")
-      .createSignedUrl(path, 3600)
-      .then(({ data }) => {
-        if (alive) setUrl(data?.signedUrl || "");
-      });
-    return () => {
-      alive = false;
-    };
-  }, [path]);
-  return url ? (
-    <a href={url} target="_blank" rel="noreferrer">
-      <img src={url} alt="Fotografie raport din teren" />
-    </a>
-  ) : (
-    <div className="bg-muted h-24" />
-  );
 }
 export function Office() {
   const clientVerification = useClientVerification();
@@ -164,13 +143,19 @@ export function Office() {
     kind: "proposal" | "field",
     decision: "aprobat" | "respins" | "in_asteptare",
   ) {
-    if (access.test) { toast.info(testWriteNotice); return; }
+    if (access.test && kind !== "field") { toast.info(testWriteNotice); return; }
     if (!actor || !access.validate) {
       toast.error("Completează numele operatorului.");
       return;
     }
     setBusy(id);
     try {
+      if (access.test) {
+        await decideDemoReport(id, decision);
+        await client.invalidateQueries({ queryKey: ["gridtwin"] });
+        toast.success(decision === "aprobat" ? "Raport demo aprobat" : decision === "respins" ? "Raport demo respins" : "Decizie anulată");
+        return;
+      }
       const { error } = await supabase.rpc("decide_grid_item", {
         item_id: id,
         item_kind: kind,
@@ -640,8 +625,8 @@ export function Office() {
                       </div>
                       {r.osm_id && <><div className="object-id">OSM · {r.osm_id}</div><h3 className={r.osm_verdict ? osmTones[r.osm_verdict] : "primary"}>{r.osm_verdict && osmVerdicts[r.osm_verdict]} · {r.status === "aprobat" ? "aprobat" : "propus"}</h3><p className="text-xs">{r.evidence_notes}</p><p className="text-xs text-muted-foreground">Verificat: {new Date(r.inspected_at || r.created_at).toLocaleString("ro-RO")}</p></>}
                       <div className="report-photos">
-                        <Photo path={r.photo_pole_url} />
-                        <Photo path={r.photo_sheet_url} />
+                        <Photo path={r.photo_pole_url} demo={access.test} />
+                        <Photo path={r.photo_sheet_url} demo={access.test} />
                       </div>
                       {!r.osm_id && <p className="text-xs">
                         Stâlp în poză:{" "}
@@ -692,7 +677,7 @@ export function Office() {
                             onClick={() => void decide(r.id, "field", "aprobat")}
                           >
                             <Check />
-                            {r.osm_id ? "Aprobă eticheta OSM" : "Aprobă și pune în model"}
+                            {access.test ? "Aprobă raportul" : r.osm_id ? "Aprobă eticheta OSM" : "Aprobă și pune în model"}
                           </Button>
                           <Button
                             variant="reject"

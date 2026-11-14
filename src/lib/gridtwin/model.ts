@@ -107,6 +107,7 @@ export const extractionSchema = z.object({
 });
 export type Reading = z.infer<typeof valueSchema>;
 export type Report = {
+  fictional?: boolean;
   submitted_team?: string | null;
   osm_id?: string | null;
   osm_verdict?: "sigur" | "de_verificat" | "nesigur" | null;

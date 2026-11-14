@@ -5,17 +5,20 @@ import { readWorkspace } from "./data.functions";
 import { toast } from "sonner";
 import { normalizeWorkspace } from "./workspace";
 import { readTestSession, testWriteNotice } from "./test-session";
-import { testWorkspace } from "./test-workspace";
+import { readDemoWorkspace } from "./demo-reports";
 export const workspaceQuery = queryOptions({
   queryKey: ["gridtwin"],
-  queryFn: async () => readTestSession() ? testWorkspace : normalizeWorkspace(await readWorkspace()),
+  queryFn: async () => readTestSession() ? readDemoWorkspace() : normalizeWorkspace(await readWorkspace()),
   staleTime: 15000,
 });
 export function useWorkspace() {
   const query = useSuspenseQuery(workspaceQuery);
   const client = useQueryClient();
   useEffect(() => {
-    if (readTestSession()) return;
+    if (readTestSession()) {
+      const timer = window.setInterval(() => { void client.invalidateQueries({ queryKey: ["gridtwin"] }); }, 10000);
+      return () => window.clearInterval(timer);
+    }
     const channel = supabase.channel(`gridtwin-${crypto.randomUUID()}`);
     for (const table of ["layers", "proposals", "line_scores", "field_reports", "audit_log"])
       channel.on("postgres_changes", { event: "*", schema: "public", table }, (payload) => {

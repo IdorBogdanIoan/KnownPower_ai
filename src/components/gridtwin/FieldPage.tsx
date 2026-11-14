@@ -30,12 +30,15 @@ import {
 } from "@/lib/gridtwin/model";
 import { useOperator } from "./Shell";
 import { readTestSession, testWriteNotice } from "@/lib/gridtwin/test-session";
+import { submitDemoReport } from "@/lib/gridtwin/demo-reports";
+import { useAccount } from "./Account";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Route } from "@/routes/_authenticated/teren";
 import { OsmInspectionForm } from "./OsmInspectionForm";
 const MapView = lazy(() => import("./MapView"));
 async function resize(file: File): Promise<string> {
   const bitmap = await createImageBitmap(file, { imageOrientation: "from-image" });
-  const factor = Math.min(1, 1600 / Math.max(bitmap.width, bitmap.height));
+  const factor = Math.min(1, (readTestSession() ? 1000 : 1600) / Math.max(bitmap.width, bitmap.height));
   const canvas = document.createElement("canvas");
   canvas.width = Math.round(bitmap.width * factor);
   canvas.height = Math.round(bitmap.height * factor);
@@ -43,11 +46,13 @@ async function resize(file: File): Promise<string> {
   if (!ctx) throw new Error("Fotografia nu poate fi procesată");
   ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
   bitmap.close();
-  return canvas.toDataURL("image/jpeg", 0.85);
+  return canvas.toDataURL("image/jpeg", readTestSession() ? 0.7 : 0.85);
 }
 export function FieldPage() {
   const data = useWorkspace();
   const actor = useOperator();
+  const account = useAccount();
+  const [fictional, setFictional] = useState(false);
   const read = useServerFn(extractSheet);
   const client = useQueryClient();
   const search = Route.useSearch();
@@ -125,12 +130,22 @@ export function FieldPage() {
     }
   }
   async function submit() {
-    if (readTestSession()) { setError(testWriteNotice); return; }
     if (!pole || !sheet || !actor) return;
+    const [lon, lat] = position;
+    if (lon === undefined || lat === undefined) { setError("Marchează poziția stâlpului pe hartă."); return; }
+    if (readTestSession() && !fictional) { setError("Confirmă că raportul și fotografiile sunt fictive, fără date personale."); return; }
     setBusy("send");
     setError("");
     const id = crypto.randomUUID();
     try {
+      if (readTestSession()) {
+        const rid = await submitDemoReport({ fictional: true, actor, lat, lon, pos_source: source,
+          fields: { ...fields, ...Object.fromEntries(extra.map(e => [e.nume, { valoare: e.valoare, incredere: 0 }])) },
+          pole_check: poleCheck, photo_pole_url: pole, photo_sheet_url: sheet });
+        setSent(rid);
+        await client.invalidateQueries({ queryKey: ["gridtwin"] });
+        return;
+      }
       const upload = async (image: string, name: string) => {
         const blob = await fetch(image).then((r) => r.blob());
         const path = `${id}/${name}.jpg`;
@@ -174,12 +189,12 @@ export function FieldPage() {
       <main className="page-body">
         <div className="field-page success-report">
           <CheckCircle2 />
-          <h1>Raport trimis în birou</h1>
-          <p>Raportul tău așteaptă aprobarea operatorului.</p>
+          <h1>Raport trimis la Validation team</h1>
+          <p>Raportul tău așteaptă validarea.</p>
           <p className="font-mono text-xs">{sent}</p>
-          <Button asChild>
+          {account.map && <Button asChild>
             <Link to="/birou">Deschide harta</Link>
-          </Button>
+          </Button>}
           <Button
             variant="outline"
             className="ml-2"
@@ -187,6 +202,7 @@ export function FieldPage() {
               setSent(undefined);
               setPole("");
               setSheet("");
+              setFictional(false);
               setFields(
                 Object.fromEntries(fieldKeys.map((k) => [k, { valoare: null, incredere: 0 }])),
               );
@@ -398,11 +414,12 @@ export function FieldPage() {
             {error}
           </div>
         )}
+        {account.test && <label className="flex items-start gap-2 my-4 text-sm"><Checkbox checked={fictional} onCheckedChange={value => setFictional(value === true)} aria-label="Confirm raport fictiv" /><span>Confirm că raportul și fotografiile sunt fictive, fără date personale. Vor fi vizibile tuturor celor care accesează aplicația demo, nu vor modifica rețeaua reală.</span></label>}
         <Button
           variant="field"
           className="submit-field"
           size="lg"
-          disabled={!pole || !sheet || !actor || !!busy}
+          disabled={!pole || !sheet || !actor || !!busy || (account.test && !fictional)}
           onClick={() => void submit()}
         >
           {busy === "send" ? <Loader2 className="animate-spin" /> : <Send />}

@@ -80,6 +80,33 @@ export type Database = {
         }
         Relationships: []
       }
+      demo_reports: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          id: string
+          payload: Json
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          id?: string
+          payload: Json
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          id?: string
+          payload?: Json
+          status?: string
+        }
+        Relationships: []
+      }
       field_reports: {
         Row: {
           actor: string

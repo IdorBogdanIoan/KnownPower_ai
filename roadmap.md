@@ -1,4 +1,5 @@
 # GridTwin
+- [x] Add isolated public fictional demo GIS reports, photos and approve/reject/undo; verified role switching, reload persistence and independent mobile browser read-back, with 30 tests passing. Real Cloud records remain protected; AI and real OSM inspection sharing are unchanged.
 - [x] Adapt all pages for phone, tablet, desktop and landscape; checked six pages at eight viewport sizes without horizontal overflow or runtime errors, plus user search/status filters and field map/legend. Real-account data flows remain separately unverified below.
 - [x] Restrict proposal views to explicitly linked Nesigur elements and combine pending filters; 31 tests and browser checks passed, imported proposals and evaluations preserved.
 - [x] Client document import, exact address matching, AI/rules verification, transactional automatic underground approval, compact cards, batch progress and map legend; 59 tests and local browser checks, zero test documents saved

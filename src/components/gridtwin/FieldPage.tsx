@@ -316,7 +316,7 @@ export function FieldPage() {
                         ? "gol"
                         : (f?.incredere ?? 0) >= 0.8
                           ? "citit sigur"
-                          : "de verificat"}
+                          : "Partial Sigur"}
                   </span>
                 </label>
               );

@@ -1,7 +1,7 @@
 import { approvedOsmInspection, osmTones } from "./osm-inspections";
 import { tone, type Feature, type Report, type Proposal } from "./model";
 
-export const statusLabels = { safe: "Sigur", warning: "De verificat", danger: "Nesigur", primary: "Nevalidat" } as const;
+export const statusLabels = { safe: "Sigur", warning: "Partial Sigur", danger: "Nesigur", primary: "Nevalidat" } as const;
 export type MapStatus = keyof typeof statusLabels;
 export type StatusSelection = Record<MapStatus, boolean>;
 export const initialStatuses: StatusSelection = { safe: false, warning: false, danger: false, primary: true };

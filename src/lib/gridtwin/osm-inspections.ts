@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { Feature, Report } from "./model";
 
-export const osmVerdicts = { sigur: "Sigur", de_verificat: "De verificat", nesigur: "Nesigur" } as const;
+export const osmVerdicts = { sigur: "Sigur", de_verificat: "Partial Sigur", nesigur: "Nesigur" } as const;
 export const osmTones = { sigur: "safe", de_verificat: "warning", nesigur: "danger" } as const;
 export const osmInspectionSchema = z.object({
   actor: z.string().trim().min(2).max(100),

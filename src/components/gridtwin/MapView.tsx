@@ -624,7 +624,7 @@ export default function MapView({
             </div>
             <div className="legend-row">
               <i className="legend-line warning" />
-              De verificat <span className="ml-auto text-muted-foreground">{meta ? "teren" : "40–69%"}</span>
+              Partial Sigur <span className="ml-auto text-muted-foreground">{meta ? "teren" : "40–69%"}</span>
             </div>
             <div className="legend-row">
               <i className="legend-line danger" />

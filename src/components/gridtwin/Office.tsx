@@ -278,7 +278,7 @@ export function Office() {
               ["safe", "Tronsoane sigure", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "sigur").length : scores.filter((s) => s.scor >= 0.7).length],
               [
                 "warning",
-                "Tronsoane de verificat",
+                "Tronsoane Partial Sigur",
                 osmMeta ? osmApproved.filter(r => r?.osm_verdict === "de_verificat").length : scores.filter((s) => s.scor >= 0.4 && s.scor < 0.7).length,
               ],
               ["danger", "Tronsoane nesigure", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "nesigur").length : scores.filter((s) => s.scor < 0.4).length],

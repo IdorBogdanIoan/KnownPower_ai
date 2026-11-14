@@ -50,6 +50,90 @@ export type Database = {
         }
         Relationships: []
       }
+      backup_1114_layers: {
+        Row: {
+          geojson: Json | null
+          name: string | null
+        }
+        Insert: {
+          geojson?: Json | null
+          name?: string | null
+        }
+        Update: {
+          geojson?: Json | null
+          name?: string | null
+        }
+        Relationships: []
+      }
+      backup_1114_line_scores: {
+        Row: {
+          culoare: string | null
+          geometry: Json | null
+          id: string | null
+          motive: Json | null
+          scor: number | null
+        }
+        Insert: {
+          culoare?: string | null
+          geometry?: Json | null
+          id?: string | null
+          motive?: Json | null
+          scor?: number | null
+        }
+        Update: {
+          culoare?: string | null
+          geometry?: Json | null
+          id?: string | null
+          motive?: Json | null
+          scor?: number | null
+        }
+        Relationships: []
+      }
+      backup_1114_proposals: {
+        Row: {
+          decided_at: string | null
+          decided_by: string | null
+          geometrie: Json | null
+          id: string | null
+          incredere: number | null
+          motiv: string | null
+          obiect: string | null
+          propus: Json | null
+          status: string | null
+          sursa: string | null
+          tip: string | null
+          validated_by: string | null
+        }
+        Insert: {
+          decided_at?: string | null
+          decided_by?: string | null
+          geometrie?: Json | null
+          id?: string | null
+          incredere?: number | null
+          motiv?: string | null
+          obiect?: string | null
+          propus?: Json | null
+          status?: string | null
+          sursa?: string | null
+          tip?: string | null
+          validated_by?: string | null
+        }
+        Update: {
+          decided_at?: string | null
+          decided_by?: string | null
+          geometrie?: Json | null
+          id?: string | null
+          incredere?: number | null
+          motiv?: string | null
+          obiect?: string | null
+          propus?: Json | null
+          status?: string | null
+          sursa?: string | null
+          tip?: string | null
+          validated_by?: string | null
+        }
+        Relationships: []
+      }
       client_documents: {
         Row: {
           data: string | null
@@ -278,6 +362,21 @@ export type Database = {
           sursa?: string | null
           tip?: string
           validated_by?: string | null
+        }
+        Relationships: []
+      }
+      stage_ptab: {
+        Row: {
+          k: string
+          v: Json
+        }
+        Insert: {
+          k: string
+          v: Json
+        }
+        Update: {
+          k?: string
+          v?: Json
         }
         Relationships: []
       }

@@ -4,6 +4,7 @@ import type { Database, Json } from "@/integrations/supabase/types";
 import { valueSchema, type Report } from "./model";
 import { testWorkspace } from "./test-workspace";
 import { readTestSession } from "./test-session";
+import { normalizeWorkspace } from "./workspace";
 
 const photoSchema = z.string().max(1400000).regex(/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/);
 export const demoReportSchema = z.object({
@@ -47,6 +48,32 @@ export async function readDemoWorkspace() {
   const reports = result.data.flatMap(row => {
     try { return [demoReportFromRow(row)]; } catch { return []; }
   });
+  if (readTestSession()?.role === "admin") {
+    try {
+      const client = publicDemoClient();
+      async function all<T>(readPage: (start: number) => PromiseLike<{ data: T[] | null; error: unknown }>): Promise<T[]> {
+        const rows: T[] = [];
+        for (let start = 0; ; start += 1000) {
+          const page = await readPage(start);
+          if (page.error) throw page.error;
+          if (!page.data) throw new Error("Datele rețelei nu au putut fi citite.");
+          rows.push(...page.data);
+          if (page.data.length < 1000) return rows;
+        }
+      }
+      const [layers, proposals, scores] = await Promise.all([
+        all(start => client.from("layers").select("name, geojson").order("name").range(start, start + 999)),
+        all(start => client.from("proposals").select("*").order("id").range(start, start + 999)),
+        all(start => client.from("line_scores").select("*").order("id").range(start, start + 999)),
+      ]);
+      return normalizeWorkspace({
+        layers: Object.fromEntries(layers.map(layer => [layer.name, layer.geojson])),
+        proposals, scores, reports, audit: [],
+      });
+    } catch {
+      // Public network reads must not prevent access to the existing demo reports.
+    }
+  }
   return { ...testWorkspace, reports };
 }
 export async function submitDemoReport(input: DemoReportInput) {

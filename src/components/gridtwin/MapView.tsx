@@ -414,7 +414,10 @@ export default function MapView({
               `score-${s.id}-${s.scor}`,
               palette[tone(s.scor)],
               3.5,
-              undefined,
+              data.layers["gis"]?.features.some(f =>
+                f.properties?.["kind"] === "tronson" && f.properties?.["tip_retea"] === "subteran" &&
+                (f.properties?.["id"] === s.id || JSON.stringify(f.geometry) === JSON.stringify(s.geometry))
+              ) ? "4 6" : undefined,
               () => onInspect?.({ ...s, kind: "line" }),
               `${s.id} · ${Math.round(s.scor * 100)}% · ${s.motive.join(" · ")}`,
             ),

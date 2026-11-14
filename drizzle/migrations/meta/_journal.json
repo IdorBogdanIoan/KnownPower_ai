@@ -43,6 +43,13 @@
       "when": 1794676497150,
       "tag": "0005_shared_fictional_demo_reports",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1794677805531,
+      "tag": "0006_demo_network_anon_read",
+      "breakpoints": true
     }
   ]
 }

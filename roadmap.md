@@ -1,4 +1,5 @@
 # GridTwin
+- [x] Load existing public fictional network tables for demo Admin only; verified 6 layers, 46 proposals and 268 scores via public reads, no anonymous writes, pagination/fallback and role-switch refetch with 29 tests and browser checks. Login and other roles unchanged; unsupported nodes remain ignored and scored underground segments use existing dashed styling.
 - [ ] Extend shared demo Admin imports, documents, decisions, contract verification and exports; preserve records and verify cross-device updates.
 - [ ] Add GIS-priority framing, PTAB heading, underground/node/service symbols; test proposal compatibility and provide exact import filenames.
 - [x] Add isolated public fictional demo GIS reports, photos and approve/reject/undo; verified role switching, reload persistence and independent mobile browser read-back, with 30 tests passing. Real Cloud records remain protected; AI and real OSM inspection sharing are unchanged.

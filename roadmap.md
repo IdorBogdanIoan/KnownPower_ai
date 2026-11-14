@@ -1,6 +1,6 @@
 # GridTwin
 - [x] Replace key-required CARTO background with keyless OpenFreeMap; verify no watermark, desktop/mobile rendering and satellite switching
-- [ ] Obtain real network data — awaiting target locality and county
+- [ ] Obtain real network data for Constanța municipality — public sources identified, but Overpass exports rejected or timed out; no verified GeoJSON downloaded and official detailed GIS is unavailable
 - [ ] Show confirmed connected consumers as green points — awaiting anonymized connection records
 - [x] Cloud tables, private storage and transactional audited decisions
 - [x] Import supplied agent outputs and support GIS layer uploads

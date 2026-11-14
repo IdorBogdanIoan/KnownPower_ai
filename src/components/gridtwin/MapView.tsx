@@ -295,7 +295,7 @@ export default function MapView({
           <TileLayer
             attribution="Esri"
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-            maxNativeZoom={19}
+            maxNativeZoom={18}
             maxZoom={22}
           />
         )}
@@ -368,17 +368,22 @@ export default function MapView({
           />
         )}
         {enabled["streets"] &&
-          data.layers["streets"]?.features.map((f, i) => (
+          data.layers["streets"]?.features.map((f, i) => {
+            const name = String(f.properties?.["name"] ?? f.properties?.["nume"] ?? "").trim();
+            return (
             <GeoJSON
               key={`street-${i}`}
               data={f}
               style={{ color: palette["road"], weight: 8, opacity: 0.8 }}
             >
-              <Tooltip permanent direction="center" className="street-label">
-                {f.properties?.["name"] || f.properties?.["nume"]}
-              </Tooltip>
+              {name && name.toLocaleLowerCase("ro") !== "drum fără nume" && (
+                <Tooltip permanent direction="center" className="street-label">
+                  {name}
+                </Tooltip>
+              )}
             </GeoJSON>
-          ))}
+            );
+          })}
         {enabled["unknown"] &&
           data.layers["unknown"]?.features.map((f, i) => (
             <GeoJSON

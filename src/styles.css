@@ -630,15 +630,16 @@ input[type="checkbox"] {
 }
 .search-box svg {
   position: absolute;
-  left: 8px;
-  top: 6px;
-  width: 14px;
-  height: 14px;
+  left: 7px;
+  top: 5px;
+  width: 11px;
+  height: 11px;
   color: var(--muted-foreground);
 }
 .search-box input {
   width: 100%;
-  padding-left: 26px;
+  padding-left: 22px;
+  font-size: 10px;
 }
 .filter-wrap {
   display: flex;

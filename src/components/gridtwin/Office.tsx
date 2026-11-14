@@ -325,7 +325,7 @@ export function Office() {
               <div className="search-box">
                 <Search />
                 <input
-                  className="form-control h-6 text-xs"
+                  className="form-control h-5 text-[10px]"
                   placeholder="Caută propunere, stâlp…"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}

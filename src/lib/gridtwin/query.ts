@@ -3,10 +3,10 @@ import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { readWorkspace } from "./data.functions";
 import { toast } from "sonner";
-import type { Workspace } from "./model";
+import { normalizeWorkspace } from "./workspace";
 export const workspaceQuery = queryOptions({
   queryKey: ["gridtwin"],
-  queryFn: async (): Promise<Workspace> => JSON.parse(await readWorkspace()),
+  queryFn: async () => normalizeWorkspace(await readWorkspace()),
   staleTime: 15000,
 });
 export function useWorkspace() {
@@ -25,7 +25,7 @@ export function useWorkspace() {
       void supabase.removeChannel(channel);
     };
   }, [client]);
-  return query.data;
+  return normalizeWorkspace(query.data);
 }
 export async function audit(actor: string, text: string) {
   const { error } = await supabase.from("audit_log").insert({ actor, text });

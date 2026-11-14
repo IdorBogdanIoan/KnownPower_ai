@@ -1,0 +1,2535 @@
+[
+ {
+  "tip": "corectie_pozitie",
+  "obiect": "S012",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0407176,
+     44.5350139
+    ],
+    [
+     26.0405629,
+     44.5349584
+    ]
+   ]
+  },
+  "propus": {
+   "pozitie_noua": [
+    26.0405629,
+    44.5349584
+   ],
+   "tronsoane_afectate": [
+    "T012",
+    "T013"
+   ],
+   "bransamente_afectate": [
+    "C046",
+    "C047"
+   ]
+  },
+  "sursa": "imagine aeriana (YOLO) + GIS companie",
+  "incredere": 0.71,
+  "motiv": "Stâlpul S012 nu are detecție în 8 m, dar are una la 14 m, lângă Str. Morii (5 m de ax). Probabil desenat greșit în GIS.",
+  "status": "in_asteptare",
+  "id": "P001"
+ },
+ {
+  "tip": "corectie_pozitie",
+  "obiect": "S037",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0418334,
+     44.5343666
+    ],
+    [
+     26.0420663,
+     44.5342884
+    ]
+   ]
+  },
+  "propus": {
+   "pozitie_noua": [
+    26.0420663,
+    44.5342884
+   ],
+   "tronsoane_afectate": [],
+   "bransamente_afectate": [
+    "C106",
+    "C107"
+   ]
+  },
+  "sursa": "imagine aeriana (YOLO) + GIS companie",
+  "incredere": 0.6,
+  "motiv": "Stâlpul S037 nu are detecție în 8 m, dar are una la 20 m, lângă Str. Principala (5 m de ax). Probabil desenat greșit în GIS.",
+  "status": "in_asteptare",
+  "id": "P002"
+ },
+ {
+  "tip": "corectie_pozitie",
+  "obiect": "S046",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0417176,
+     44.533995
+    ],
+    [
+     26.0419438,
+     44.5339777
+    ]
+   ]
+  },
+  "propus": {
+   "pozitie_noua": [
+    26.0419438,
+    44.5339777
+   ],
+   "tronsoane_afectate": [
+    "T046",
+    "T047"
+   ],
+   "bransamente_afectate": [
+    "C085"
+   ]
+  },
+  "sursa": "imagine aeriana (YOLO) + GIS companie",
+  "incredere": 0.67,
+  "motiv": "Stâlpul S046 nu are detecție în 8 m, dar are una la 18 m, lângă Str. Principala (4 m de ax). Probabil desenat greșit în GIS.",
+  "status": "in_asteptare",
+  "id": "P003"
+ },
+ {
+  "tip": "stalp_lipsa",
+  "obiect": "NOU-01",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0397373,
+    44.536049
+   ]
+  },
+  "propus": {
+   "kind": "stalp",
+   "feeder": "F4",
+   "street": "Str. Teilor",
+   "vecini": [
+    "S032"
+   ]
+  },
+  "sursa": "imagine aeriana (YOLO)",
+  "incredere": 0.75,
+  "motiv": "Detecție YOLO (0.75) fără niciun stâlp GIS în 30 m, la 3 m de Str. Teilor.",
+  "status": "in_asteptare",
+  "id": "P004"
+ },
+ {
+  "tip": "stalp_lipsa",
+  "obiect": "NOU-02",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0401737,
+    44.533968
+   ]
+  },
+  "propus": {
+   "kind": "stalp",
+   "feeder": "F6",
+   "street": "Str. Livezii",
+   "vecini": [
+    "S051",
+    "S049"
+   ]
+  },
+  "sursa": "imagine aeriana (YOLO)",
+  "incredere": 0.99,
+  "motiv": "Detecție YOLO (0.91) fără niciun stâlp GIS în 30 m, la 5 m de Str. Livezii. Umple un gol între doi stâlpi vecini.",
+  "status": "in_asteptare",
+  "id": "P005"
+ },
+ {
+  "tip": "stalp_lipsa",
+  "obiect": "NOU-03",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0410828,
+    44.5360295
+   ]
+  },
+  "propus": {
+   "kind": "stalp",
+   "feeder": "F4",
+   "street": "Str. Teilor",
+   "vecini": [
+    "NOU-04",
+    "S031"
+   ]
+  },
+  "sursa": "imagine aeriana (YOLO)",
+  "incredere": 0.66,
+  "motiv": "Detecție YOLO (0.56) fără niciun stâlp GIS în 30 m, la 5 m de Str. Teilor. Umple un gol între doi stâlpi vecini.",
+  "status": "in_asteptare",
+  "id": "P006"
+ },
+ {
+  "tip": "stalp_lipsa",
+  "obiect": "NOU-04",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0414848,
+    44.5360234
+   ]
+  },
+  "propus": {
+   "kind": "stalp",
+   "feeder": "F4",
+   "street": "Str. Teilor",
+   "vecini": [
+    "NOU-03",
+    "S028"
+   ]
+  },
+  "sursa": "imagine aeriana (YOLO)",
+  "incredere": 0.86,
+  "motiv": "Detecție YOLO (0.76) fără niciun stâlp GIS în 30 m, la 6 m de Str. Teilor. Umple un gol între doi stâlpi vecini.",
+  "status": "in_asteptare",
+  "id": "P007"
+ },
+ {
+  "tip": "tronson_lipsa",
+  "obiect": "NOU-01–S032",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0397373,
+     44.536049
+    ],
+    [
+     26.0401853,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "tronson",
+   "from": "NOU-01",
+   "to": "S032",
+   "feeder": "F4",
+   "lungime_m": 35.6,
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "geometrie (stâlpi vecini)",
+  "incredere": 0.65,
+  "motiv": "Leagă stâlpul propus NOU-01 de vecinul S032. Atributele sunt deduse din circuitul F4.",
+  "status": "in_asteptare",
+  "id": "P008"
+ },
+ {
+  "tip": "tronson_lipsa",
+  "obiect": "NOU-02–S051",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0401737,
+     44.533968
+    ],
+    [
+     26.0397442,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "tronson",
+   "from": "NOU-02",
+   "to": "S051",
+   "feeder": "F6",
+   "lungime_m": 34.1,
+   "conductor_type": {
+    "valoare": "Al-Ol neizolat",
+    "sursa": "dedus (circuitul F6)",
+    "incredere": 0.7,
+    "exemple": "4/4"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (circuitul F6)",
+    "incredere": 0.7,
+    "exemple": "4/4"
+   },
+   "material": {
+    "valoare": "Al-Ol",
+    "sursa": "dedus (circuitul F6)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   }
+  },
+  "sursa": "geometrie (stâlpi vecini)",
+  "incredere": 0.75,
+  "motiv": "Leagă stâlpul propus NOU-02 de vecinul S051. Atributele sunt deduse din circuitul F6.",
+  "status": "in_asteptare",
+  "id": "P009"
+ },
+ {
+  "tip": "tronson_lipsa",
+  "obiect": "NOU-02–S049",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0401737,
+     44.533968
+    ],
+    [
+     26.0406264,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "tronson",
+   "from": "NOU-02",
+   "to": "S049",
+   "feeder": "F6",
+   "lungime_m": 35.9,
+   "conductor_type": {
+    "valoare": "Al-Ol neizolat",
+    "sursa": "dedus (circuitul F6)",
+    "incredere": 0.7,
+    "exemple": "4/4"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (circuitul F6)",
+    "incredere": 0.7,
+    "exemple": "4/4"
+   },
+   "material": {
+    "valoare": "Al-Ol",
+    "sursa": "dedus (circuitul F6)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   }
+  },
+  "sursa": "geometrie (stâlpi vecini)",
+  "incredere": 0.75,
+  "motiv": "Leagă stâlpul propus NOU-02 de vecinul S049. Atributele sunt deduse din circuitul F6.",
+  "status": "in_asteptare",
+  "id": "P010"
+ },
+ {
+  "tip": "tronson_lipsa",
+  "obiect": "NOU-03–NOU-04",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0410828,
+     44.5360295
+    ],
+    [
+     26.0414848,
+     44.5360234
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "tronson",
+   "from": "NOU-03",
+   "to": "NOU-04",
+   "feeder": "F4",
+   "lungime_m": 31.9,
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "geometrie (stâlpi vecini)",
+  "incredere": 0.54,
+  "motiv": "Leagă stâlpul propus NOU-03 de vecinul NOU-04. Atributele sunt deduse din circuitul F4.",
+  "status": "in_asteptare",
+  "id": "P011"
+ },
+ {
+  "tip": "tronson_lipsa",
+  "obiect": "NOU-03–S031",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0410828,
+     44.5360295
+    ],
+    [
+     26.0406264,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "tronson",
+   "from": "NOU-03",
+   "to": "S031",
+   "feeder": "F4",
+   "lungime_m": 36.2,
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "geometrie (stâlpi vecini)",
+  "incredere": 0.54,
+  "motiv": "Leagă stâlpul propus NOU-03 de vecinul S031. Atributele sunt deduse din circuitul F4.",
+  "status": "in_asteptare",
+  "id": "P012"
+ },
+ {
+  "tip": "tronson_lipsa",
+  "obiect": "NOU-04–S028",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0414848,
+     44.5360234
+    ],
+    [
+     26.0419496,
+     44.5357186
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "tronson",
+   "from": "NOU-04",
+   "to": "S028",
+   "feeder": "F4",
+   "lungime_m": 50.1,
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "geometrie (stâlpi vecini)",
+  "incredere": 0.66,
+  "motiv": "Leagă stâlpul propus NOU-04 de vecinul S028. Atributele sunt deduse din circuitul F4.",
+  "status": "in_asteptare",
+  "id": "P013"
+ },
+ {
+  "tip": "gol_retea",
+  "obiect": "S037–S039",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0420663,
+     44.5342884
+    ],
+    [
+     26.0424915,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "stalpi_neconectati": [
+    "S037"
+   ],
+   "actiune": "verificare în teren (poză la stâlp + foaia de lucrări)"
+  },
+  "sursa": "topologie GIS + imagine aeriana",
+  "incredere": 0.6,
+  "motiv": "Stâlpul S037 nu ajunge la post prin nicio linie din GIS. Cel mai probabil lipsește un stâlp sau un tronson între S037 și S039 (50 m), pe care imaginea nu-l vede.",
+  "status": "in_asteptare",
+  "id": "P014"
+ },
+ {
+  "tip": "gol_retea",
+  "obiect": "S035–NOU-01",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0388621,
+     44.536042
+    ],
+    [
+     26.0397373,
+     44.536049
+    ]
+   ]
+  },
+  "propus": {
+   "stalpi_neconectati": [
+    "S034",
+    "S035"
+   ],
+   "actiune": "verificare în teren (poză la stâlp + foaia de lucrări)"
+  },
+  "sursa": "topologie GIS + imagine aeriana",
+  "incredere": 0.6,
+  "motiv": "Stâlpii S034, S035 nu ajung la post prin nicio linie din GIS. Cel mai probabil lipsește un stâlp sau un tronson între S035 și NOU-01 (69 m), pe care imaginea nu-l vede.",
+  "status": "in_asteptare",
+  "id": "P015"
+ },
+ {
+  "tip": "gol_retea",
+  "obiect": "S037–S001",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0420663,
+     44.5342884
+    ],
+    [
+     26.042126,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "stalpi_neconectati": [
+    "S037",
+    "S039",
+    "S040",
+    "S041",
+    "S042",
+    "S043",
+    "S044",
+    "S045"
+   ],
+   "actiune": "verificare în teren (poză la stâlp + foaia de lucrări)"
+  },
+  "sursa": "topologie GIS + imagine aeriana",
+  "incredere": 0.6,
+  "motiv": "Stâlpii S037, S039, S040, S041, S042, S043, S044, S045 nu ajung la post prin nicio linie din GIS. Cel mai probabil lipsește un stâlp sau un tronson între S037 și S001 (75 m), pe care imaginea nu-l vede.",
+  "status": "in_asteptare",
+  "id": "P016"
+ },
+ {
+  "tip": "pozitie_suspecta",
+  "obiect": "S034",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.039376,
+    44.536243
+   ]
+  },
+  "propus": {
+   "actiune": "verificare în teren (poză la stâlp)"
+  },
+  "sursa": "GIS companie + drumuri OSM",
+  "incredere": 0.45,
+  "motiv": "Nicio detecție și stâlpul e la 18 m de axul Str. Teilor, mult mai departe decât vecinii. Imaginea nu-l vede (umbră, copac sau poziție greșită în GIS).",
+  "status": "in_asteptare",
+  "id": "P017"
+ },
+ {
+  "tip": "posibil_demontat",
+  "obiect": "S901",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0442684,
+    44.5352336
+   ]
+  },
+  "propus": {
+   "actiune": "verificare în teren, apoi scoatere din GIS"
+  },
+  "sursa": "imagine aeriana (YOLO) + GIS companie",
+  "incredere": 0.8,
+  "motiv": "Nicio detecție în 30 m, niciun tronson legat de el, verificat ultima dată în 2013, la 26 m de drum.",
+  "status": "in_asteptare",
+  "id": "P018"
+ },
+ {
+  "tip": "posibil_demontat",
+  "obiect": "S902",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0404877,
+    44.5362576
+   ]
+  },
+  "propus": {
+   "actiune": "verificare în teren, apoi scoatere din GIS"
+  },
+  "sursa": "imagine aeriana (YOLO) + GIS companie",
+  "incredere": 0.8,
+  "motiv": "Nicio detecție în 30 m, niciun tronson legat de el, verificat ultima dată în 2013, la 20 m de drum.",
+  "status": "in_asteptare",
+  "id": "P019"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T001",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0420756,
+     44.5350539
+    ],
+    [
+     26.042126,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.6,
+  "motiv": "Lipsesc material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P020"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T002",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.042126,
+     44.5349641
+    ],
+    [
+     26.0425671,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 70,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.6,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P021"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T003",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0425671,
+     44.5349641
+    ],
+    [
+     26.0430082,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 70,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P022"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T005",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0434493,
+     44.5349641
+    ],
+    [
+     26.0438903,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 70,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P023"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T006",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0438903,
+     44.5349641
+    ],
+    [
+     26.0443314,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "section_mm2": {
+    "valoare": 70,
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.6,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P024"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T007",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0443314,
+     44.5349641
+    ],
+    [
+     26.0447725,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "section_mm2": {
+    "valoare": 70,
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.6,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P025"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T008",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0447725,
+     44.5349641
+    ],
+    [
+     26.0452136,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "section_mm2": {
+    "valoare": 70,
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F1)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.6,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P026"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T009",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0420756,
+     44.5350539
+    ],
+    [
+     26.041874,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P027"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T013",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0407176,
+     44.5350139
+    ],
+    [
+     26.0403404,
+     44.5349955
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 70,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P028"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T014",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0403404,
+     44.5349955
+    ],
+    [
+     26.0396686,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (circuitul F2)",
+    "incredere": 0.7,
+    "exemple": "5/5"
+   },
+   "section_mm2": {
+    "valoare": 70,
+    "sursa": "dedus (circuitul F2)",
+    "incredere": 0.7,
+    "exemple": "5/5"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F2)",
+    "incredere": 0.7,
+    "exemple": "4/4"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.7,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P029"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T015",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0396686,
+     44.5349641
+    ],
+    [
+     26.0392275,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 70,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P030"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T017",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0420756,
+     44.5350539
+    ],
+    [
+     26.0420504,
+     44.5353593
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P031"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T020",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0420504,
+     44.536078
+    ],
+    [
+     26.0424915,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P032"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T021",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0424915,
+     44.536042
+    ],
+    [
+     26.0429326,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (circuitul F3)",
+    "incredere": 0.7,
+    "exemple": "6/6"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (circuitul F3)",
+    "incredere": 0.7,
+    "exemple": "6/6"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F3)",
+    "incredere": 0.7,
+    "exemple": "5/5"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.7,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P033"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T022",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0429326,
+     44.536042
+    ],
+    [
+     26.0433736,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P034"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T025",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0442558,
+     44.536042
+    ],
+    [
+     26.0446969,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.85,
+    "exemple": "2/2"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.85,
+  "motiv": "Lipsesc material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P035"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T027",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0420756,
+     44.5350539
+    ],
+    [
+     26.0419496,
+     44.5353593
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P036"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T032",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0406264,
+     44.536042
+    ],
+    [
+     26.0401853,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.6,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P037"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T035",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.039376,
+     44.536243
+    ],
+    [
+     26.0388621,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F4)",
+    "incredere": 0.6,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.6,
+  "motiv": "Lipsesc material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P038"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T040",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0424915,
+     44.533958
+    ],
+    [
+     26.0429326,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F5)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.7,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P039"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T041",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0429326,
+     44.533958
+    ],
+    [
+     26.0433736,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (circuitul F5)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.7,
+  "motiv": "Lipsesc material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P040"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T042",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0433736,
+     44.533958
+    ],
+    [
+     26.0438147,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.85,
+    "exemple": "2/2"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.85,
+    "exemple": "2/2"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P041"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T045",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0446969,
+     44.533958
+    ],
+    [
+     26.0451379,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "TYIR",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P042"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T047",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0417176,
+     44.533995
+    ],
+    [
+     26.0415085,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "material": {
+    "valoare": "Al-Ol",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P043"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T048",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0415085,
+     44.533958
+    ],
+    [
+     26.0410674,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "Al-Ol neizolat",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.85,
+    "exemple": "2/2"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.85,
+    "exemple": "2/2"
+   },
+   "material": {
+    "valoare": "Al-Ol",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.75,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din tronsoanele vecine.",
+  "status": "in_asteptare",
+  "id": "P044"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T052",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0397442,
+     44.533958
+    ],
+    [
+     26.0393031,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "conductor_type": {
+    "valoare": "Al-Ol neizolat",
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "section_mm2": {
+    "valoare": 50,
+    "sursa": "dedus (tronsoane vecine, același circuit)",
+    "incredere": 0.75,
+    "exemple": "1/1"
+   },
+   "material": {
+    "valoare": "Al-Ol",
+    "sursa": "dedus (circuitul F6)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.7,
+  "motiv": "Lipsesc conductor_type, section_mm2, material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P045"
+ },
+ {
+  "tip": "atribute_lipsa",
+  "obiect": "T053",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0393031,
+     44.533958
+    ],
+    [
+     26.0388621,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "material": {
+    "valoare": "Al-Ol",
+    "sursa": "dedus (circuitul F6)",
+    "incredere": 0.7,
+    "exemple": "2/2"
+   }
+  },
+  "sursa": "dedus de agent",
+  "incredere": 0.7,
+  "motiv": "Lipsesc material. Completate din restul circuitului.",
+  "status": "in_asteptare",
+  "id": "P046"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C003",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0392779,
+     44.5359162
+    ],
+    [
+     26.0388621,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C003",
+   "pole": "S035",
+   "lungime_m": 35.8,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.43,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: S035, la 36 m. Atenție: stâlpul nu e legat de post în GIS, poate există unul mai aproape pe care imaginea nu-l vede.",
+  "status": "in_asteptare",
+  "id": "P047"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C004",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0395804,
+     44.5359163
+    ],
+    [
+     26.0397373,
+     44.536049
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C004",
+   "pole": "NOU-01",
+   "lungime_m": 19.3,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.7,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: NOU-01, la 19 m.",
+  "status": "in_asteptare",
+  "id": "P048"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C005",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0395804,
+     44.5362396
+    ],
+    [
+     26.0397373,
+     44.536049
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C005",
+   "pole": "NOU-01",
+   "lungime_m": 24.6,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.67,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: NOU-01, la 25 m.",
+  "status": "in_asteptare",
+  "id": "P049"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C006",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0398828,
+     44.5359163
+    ],
+    [
+     26.0397373,
+     44.536049
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C006",
+   "pole": "NOU-01",
+   "lungime_m": 18.8,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.7,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: NOU-01, la 19 m.",
+  "status": "in_asteptare",
+  "id": "P050"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C009",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0404878,
+     44.5362397
+    ],
+    [
+     26.0406264,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C009",
+   "pole": "S031",
+   "lungime_m": 24.6,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.82,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: S031, la 25 m.",
+  "status": "in_asteptare",
+  "id": "P051"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C011",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0410926,
+     44.5359162
+    ],
+    [
+     26.0410828,
+     44.5360295
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C011",
+   "pole": "NOU-03",
+   "lungime_m": 12.6,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.7,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: NOU-03, la 13 m.",
+  "status": "in_asteptare",
+  "id": "P052"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C012",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0410926,
+     44.5362396
+    ],
+    [
+     26.0410828,
+     44.5360295
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C012",
+   "pole": "NOU-03",
+   "lungime_m": 23.4,
+   "prosumator": true
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.67,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: NOU-03, la 23 m. Are și panouri PV.",
+  "status": "in_asteptare",
+  "id": "P053"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C013",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.041395,
+     44.5359162
+    ],
+    [
+     26.0414848,
+     44.5360234
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C013",
+   "pole": "NOU-04",
+   "lungime_m": 13.9,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.7,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: NOU-04, la 14 m.",
+  "status": "in_asteptare",
+  "id": "P054"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C014",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0413951,
+     44.5362396
+    ],
+    [
+     26.0414848,
+     44.5360234
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C014",
+   "pole": "NOU-04",
+   "lungime_m": 25.1,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.66,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: NOU-04, la 25 m.",
+  "status": "in_asteptare",
+  "id": "P055"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C015",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0416976,
+     44.5359163
+    ],
+    [
+     26.0414848,
+     44.5360234
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C015",
+   "pole": "NOU-04",
+   "lungime_m": 20.7,
+   "prosumator": true
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.69,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: NOU-04, la 21 m. Are și panouri PV.",
+  "status": "in_asteptare",
+  "id": "P056"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C016",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0416976,
+     44.5362396
+    ],
+    [
+     26.0414848,
+     44.5360234
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C016",
+   "pole": "NOU-04",
+   "lungime_m": 29.4,
+   "prosumator": true
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.63,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: NOU-04, la 29 m. Are și panouri PV.",
+  "status": "in_asteptare",
+  "id": "P057"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C017",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.042,
+     44.5359162
+    ],
+    [
+     26.0420504,
+     44.536078
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C017",
+   "pole": "S019",
+   "lungime_m": 18.4,
+   "prosumator": true
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.85,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: S019, la 18 m. Are și panouri PV.",
+  "status": "in_asteptare",
+  "id": "P058"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C033",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0444197,
+     44.5359163
+    ],
+    [
+     26.0442558,
+     44.536042
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C033",
+   "pole": "S024",
+   "lungime_m": 19.1,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.85,
+  "motiv": "Clădire (Str. Teilor) fără loc de consum în GIS. Cel mai apropiat stâlp: S024, la 19 m.",
+  "status": "in_asteptare",
+  "id": "P059"
+ },
+ {
+  "tip": "prosumator_neinregistrat",
+  "obiect": "C034",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0444196,
+    44.5362397
+   ]
+  },
+  "propus": {
+   "prosumator": true
+  },
+  "sursa": "imagine aeriana (PV)",
+  "incredere": 0.66,
+  "motiv": "Panouri fotovoltaice detectate (0.66) pe o clădire care nu e prosumator în GIS.",
+  "status": "in_asteptare",
+  "id": "P060"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C049",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0407902,
+     44.5351617
+    ],
+    [
+     26.0409918,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C049",
+   "pole": "S011",
+   "lungime_m": 27.2,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.8,
+  "motiv": "Clădire (Str. Morii) fără loc de consum în GIS. Cel mai apropiat stâlp: S011, la 27 m.",
+  "status": "in_asteptare",
+  "id": "P061"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C059",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0432098,
+     44.5351617
+    ],
+    [
+     26.0430082,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C059",
+   "pole": "S003",
+   "lungime_m": 27.2,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.8,
+  "motiv": "Clădire (Str. Morii) fără loc de consum în GIS. Cel mai apropiat stâlp: S003, la 27 m.",
+  "status": "in_asteptare",
+  "id": "P062"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C076",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0401853,
+     44.5337603
+    ],
+    [
+     26.0401737,
+     44.533968
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C076",
+   "pole": "NOU-02",
+   "lungime_m": 23.1,
+   "prosumator": true
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.68,
+  "motiv": "Clădire (Str. Livezii) fără loc de consum în GIS. Cel mai apropiat stâlp: NOU-02, la 23 m. Are și panouri PV.",
+  "status": "in_asteptare",
+  "id": "P063"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C078",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0404878,
+     44.5340837
+    ],
+    [
+     26.0406264,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C078",
+   "pole": "S049",
+   "lungime_m": 17.8,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.85,
+  "motiv": "Clădire (Str. Livezii) fără loc de consum în GIS. Cel mai apropiat stâlp: S049, la 18 m.",
+  "status": "in_asteptare",
+  "id": "P064"
+ },
+ {
+  "tip": "prosumator_neinregistrat",
+  "obiect": "C079",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0407902,
+    44.5337603
+   ]
+  },
+  "propus": {
+   "prosumator": true
+  },
+  "sursa": "imagine aeriana (PV)",
+  "incredere": 0.66,
+  "motiv": "Panouri fotovoltaice detectate (0.66) pe o clădire care nu e prosumator în GIS.",
+  "status": "in_asteptare",
+  "id": "P065"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C084",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.042,
+     44.5337604
+    ],
+    [
+     26.0419438,
+     44.5339777
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C084",
+   "pole": "S046",
+   "lungime_m": 24.6,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.82,
+  "motiv": "Clădire (Str. Livezii) fără loc de consum în GIS. Cel mai apropiat stâlp: S046, la 25 m.",
+  "status": "in_asteptare",
+  "id": "P066"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C086",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0423025,
+     44.5337604
+    ],
+    [
+     26.0424915,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C086",
+   "pole": "S039",
+   "lungime_m": 26.6,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.5,
+  "motiv": "Clădire (Str. Livezii) fără loc de consum în GIS. Cel mai apropiat stâlp: S039, la 27 m. Atenție: stâlpul nu e legat de post în GIS, poate există unul mai aproape pe care imaginea nu-l vede.",
+  "status": "in_asteptare",
+  "id": "P067"
+ },
+ {
+  "tip": "prosumator_neinregistrat",
+  "obiect": "C098",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0444196,
+    44.5337603
+   ]
+  },
+  "propus": {
+   "prosumator": true
+  },
+  "sursa": "imagine aeriana (PV)",
+  "incredere": 0.64,
+  "motiv": "Panouri fotovoltaice detectate (0.64) pe o clădire care nu e prosumator în GIS.",
+  "status": "in_asteptare",
+  "id": "P068"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C105",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0422268,
+     44.5335987
+    ],
+    [
+     26.0424915,
+     44.533958
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C105",
+   "pole": "S039",
+   "lungime_m": 45.2,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.36,
+  "motiv": "Clădire (Str. Principala) fără loc de consum în GIS. Cel mai apropiat stâlp: S039, la 45 m. Atenție: stâlpul nu e legat de post în GIS, poate există unul mai aproape pe care imaginea nu-l vede.",
+  "status": "in_asteptare",
+  "id": "P069"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C108",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0417731,
+     44.5344611
+    ],
+    [
+     26.0420663,
+     44.5342884
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C108",
+   "pole": "S037",
+   "lungime_m": 30.2,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.47,
+  "motiv": "Clădire (Str. Principala) fără loc de consum în GIS. Cel mai apropiat stâlp: S037, la 30 m. Atenție: stâlpul nu e legat de post în GIS, poate există unul mai aproape pe care imaginea nu-l vede.",
+  "status": "in_asteptare",
+  "id": "P070"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C109",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0422268,
+     44.534461
+    ],
+    [
+     26.0420663,
+     44.5342884
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C109",
+   "pole": "S037",
+   "lungime_m": 23.1,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.53,
+  "motiv": "Clădire (Str. Principala) fără loc de consum în GIS. Cel mai apropiat stâlp: S037, la 23 m. Atenție: stâlpul nu e legat de post în GIS, poate există unul mai aproape pe care imaginea nu-l vede.",
+  "status": "in_asteptare",
+  "id": "P071"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C110",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0417732,
+     44.5346766
+    ],
+    [
+     26.041874,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C110",
+   "pole": "S009",
+   "lungime_m": 33.0,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.75,
+  "motiv": "Clădire (Str. Principala) fără loc de consum în GIS. Cel mai apropiat stâlp: S009, la 33 m.",
+  "status": "in_asteptare",
+  "id": "P072"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C111",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0422268,
+     44.5346766
+    ],
+    [
+     26.042126,
+     44.5349641
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C111",
+   "pole": "S001",
+   "lungime_m": 33.0,
+   "prosumator": true
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.75,
+  "motiv": "Clădire (Str. Principala) fără loc de consum în GIS. Cel mai apropiat stâlp: S001, la 33 m. Are și panouri PV.",
+  "status": "in_asteptare",
+  "id": "P073"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C113",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0417731,
+     44.535485
+    ],
+    [
+     26.0419496,
+     44.5353593
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C113",
+   "pole": "S027",
+   "lungime_m": 19.8,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.85,
+  "motiv": "Clădire (Str. Principala) fără loc de consum în GIS. Cel mai apropiat stâlp: S027, la 20 m.",
+  "status": "in_asteptare",
+  "id": "P074"
+ },
+ {
+  "tip": "prosumator_neinregistrat",
+  "obiect": "C114",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0422268,
+    44.5354851
+   ]
+  },
+  "propus": {
+   "prosumator": true
+  },
+  "sursa": "imagine aeriana (PV)",
+  "incredere": 0.72,
+  "motiv": "Panouri fotovoltaice detectate (0.72) pe o clădire care nu e prosumator în GIS.",
+  "status": "in_asteptare",
+  "id": "P075"
+ },
+ {
+  "tip": "prosumator_neinregistrat",
+  "obiect": "C115",
+  "geometrie": {
+   "type": "Point",
+   "coordinates": [
+    26.0417731,
+    44.5357007
+   ]
+  },
+  "propus": {
+   "prosumator": true
+  },
+  "sursa": "imagine aeriana (PV)",
+  "incredere": 0.78,
+  "motiv": "Panouri fotovoltaice detectate (0.78) pe o clădire care nu e prosumator în GIS.",
+  "status": "in_asteptare",
+  "id": "P076"
+ },
+ {
+  "tip": "bransament_lipsa",
+  "obiect": "C118",
+  "geometrie": {
+   "type": "LineString",
+   "coordinates": [
+    [
+     26.0422268,
+     44.5363475
+    ],
+    [
+     26.0420504,
+     44.536078
+    ]
+   ]
+  },
+  "propus": {
+   "kind": "bransament",
+   "building": "C118",
+   "pole": "S019",
+   "lungime_m": 33.1,
+   "prosumator": false
+  },
+  "sursa": "ANCPI/OSM + cel mai apropiat stâlp",
+  "incredere": 0.75,
+  "motiv": "Clădire (Str. Principala) fără loc de consum în GIS. Cel mai apropiat stâlp: S019, la 33 m.",
+  "status": "in_asteptare",
+  "id": "P077"
+ }
+]

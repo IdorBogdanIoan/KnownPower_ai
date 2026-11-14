@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BirouRouteImport } from './routes/birou'
+import { Route as ImportRouteImport } from './routes/import'
+import { Route as TerenRouteImport } from './routes/teren'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BirouRoute = BirouRouteImport.update({
+  id: '/birou',
+  path: '/birou',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImportRoute = ImportRouteImport.update({
+  id: '/import',
+  path: '/import',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TerenRoute = TerenRouteImport.update({
+  id: '/teren',
+  path: '/teren',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/birou': typeof BirouRoute
+  '/import': typeof ImportRoute
+  '/teren': typeof TerenRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/birou': typeof BirouRoute
+  '/import': typeof ImportRoute
+  '/teren': typeof TerenRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/birou': typeof BirouRoute
+  '/import': typeof ImportRoute
+  '/teren': typeof TerenRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/birou' | '/import' | '/teren'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/birou' | '/import' | '/teren'
+  id: '__root__' | '/' | '/birou' | '/import' | '/teren'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BirouRoute: typeof BirouRoute
+  ImportRoute: typeof ImportRoute
+  TerenRoute: typeof TerenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/birou': {
+      id: '/birou'
+      path: '/birou'
+      fullPath: '/birou'
+      preLoaderRoute: typeof BirouRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/import': {
+      id: '/import'
+      path: '/import'
+      fullPath: '/import'
+      preLoaderRoute: typeof ImportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/teren': {
+      id: '/teren'
+      path: '/teren'
+      fullPath: '/teren'
+      preLoaderRoute: typeof TerenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BirouRoute: BirouRoute,
+  ImportRoute: ImportRoute,
+  TerenRoute: TerenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

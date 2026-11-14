@@ -28,3 +28,11 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## GridTwin architecture
+- Public routes load one paginated workspace through a publishable-key server function and TanStack Query; Realtime invalidates it to keep the office and field views consistent.
+- Leaflet is dynamically imported behind ClientOnly, with browser-safe geometry logic in a separate module, to preserve SSR compatibility.
+- Demo decisions and field submission use transactional database functions so audit rows and status changes are saved together; permissive policies are demo-only.
+- Compute effective scores and inferred attributes from original imports plus approved reports/proposals, preserving original GIS and supporting undo without destructive edits.
+- Store photo object paths, not expiring URLs; request signed URLs for display because workspace policy requires private storage.
+- Run vision extraction in a TanStack server function through the AI Gateway SDK, validating model output and retaining manual edits on failure.

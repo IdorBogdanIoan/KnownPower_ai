@@ -30,6 +30,7 @@ use the editor.
 <!-- LOVABLE:END -->
 
 ## GridTwin architecture
+- Keep responsive layouts in the shared stylesheet: two-row navigation on constrained widths, stacked map/review on phones including landscape, and independently scrollable desktop review so map controls and proposals stay accessible.
 - Share browser-safe map status selection and unsafe proposal eligibility across map, review lists and batches; match proposals by explicit object/affected IDs or identical geometry to effective danger scores or approved matching OSM inspections, never by proximity or approval status, so missing validation cannot create eligibility. Preserve stored proposals and evidence.
 - Network status overlays show only scored GIS or approved matching-geometry OSM inspections; preserve all imported objects for field inspection without assigning missing evidence a safety category.
 - Validate file imports in a browser-safe shared parser; use known filename aliases or an explicit destination for renamed files so data never silently enters the wrong layer.

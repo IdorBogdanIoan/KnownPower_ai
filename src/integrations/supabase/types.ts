@@ -365,21 +365,6 @@ export type Database = {
         }
         Relationships: []
       }
-      stage_ptab: {
-        Row: {
-          k: string
-          v: Json
-        }
-        Insert: {
-          k: string
-          v: Json
-        }
-        Update: {
-          k?: string
-          v?: Json
-        }
-        Relationships: []
-      }
       user_roles: {
         Row: {
           id: string

@@ -1,10 +1,11 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Activity, Map, Camera, Upload, Moon, Sun, LogOut, Settings, UserRound } from "lucide-react";
+import { Activity, Map, Camera, Upload, Moon, Sun, LogOut, Settings, UserRound, ClipboardCheck } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAccount } from "./Account";
 import { roleLabels } from "@/lib/gridtwin/access";
+import { roleHome } from "@/lib/gridtwin/test-session";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "sonner";
 export const useOperator = () => useAccount().name;
@@ -29,17 +30,18 @@ export function AppShell({ children }: { children: ReactNode }) {
     <>
       <div className="app-shell">
         <header className="app-header">
-          <Link to="/birou" className="brand">
+          <Link to={account.roles[0] ? roleHome(account.roles[0]) : "/auth"} className="brand">
             <span className="brand-mark">
               <Activity />
             </span>
             GridTwin
           </Link>
           <nav className="header-nav">
-            <Link to="/birou" activeProps={{ className: "active" }}>
+            {account.map && <Link to="/birou" activeProps={{ className: "active" }}>
               <Map />
               Hartă
-            </Link>
+            </Link>}
+            {account.validate && <Link to="/validare" activeProps={{ className: "active" }}><ClipboardCheck />Validare rapoarte</Link>}
             {account.submit && <Link to="/teren" activeProps={{ className: "active" }}>
               <Camera />
               Teren
@@ -61,7 +63,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             >
               {dark ? <Sun /> : <Moon />}
             </Button>
-            {account.userId ? <><Button variant="ghost" asChild className="px-1" title="Profilul meu"><Link to="/profil">
+            {account.test ? <><span className="actor-name text-xs">{actor}</span><Button variant="ghost" size="icon" aria-label="Deconectare" title="Deconectare" onClick={async () => { await client.cancelQueries(); account.endTest(); await navigate({ to: "/auth", replace: true }); }}><LogOut /></Button></> : account.userId ? <><Button variant="ghost" asChild className="px-1" title="Profilul meu"><Link to="/profil">
               <span className="avatar">
                 {actor
                   .split(" ")
@@ -74,6 +76,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Link></Button><Button variant="ghost" size="icon" aria-label="Deconectare" title="Deconectare" onClick={async () => { await client.cancelQueries(); client.clear(); await supabase.auth.signOut(); await navigate({ to: "/auth", replace: true }); }}><LogOut /></Button></> : <Button variant="outline" asChild><Link to="/auth"><UserRound />Login</Link></Button>}
           </div>
         </header>
+        {account.test && <div className="border-b border-border bg-muted px-4 py-2 text-xs text-muted-foreground" role="status">Mod de test · rezultate simulate furnizate inițial · datele reale nu sunt modificate</div>}
         {children}
       </div>
       <Toaster position="top-center" richColors />

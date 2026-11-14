@@ -40,6 +40,7 @@ use the editor.
 - Use a browser-only OpenFreeMap MapLibre layer for the keyless street background, explicitly configuring the Vite worker URL so published maps do not fail to load workers; retain Leaflet overlays and the satellite background.
 - Account roles live in protected user_roles, separate from editable name/team profiles; database policies and transactional RPCs enforce access and derive audit identity from auth.uid() because UI visibility is not authorization.
 - Application settings use an admin-writable store read by the office view; new accounts default to read-only and the initial real administrator must be explicitly identified, never auto-promoted.
+- Name/role test sessions are sessionStorage-only UI previews using the original supplied simulated outputs; never attach credentials, read private Cloud data or write real data from this mode, because self-selected roles are not authorization.
 - Compute effective scores and inferred attributes from original imports plus approved reports/proposals, preserving original GIS and supporting undo without destructive edits.
 - Store photo object paths, not expiring URLs; request signed URLs for display because workspace policy requires private storage.
 - Run vision extraction in a TanStack server function through the AI Gateway SDK, validating model output and retaining manual edits on failure.

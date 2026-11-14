@@ -20,6 +20,7 @@ import uploadedProposals from "@/data/proposals.json";
 import uploadedScores from "@/data/scores.json";
 import type { Json } from "@/integrations/supabase/types";
 import { OsmImport } from "./OsmImport";
+import { readTestSession, testWriteNotice } from "@/lib/gridtwin/test-session";
 export function ImportPage() {
   const data = useWorkspace();
   const actor = useOperator();
@@ -58,6 +59,7 @@ export function ImportPage() {
     return `${geojson.features.length} obiecte`;
   }
   async function run(items: { name: string; value: () => Promise<unknown> }[]) {
+    if (readTestSession()) { toast.info(testWriteNotice); return; }
     if (busy || !items.length) return;
     if (!actor) { toast.error("Completează numele operatorului înainte de import."); return; }
     setBusy(true);

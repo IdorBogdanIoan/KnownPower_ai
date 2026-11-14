@@ -13,6 +13,7 @@ export const Route = createFileRoute("/_authenticated/profil")({
 function Profile() {
   const account = useAccount();
   if (account.loading) return <main className="page-body">Se încarcă profilul…</main>;
+  if (account.test) return <main className="page-body"><h1>{account.name}</h1><p>Profil de test · {account.roles.map(r => roleLabels[r]).join(", ")}</p></main>;
   if (account.error) return <main className="page-body"><p role="alert">{account.error}</p></main>;
   return <ProfileForm key={`${account.userId}:${account.name}:${account.team}`} />;
 }

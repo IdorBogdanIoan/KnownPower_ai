@@ -40,6 +40,7 @@ import {
 } from "@/lib/gridtwin/model";
 import { useOperator } from "./Shell";
 import { useAccount } from "./Account";
+import { testWriteNotice } from "@/lib/gridtwin/test-session";
 import { osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmVerdicts, osmTones } from "@/lib/gridtwin/osm-inspections";
 import { OsmOfficeList } from "./OsmOfficeList";
@@ -101,7 +102,7 @@ export function Office() {
   const [statuses, setStatuses] = useState<StatusSelection>(data.layers["osm_constanta"] ? initialStatuses : { ...initialStatuses, primary: false, safe: true });
   const actor = useOperator();
   const access = useAccount();
-  const settings = useQuery({ queryKey: ["app-settings"], queryFn: async () => { const r = await supabase.from("app_settings").select("*"); if (r.error) throw r.error; return Object.fromEntries(r.data.map(x => [x.key,x.value])); } });
+  const settings = useQuery({ queryKey: ["app-settings"], enabled: !access.test, queryFn: async () => { const r = await supabase.from("app_settings").select("*"); if (r.error) throw r.error; return Object.fromEntries(r.data.map(x => [x.key,x.value])); } });
   const client = useQueryClient();
   const [tab, setTab] = useState(data.layers["osm_constanta"] ? "osm" : "proposals");
   const [osmSelected, setOsmSelected] = useState<string>();
@@ -158,6 +159,7 @@ export function Office() {
     kind: "proposal" | "field",
     decision: "aprobat" | "respins" | "in_asteptare",
   ) {
+    if (access.test) { toast.info(testWriteNotice); return; }
     if (!actor || !access.validate) {
       toast.error("Completează numele operatorului.");
       return;

@@ -10,6 +10,7 @@ import { convertOsm, osmMetadata, osmQuery, type OsmCollection } from "@/lib/gri
 import { fetchConstantaOsm } from "@/lib/gridtwin/osm.functions";
 import type { FeatureCollection } from "@/lib/gridtwin/model";
 import { useOperator } from "./Shell";
+import { readTestSession, testWriteNotice } from "@/lib/gridtwin/test-session";
 
 export function OsmImport({ collection }: { collection?: FeatureCollection | undefined }) {
   const fetchOsm = useServerFn(fetchConstantaOsm);
@@ -20,6 +21,7 @@ export function OsmImport({ collection }: { collection?: FeatureCollection | und
   const [error, setError] = useState("");
   const meta = osmMetadata(collection);
   async function download() {
+    if (readTestSession()) { setError(testWriteNotice); return; }
     setBusy(true);
     setError("");
     setPreview(undefined);
@@ -34,6 +36,7 @@ export function OsmImport({ collection }: { collection?: FeatureCollection | und
     }
   }
   async function save() {
+    if (readTestSession()) { setError(testWriteNotice); return; }
     if (!preview || !actor) return;
     setBusy(true);
     setError("");

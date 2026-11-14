@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { workspaceQuery } from "@/lib/gridtwin/query";
 import { Office } from "@/components/gridtwin/Office";
+import { AccessRequired } from "@/components/gridtwin/Account";
 export const Route = createFileRoute("/_authenticated/birou")({
   head: () => ({
     meta: [
@@ -19,5 +20,5 @@ export const Route = createFileRoute("/_authenticated/birou")({
     ],
   }),
   loader: ({ context }) => context.queryClient.ensureQueryData(workspaceQuery),
-  component: Office,
+  component: () => <AccessRequired kind="map"><Office /></AccessRequired>,
 });

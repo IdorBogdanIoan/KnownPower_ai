@@ -1,9 +1,10 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Activity, LogIn, Loader2 } from "lucide-react";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { Activity, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { lovable } from "@/integrations/lovable";
 import { useAccount } from "@/components/gridtwin/Account";
+import { roleLabels, type AppRole } from "@/lib/gridtwin/access";
+import { roleHome } from "@/lib/gridtwin/test-session";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({ meta: [
@@ -16,22 +17,14 @@ export const Route = createFileRoute("/auth")({
 function Login() {
   const account = useAccount();
   const navigate = useNavigate();
-  const [busy, setBusy] = useState("");
-  const [error, setError] = useState("");
-  useEffect(() => { if (account.userId && !account.loading && !account.error) void navigate({ to: account.name.trim().length >= 2 && account.team.trim().length >= 2 ? "/birou" : "/profil", replace: true }); }, [account.userId, account.loading, account.error, account.name, account.team, navigate]);
-  async function login(provider: "google" | "lovable") {
-    setBusy(provider); setError("");
-    try {
-      const result = await lovable.auth.signInWithOAuth(provider, { redirect_uri: `${window.location.origin}/auth` });
-      if (result.error) throw result.error;
-    } catch { setError("Autentificarea nu a reușit. Încearcă din nou."); }
-    finally { setBusy(""); }
-  }
+  const [name, setName] = useState("");
+  const [role, setRole] = useState<AppRole>("user");
   return <main className="page-body"><div className="mx-auto max-w-md py-16 space-y-6">
-    <Activity className="text-primary size-10" /><h1 className="text-3xl font-semibold">GridTwin</h1><h2 className="text-xl">Autentificare</h2>
-    <div className="space-y-3"><Button className="w-full" disabled={!!busy} onClick={() => void login("google")}>{busy === "google" ? <Loader2 className="animate-spin" /> : <LogIn />}Continuă cu Google</Button>
-    <Button variant="outline" className="w-full" disabled={!!busy} onClick={() => void login("lovable")}>{busy === "lovable" ? <Loader2 className="animate-spin" /> : <LogIn />}Continuă cu Lovable</Button></div>
-    {(error || account.error) && <p role="alert" className="text-destructive">{error || account.error}</p>}
-    {account.userId && <Button asChild variant="outline"><Link to="/profil">Profilul meu</Link></Button>}
+    <Activity className="text-primary size-10" /><h1 className="text-3xl font-semibold">GridTwin</h1><h2 className="text-xl">Login</h2>
+    <form className="space-y-5" onSubmit={async e => { e.preventDefault(); if (name.trim().length < 2) return; account.startTest({ name: name.trim(), role }); await navigate({ to: roleHome(role), replace: true }); }}>
+      <label className="block form-label">Nume<input className="form-control mt-2" autoComplete="name" required minLength={2} maxLength={100} value={name} onChange={e => setName(e.target.value)} /></label>
+      <label className="block form-label">Rol<select className="form-control mt-2" value={role} onChange={e => setRole(e.target.value as AppRole)}>{Object.entries(roleLabels).map(([key,label]) => <option key={key} value={key}>{label}</option>)}</select></label>
+      <Button className="w-full" disabled={name.trim().length < 2}><LogIn />Intră</Button>
+    </form><p className="text-sm text-muted-foreground">Acces de test · fără modificări ale datelor reale.</p>
   </div></main>;
 }

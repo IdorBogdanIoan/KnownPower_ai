@@ -1,4 +1,5 @@
 # GridTwin
+- [x] Replace social login buttons with name/role test entry, exact role menus and isolated no-write preview; 45 tests and all four browser flows, reload/logout and mobile login verified
 - [x] Add Google/Lovable login, name/team profiles, four roles, protected workspace, server/database permission checks, admin role/configuration screen; 40 tests and signed-out desktop/mobile access-denial checks passed
 - [ ] Assign the first real admin and verify all four signed-in roles — no accounts exist yet; temporary-account creation is unavailable, awaiting the user's login and explicit first-admin account
 - [x] Improve map heading readability, remove OSM title badge, rename navigation to Hartă, add legends to both field maps and multi-select status filters; 14 tests and desktop/mobile browser checks passed

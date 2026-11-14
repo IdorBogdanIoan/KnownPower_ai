@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { midpoint, type Position, type Workspace } from "@/lib/gridtwin/model";
 import { osmInspectionSchema, osmVerdicts } from "@/lib/gridtwin/osm-inspections";
 import { useOperator } from "./Shell";
+import { readTestSession, testWriteNotice } from "@/lib/gridtwin/test-session";
 const MapView = lazy(() => import("./MapView"));
 
 export function OsmInspectionForm({ data, initialId }: { data: Workspace; initialId?: string | undefined }) {
@@ -25,6 +26,7 @@ export function OsmInspectionForm({ data, initialId }: { data: Workspace; initia
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
   async function submit() {
+    if (readTestSession()) { setError(testWriteNotice); return; }
     setError("");
     if (!photo || !feature || !position) { setError("Selectează elementul, înregistrează poziția și adaugă o fotografie."); return; }
     const path = `${crypto.randomUUID()}/pole.jpg`;

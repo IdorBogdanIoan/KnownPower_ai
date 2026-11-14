@@ -17,6 +17,7 @@ import { Route as AuthenticatedBirouRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedImportRouteImport } from './routes/_authenticated/import'
 import { Route as AuthenticatedProfilRouteImport } from './routes/_authenticated/profil'
 import { Route as AuthenticatedTerenRouteImport } from './routes/_authenticated/teren'
+import { Route as AuthenticatedValidareRouteImport } from './routes/_authenticated/validare'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -57,6 +58,11 @@ const AuthenticatedTerenRoute = AuthenticatedTerenRouteImport.update({
   path: '/teren',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedValidareRoute = AuthenticatedValidareRouteImport.update({
+  id: '/validare',
+  path: '/validare',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/import': typeof AuthenticatedImportRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/teren': typeof AuthenticatedTerenRoute
+  '/validare': typeof AuthenticatedValidareRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/import': typeof AuthenticatedImportRoute
   '/profil': typeof AuthenticatedProfilRoute
   '/teren': typeof AuthenticatedTerenRoute
+  '/validare': typeof AuthenticatedValidareRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,13 +94,29 @@ export interface FileRoutesById {
   '/_authenticated/import': typeof AuthenticatedImportRoute
   '/_authenticated/profil': typeof AuthenticatedProfilRoute
   '/_authenticated/teren': typeof AuthenticatedTerenRoute
+  '/_authenticated/validare': typeof AuthenticatedValidareRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/admin' | '/birou' | '/import' | '/profil' | '/teren'
+    | '/'
+    | '/auth'
+    | '/admin'
+    | '/birou'
+    | '/import'
+    | '/profil'
+    | '/teren'
+    | '/validare'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/admin' | '/birou' | '/import' | '/profil' | '/teren'
+  to:
+    | '/'
+    | '/auth'
+    | '/admin'
+    | '/birou'
+    | '/import'
+    | '/profil'
+    | '/teren'
+    | '/validare'
   id:
     | '__root__'
     | '/'
@@ -103,6 +127,7 @@ export interface FileRouteTypes {
     | '/_authenticated/import'
     | '/_authenticated/profil'
     | '/_authenticated/teren'
+    | '/_authenticated/validare'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -169,6 +194,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedTerenRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/validare': {
+      id: '/_authenticated/validare'
+      path: '/validare'
+      fullPath: '/validare'
+      preLoaderRoute: typeof AuthenticatedValidareRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -178,6 +210,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedImportRoute: typeof AuthenticatedImportRoute
   AuthenticatedProfilRoute: typeof AuthenticatedProfilRoute
   AuthenticatedTerenRoute: typeof AuthenticatedTerenRoute
+  AuthenticatedValidareRoute: typeof AuthenticatedValidareRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -186,6 +219,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedImportRoute: AuthenticatedImportRoute,
   AuthenticatedProfilRoute: AuthenticatedProfilRoute,
   AuthenticatedTerenRoute: AuthenticatedTerenRoute,
+  AuthenticatedValidareRoute: AuthenticatedValidareRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

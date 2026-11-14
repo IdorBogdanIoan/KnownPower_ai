@@ -29,6 +29,7 @@ import {
   type Position,
 } from "@/lib/gridtwin/model";
 import { useOperator } from "./Shell";
+import { readTestSession, testWriteNotice } from "@/lib/gridtwin/test-session";
 import { Route } from "@/routes/_authenticated/teren";
 import { OsmInspectionForm } from "./OsmInspectionForm";
 const MapView = lazy(() => import("./MapView"));
@@ -99,6 +100,7 @@ export function FieldPage() {
     }
   }
   async function extract() {
+    if (readTestSession()) { setError(testWriteNotice); return; }
     setBusy("ai");
     setError("");
     try {
@@ -123,6 +125,7 @@ export function FieldPage() {
     }
   }
   async function submit() {
+    if (readTestSession()) { setError(testWriteNotice); return; }
     if (!pole || !sheet || !actor) return;
     setBusy("send");
     setError("");

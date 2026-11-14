@@ -22,23 +22,27 @@ jobs:
   analiza:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: ai
     env:
       GRIDTWIN_MS_LIVE: "1"
       YOLO_CONFIG_DIR: /tmp/ultra
     steps:
+      - uses: actions/checkout@v4
       - name: Ascunde tokenul din loguri
         env:
           JOB_TOKEN: ${{ inputs.token }}
         run: echo "::add-mask::$JOB_TOKEN"
-      - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
           cache: pip
+          cache-dependency-path: ai/requirements.txt
       - name: Cache cladiri Microsoft
         uses: actions/cache@v4
         with:
-          path: cache_ms
+          path: ai/cache_ms
           key: cache-ms-v1
       - name: Instaleaza
         run: pip install -r requirements.txt

@@ -1,12 +1,24 @@
-# KnownPower AI
+# Screenshot To Spark
 
-Motorul AI din pagina „Caută zonă” a site-ului KnownPower.
+Implement exactly the screenshot and nothing else
 
-Site-ul pornește workflow-ul `Analiza zona AI` (prin funcția de server `startAiAnalysis`). Workflow-ul:
-1. descarcă străzile și casele (OpenStreetMap + Microsoft Building Footprints),
-2. descarcă imaginea din satelit și caută stâlpii cu modelul YOLO `grid_best_ro_B.pt`,
-3. propune rețeaua probabilă (`retea_prezisa.py`),
-4. trimite rezultatul înapoi la site (funcția SQL `ai_job_complete`, protejată de tokenul jobului).
+This project was built with [Lovable](https://lovable.dev).
 
-Test manual: Actions → Analiza zona AI → Run workflow (fără callback, rezultatul apare în log).
-Rulare locală: `python api_local.py` (server pe 127.0.0.1:8765).
+## Build with Lovable
+
+Continue developing this project in the [Lovable editor](https://lovable.dev/projects/4fc56bbe-b8a6-4a00-b7c3-d9da2851f520).
+
+- **Ship faster**: describe what you want to build and Lovable handles the code.
+- **Stay in sync**: every change made in Lovable is committed straight to this repository.
+- **Full ownership**: this code is yours. Push to `main` on GitHub and your changes sync back into Lovable, ready for your next prompt.
+
+## Development
+
+Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+
+```sh
+git clone <this-repository-url>
+cd <repository-name>
+npm i
+npm run dev
+```

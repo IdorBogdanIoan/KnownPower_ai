@@ -15,7 +15,7 @@ import * as turf from "@turf/turf";
 import { Layers, LocateFixed, Maximize, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { StatusFilters } from "./StatusFilters";
-import { initialStatuses, unsafeProposals, unvalidatedGisLines, visibleOsm, visibleScore, visibleProposal, type StatusSelection } from "@/lib/gridtwin/map-status";
+import { initialStatuses, unsafeProposals, unvalidatedGisLines, unvalidatedNetworkCount, visibleOsm, visibleScore, visibleProposal, type StatusSelection } from "@/lib/gridtwin/map-status";
 import { OpenFreeMapLayer } from "./OpenFreeMapLayer";
 import { osmCoverage, osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmTones, osmVerdicts } from "@/lib/gridtwin/osm-inspections";
@@ -323,7 +323,7 @@ export default function MapView({
           <GeoJSON
             key={`osm-${meta?.importedAt}-${JSON.stringify(activeStatuses)}-${data.reports.filter(r => r.osm_id).map(r => `${r.id}-${r.status}`).join(",")}`}
             data={filteredOsm}
-            style={f => { const r = f && approvedOsmInspection(f, data.reports); return { color: palette[r?.osm_verdict ? osmTones[r.osm_verdict] : "primary"], weight: 3, fillOpacity: 0.12 }; }}
+            style={f => { const r = f && approvedOsmInspection(f, data.reports); return { color: palette[r?.osm_verdict ? osmTones[r.osm_verdict] : "primary"], weight: 3, dashArray: r?.osm_verdict ? undefined : "5 6", fillOpacity: 0.12 }; }}
             pointToLayer={(f, p) => {
               const r = approvedOsmInspection(f, data.reports);
               return L.circleMarker(p, { radius: 5, color: palette[r?.osm_verdict ? osmTones[r.osm_verdict] : "primary"], fillOpacity: 0, weight: 3 });
@@ -618,7 +618,7 @@ export default function MapView({
             {meta && <h3>Evaluare OSM aprobată</h3>}
             {meta && (
               <div className="legend-row">
-                <span className="primary">━━</span> Rețea OSM nevalidată
+                <i className="legend-line proposal" /> Rețea OSM nevalidată
               </div>
             )}
             <div className="legend-row">
@@ -648,7 +648,9 @@ export default function MapView({
               )}
             </div>
           </div>
-          {meta ? (
+          {activeStatuses.primary && unvalidatedNetworkCount(data) === 0 ? (
+            <div className="map-note" role="status">Nu există elemente nevalidate în datele încărcate.</div>
+          ) : meta ? (
             <div className="map-note">
               OpenStreetMap · {osm?.features.length} obiecte
               <br />

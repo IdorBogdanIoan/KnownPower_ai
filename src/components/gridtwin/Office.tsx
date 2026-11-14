@@ -48,7 +48,7 @@ import { osmMetadata } from "@/lib/gridtwin/osm";
 import { approvedOsmInspection, osmVerdicts, osmTones } from "@/lib/gridtwin/osm-inspections";
 import { OsmOfficeList } from "./OsmOfficeList";
 import { StatusFilters } from "./StatusFilters";
-import { initialStatuses, unsafeProposals, unvalidatedGisLines, type StatusSelection } from "@/lib/gridtwin/map-status";
+import { initialStatuses, unsafeProposals, unvalidatedNetworkCount, type StatusSelection } from "@/lib/gridtwin/map-status";
 const MapView = lazy(() => import("./MapView"));
 const tipIcons: Record<string, typeof Activity> = {
   gol_retea: Link2,
@@ -283,7 +283,7 @@ export function Office() {
                 osmMeta ? osmApproved.filter(r => r?.osm_verdict === "de_verificat").length : scores.filter((s) => s.scor >= 0.4 && s.scor < 0.7).length,
               ],
               ["danger", "Nesigur", osmMeta ? osmApproved.filter(r => r?.osm_verdict === "nesigur").length : scores.filter((s) => s.scor < 0.4).length],
-              ["primary", "Nevalidat", osmMeta ? osmApproved.filter(r => !r).length : unvalidatedGisLines(data).length],
+              ["primary", "Nevalidat", unvalidatedNetworkCount(data)],
             ].map(([color, label, value]) => (
               <div className="stat" key={label}>
                 <div className={`stat-number ${color}`}>{value}</div>

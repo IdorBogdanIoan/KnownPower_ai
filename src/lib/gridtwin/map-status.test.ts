@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { visibleOsm, visibleScore, visibleProposal, unsafeProposals, unvalidatedGisLines, initialStatuses } from "./map-status";
+import { visibleOsm, visibleScore, visibleProposal, unsafeProposals, unvalidatedGisLines, unvalidatedNetworkCount, initialStatuses } from "./map-status";
 import type { Feature, Report, Proposal, Workspace } from "./model";
 const feature: Feature = { type: "Feature", geometry: { type: "Point", coordinates: [28.64,44.18] }, properties: { osm_id: "node/1" } };
 const report: Report = { id: "r1", osm_id: "node/1", osm_verdict: "sigur", osm_geometry: feature.geometry, status: "aprobat", actor: "Test", created_at: "2026-11-14", lat: 44.18, lon: 28.64, fields: {}, pole_check: null, photo_pole_url: null, photo_sheet_url: null, pos_source: null, decided_at: null, decided_by: null };
@@ -29,6 +29,14 @@ describe("map status checkboxes", () => {
   });
   it("excludes proposals with no evaluated evidence even at high proposal confidence", () => {
     expect(unsafeProposals(workspace)).toEqual([]);
+  });
+  it("counts unvalidated GIS and OSM together, never proposal geometry or evaluated lines", () => {
+    const line: Feature = { type: "Feature", geometry: proposal.geometrie, properties: { id: "T1" } };
+    const data = { ...workspace, layers: { gis: { type: "FeatureCollection" as const, features: [line] }, osm_constanta: { type: "FeatureCollection" as const, features: [feature] } } };
+    expect(unvalidatedNetworkCount(workspace)).toBe(0);
+    expect(unvalidatedNetworkCount(data)).toBe(2);
+    expect(unvalidatedNetworkCount({ ...data, reports: [report] })).toBe(1);
+    expect(unvalidatedNetworkCount({ ...data, reports: [report], scores: [{ id: "T1", geometry: line.geometry, scor: 0.2, culoare: "", motive: [] }] })).toBe(0);
   });
   it("includes only explicitly linked Nesigur scores, excluding safe and partial scores", () => {
     for (const [scor, expected] of [[0.3, 1], [0.4, 0], [0.8, 0]] as const) {

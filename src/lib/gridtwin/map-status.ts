@@ -21,6 +21,10 @@ export function unvalidatedGisLines(data: Workspace) {
     !data.scores.some(s => s.id === f.properties?.["id"] || JSON.stringify(s.geometry) === JSON.stringify(f.geometry))
   );
 }
+export function unvalidatedNetworkCount(data: Workspace) {
+  return unvalidatedGisLines(data).length +
+    (data.layers["osm_constanta"]?.features.filter(f => osmStatus(f, data.reports) === "primary").length ?? 0);
+}
 export function unsafeProposals(data: Workspace) {
   const scores = effectiveScores(data);
   return data.proposals.filter(p => {

@@ -756,10 +756,6 @@ export function Office() {
                 </div>
               ))}
           </div>
-          <div className="panel-footer">
-            <ShieldCheck />
-            Nicio modificare fără aprobarea unui operator.
-          </div>
         </aside>
       </div>
     </>

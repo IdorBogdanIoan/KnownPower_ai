@@ -1408,6 +1408,11 @@ meter::-webkit-meter-optimum-value {
   .panel-tabs { gap: 10px; }
   .status-filters { gap: 4px; padding: 4px 10px; }
   .status-filter { font-size: 11px; gap: 4px; }
+  .map-legend { padding: 5px 7px; font-size: 9px; max-width: 185px; }
+  .map-legend h3 { font-size: 9px; margin-bottom: 2px; }
+  .map-legend .legend-row { gap: 6px; margin-top: 2px; line-height: 1.35; }
+  .map-legend .legend-line, .map-legend .client-underground-line { width: 17px; flex-shrink: 0; }
+  .map-legend .client-flag-dot { width: 7px; height: 7px; flex-shrink: 0; }
 }
 @media (max-height: 600px) and (min-width: 761px) {
   .app-header .brand { min-height: 40px; }

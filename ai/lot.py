@@ -19,6 +19,7 @@ MIN_CASE = 30           # pătrate cu mai puține case nu merită analizate
 RAZA = CELL_M / 2       # analiza acoperă pătratul (+40 m margine din api_local)
 DET_MIN = float(os.environ.get("LOT_DET_MIN", "0.2"))   # stâlpi doar-din-satelit sub prag nu intră
 DEDUP_M = 3.0
+URBAN_CASE = int(os.environ.get("LOT_URBAN_CASE", "700"))  # peste atâtea clădiri pe pătrat: blocuri, rețea probabil subterană
 BUCURESTI_ILFOV = (25.70, 44.20, 26.50, 44.75)
 
 
@@ -191,6 +192,34 @@ def merge(a):
         cells += d["cells"]; stalpi += d["stalpi"]; linii += d["linii"]; erori += d["erori"]
     print(f"pătrate: {len(cells)}, stâlpi: {len(stalpi)}, linii: {len(linii)}, erori: {len(erori)}")
 
+    # zone urbane dense (blocuri): fără rețea prezisă, păstrăm doar ce se vede în satelit
+    urban = {c["id"] for c in cells if c["case"] >= URBAN_CASE}
+    boxes = {c["id"]: c["box"] for c in cells}
+
+    def cell_of(pt):
+        for cid, b in boxes.items():
+            if inside(pt, b):
+                return cid
+        return None
+    st2, scoase_urban = [], 0
+    for s in stalpi:
+        if s["celula"] in urban:
+            if s["sursa"] == "prezis":
+                scoase_urban += 1; continue
+            if s["sursa"] == "prezis+satelit":
+                s = {**s, "sursa": "satelit", "incredere": s["detectie"], "ext_id": None}
+        st2.append(s)
+    stalpi = st2
+    li2 = []
+    for l in linii:
+        cs = l["coords"]
+        mid = cs[len(cs) // 2] if len(cs) > 2 else [(cs[0][0] + cs[-1][0]) / 2, (cs[0][1] + cs[-1][1]) / 2]
+        if cell_of(mid) in urban:
+            continue
+        li2.append(l)
+    print(f"pătrate urbane dense: {len(urban)}; stâlpi prezisi scoși acolo: {scoase_urban}; linii scoase: {len(linii) - len(li2)}")
+    linii = li2
+
     # verificare: transformarea metri <-> grade dus-întors
     for s in stalpi[:200]:
         x = (s["lon"] - 26) * kx(44.4); y = (s["lat"] - 44.4) * KY
@@ -254,6 +283,12 @@ def merge(a):
                   "properties": {k: s[k] for k in ("sursa", "incredere", "detectie", "rol")}} for s in sl]
         feats += [{"type": "Feature", "geometry": {"type": "LineString", "coordinates": l["coords"]},
                    "properties": {"kind": l["kind"], "lungime_m": l["lungime_m"]}} for l in ll]
+        for c in cl:
+            if c["id"] in urban:
+                w, s_, e, n = c["box"]
+                feats.append({"type": "Feature", "geometry": {"type": "Polygon", "coordinates": [[[w, s_], [e, s_], [e, n], [w, n], [w, s_]]]},
+                              "properties": {"kind": "zona_urbana", "case": c["case"],
+                                             "nota": "zonă de blocuri: rețea probabil subterană, arătăm doar stâlpii văzuți în satelit"}})
         f = f"{slug(loc)}.geojson"
         json.dump({"type": "FeatureCollection", "features": feats}, open(os.path.join(a.out, f), "w"), ensure_ascii=False, separators=(",", ":"))
         km = sum(sum(math.hypot((q[0] - p[0]) * kx(p[1]), (q[1] - p[1]) * KY) for p, q in zip(l["coords"], l["coords"][1:]))
@@ -264,12 +299,13 @@ def merge(a):
                         "km_retea_propusa": round(km, 1), "bransamente": sum(1 for l in ll if l["kind"] == "bransament"),
                         "roluri": {r: sum(1 for s in sl if s["rol"] == r) for r in ("linie", "colt", "capat", "derivatie", "izolat")},
                         "bbox": [min(b[0] for b in boxes), min(b[1] for b in boxes), max(b[2] for b in boxes), max(b[3] for b in boxes)],
-                        "scoase_in_casa": sum(c["verificari"]["in_casa"] for c in cl)})
+                        "scoase_in_casa": sum(c["verificari"]["in_casa"] for c in cl),
+                        "patrate_urbane": sum(1 for c in cl if c["id"] in urban)})
         print(f"  {loc}: {len(sl)} stâlpi, {km:.1f} km rețea propusă")
     idx = {"rulare": a.rulare, "data": time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime()),
            "model": os.environ.get("GRIDTWIN_MODEL", "grid_best_ro_B.pt"),
            "model_case": "cladiri_best.pt" if os.path.exists(os.path.join(HERE, "cladiri_best.pt")) else "OSM + Microsoft",
-           "prag_satelit": DET_MIN, "celula_m": CELL_M, "dubluri_scoase": dup, "erori": erori, "localitati": rezumat,
+           "prag_satelit": DET_MIN, "celula_m": CELL_M, "prag_urban_case": URBAN_CASE, "stalpi_prezisi_scosi_urban": scoase_urban, "dubluri_scoase": dup, "erori": erori, "localitati": rezumat,
            "total": {"stalpi": len(keep), "km_retea_propusa": round(sum(r["km_retea_propusa"] for r in rezumat), 1),
                      "case": sum(r["case"] for r in rezumat), "patrate": len(cells)}}
     json.dump(idx, open(os.path.join(a.out, "index.json"), "w"), ensure_ascii=False, indent=1)
@@ -277,7 +313,7 @@ def merge(a):
     if os.environ.get("GITHUB_STEP_SUMMARY"):
         t = [f"## Rulare {a.rulare}", "", "| localitate | pătrate | case | stâlpi | din satelit | km rețea | branșamente |", "|---|---|---|---|---|---|---|"]
         t += [f"| {r['localitate']} | {r['patrate']} | {r['case']} | {r['stalpi']} | {r['stalpi_satelit']} | {r['km_retea_propusa']} | {r['bransamente']} |" for r in rezumat]
-        t += ["", f"Dubluri scoase: {dup}. Stâlpi scoși pentru că picau în case: {sum(r['scoase_in_casa'] for r in rezumat)}. Erori: {len(erori)}."]
+        t += ["", f"Pătrate urbane dense (fără rețea prezisă): {len(urban)}. Dubluri scoase: {dup}. Stâlpi scoși pentru că picau în case: {sum(r['scoase_in_casa'] for r in rezumat)}. Erori: {len(erori)}."]
         open(os.environ["GITHUB_STEP_SUMMARY"], "a").write("\n".join(t) + "\n")
 
 

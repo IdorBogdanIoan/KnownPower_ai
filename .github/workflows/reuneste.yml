@@ -1,0 +1,36 @@
+name: Reuneste rezultatele unei rulari
+run-name: reuneste ${{ inputs.rulare }} din ${{ inputs.run_id }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id: { description: "ID-ul rularii 'Analiza periferie' (din URL)", required: true }
+      rulare: { description: "nume rulare (a-z, 0-9, -)", required: true }
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults: { run: { working-directory: ai } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.11" }
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: "part-*"
+          path: ai/parts
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+      - name: Uneste si verifica
+        env: { RULARE: "${{ inputs.rulare }}" }
+        run: |
+          case "$RULARE" in *[!a-z0-9-]*|"") echo "nume invalid"; exit 1;; esac
+          python lot.py merge --parts parts --rulare "$RULARE" --out "out/$RULARE"
+      - name: Salveaza pe ramura rezultate
+        env: { RULARE: "${{ inputs.rulare }}", GH_TOKEN: "${{ github.token }}" }
+        run: bash salveaza_rezultate.sh "$RULARE" "out/$RULARE"

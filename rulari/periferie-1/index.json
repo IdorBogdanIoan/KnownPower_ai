@@ -1,0 +1,170 @@
+{
+ "rulare": "periferie-1",
+ "data": "2026-11-15 00:08 UTC",
+ "model": "grid_best_ro_B.pt",
+ "model_case": "cladiri_best.pt",
+ "prag_satelit": 0.2,
+ "celula_m": 700,
+ "prag_urban_case": 700,
+ "stalpi_prezisi_scosi_urban": 21298,
+ "dubluri_scoase": 133,
+ "erori": [],
+ "localitati": [
+  {
+   "localitate": "Bragadiru",
+   "fisier": "bragadiru.geojson",
+   "patrate": 102,
+   "case": 50028,
+   "stalpi": 10765,
+   "stalpi_satelit": 3630,
+   "km_retea_propusa": 232.1,
+   "bransamente": 18947,
+   "roluri": {
+    "linie": 4680,
+    "colt": 325,
+    "capat": 2728,
+    "derivatie": 293,
+    "izolat": 2739
+   },
+   "bbox": [
+    25.930251,
+    44.352992,
+    26.044629,
+    44.409985
+   ],
+   "scoase_in_casa": 1072,
+   "patrate_urbane": 22
+  },
+  {
+   "localitate": "Chiajna",
+   "fisier": "chiajna.geojson",
+   "patrate": 70,
+   "case": 31313,
+   "stalpi": 6821,
+   "stalpi_satelit": 2460,
+   "km_retea_propusa": 136.6,
+   "bransamente": 10942,
+   "roluri": {
+    "linie": 2604,
+    "colt": 259,
+    "capat": 1806,
+    "derivatie": 128,
+    "izolat": 2024
+   },
+   "bbox": [
+    25.912626,
+    44.427462,
+    26.027139,
+    44.478123
+   ],
+   "scoase_in_casa": 1045,
+   "patrate_urbane": 15
+  },
+  {
+   "localitate": "Chitila",
+   "fisier": "chitila.geojson",
+   "patrate": 4,
+   "case": 3614,
+   "stalpi": 206,
+   "stalpi_satelit": 117,
+   "km_retea_propusa": 2.6,
+   "bransamente": 283,
+   "roluri": {
+    "linie": 49,
+    "colt": 6,
+    "capat": 28,
+    "derivatie": 5,
+    "izolat": 118
+   },
+   "bbox": [
+    25.979589,
+    44.496989,
+    25.997222,
+    44.509654
+   ],
+   "scoase_in_casa": 21,
+   "patrate_urbane": 3
+  },
+  {
+   "localitate": "Pantelimon",
+   "fisier": "pantelimon.geojson",
+   "patrate": 130,
+   "case": 66760,
+   "stalpi": 10468,
+   "stalpi_satelit": 5047,
+   "km_retea_propusa": 194.4,
+   "bransamente": 16671,
+   "roluri": {
+    "linie": 3663,
+    "colt": 440,
+    "capat": 2285,
+    "derivatie": 279,
+    "izolat": 3801
+   },
+   "bbox": [
+    26.188675,
+    44.41014,
+    26.347245,
+    44.505128
+   ],
+   "scoase_in_casa": 1388,
+   "patrate_urbane": 29
+  },
+  {
+   "localitate": "Popești-Leordeni",
+   "fisier": "popesti-leordeni.geojson",
+   "patrate": 106,
+   "case": 44150,
+   "stalpi": 10726,
+   "stalpi_satelit": 5609,
+   "km_retea_propusa": 183.9,
+   "bransamente": 14534,
+   "roluri": {
+    "linie": 3596,
+    "colt": 372,
+    "capat": 2197,
+    "derivatie": 220,
+    "izolat": 4341
+   },
+   "bbox": [
+    26.140404,
+    44.2982,
+    26.281098,
+    44.399521
+   ],
+   "scoase_in_casa": 1227,
+   "patrate_urbane": 21
+  },
+  {
+   "localitate": "Voluntari",
+   "fisier": "voluntari.geojson",
+   "patrate": 91,
+   "case": 50383,
+   "stalpi": 7099,
+   "stalpi_satelit": 1602,
+   "km_retea_propusa": 167.1,
+   "bransamente": 12804,
+   "roluri": {
+    "linie": 3029,
+    "colt": 347,
+    "capat": 2057,
+    "derivatie": 241,
+    "izolat": 1425
+   },
+   "bbox": [
+    26.102849,
+    44.479112,
+    26.217479,
+    44.542438
+   ],
+   "scoase_in_casa": 1075,
+   "patrate_urbane": 22
+  }
+ ],
+ "total": {
+  "stalpi": 46085,
+  "km_retea_propusa": 916.7,
+  "case": 246248,
+  "patrate": 503
+ }
+}

@@ -11,7 +11,19 @@
    },
    "model": "grid_best_ro_B.pt",
    "model_case": "cladiri_best.pt"
+  },
+  {
+   "rulare": "periferie-1",
+   "data": "2026-11-15 00:08 UTC",
+   "total": {
+    "stalpi": 46085,
+    "km_retea_propusa": 916.7,
+    "case": 246248,
+    "patrate": 503
+   },
+   "model": "grid_best_ro_B.pt",
+   "model_case": "cladiri_best.pt"
   }
  ],
- "ultima": "pilot-bragadiru-chiajna"
+ "ultima": "periferie-1"
 }
